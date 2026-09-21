@@ -1,6 +1,6 @@
-import type { FieldAvailability, TokenResponse } from '@/types/api';
+import type { AuthResult, Challenge, FieldAvailability, PublicConfig, TokenResponse } from '@/types/api';
 
-import { api } from './client';
+import { api, turnstileHeaders } from './client';
 
 export interface RegisterPayload {
   username: string;
@@ -11,11 +11,31 @@ export interface RegisterPayload {
 }
 
 export const authApi = {
-  login: (payload: { email: string; password: string; remember_me: boolean }) =>
-    api.post<TokenResponse>('/auth/login', payload, { skipAuthRefresh: true }).then((r) => r.data),
+  /** The Turnstile site key and whether emailed codes are in use. Safe to cache. */
+  config: () => api.get<PublicConfig>('/auth/config').then((r) => r.data),
 
-  register: (payload: RegisterPayload) =>
-    api.post<TokenResponse>('/auth/register', payload, { skipAuthRefresh: true }).then((r) => r.data),
+  login: (payload: { email: string; password: string; remember_me: boolean }, turnstileToken?: string | null) =>
+    api
+      .post<AuthResult>('/auth/login', payload, {
+        skipAuthRefresh: true,
+        headers: turnstileHeaders(turnstileToken),
+      })
+      .then((r) => r.data),
+
+  register: (payload: RegisterPayload, turnstileToken?: string | null) =>
+    api
+      .post<AuthResult>('/auth/register', payload, {
+        skipAuthRefresh: true,
+        headers: turnstileHeaders(turnstileToken),
+      })
+      .then((r) => r.data),
+
+  /** Finishes a sign-in or a sign-up with the code from the email. */
+  verify: (payload: { challenge_id: string; code: string }) =>
+    api.post<TokenResponse>('/auth/verify', payload, { skipAuthRefresh: true }).then((r) => r.data),
+
+  resend: (challengeId: string) =>
+    api.post<Challenge>('/auth/resend', { challenge_id: challengeId }, { skipAuthRefresh: true }).then((r) => r.data),
 
   logout: () => api.post('/auth/logout', null, { skipAuthRefresh: true }),
 
@@ -27,7 +47,8 @@ export const authApi = {
       })
       .then((r) => r.data),
 
-  forgotPassword: (email: string) => api.post('/auth/forgot-password', { email }).then((r) => r.data),
+  forgotPassword: (email: string, turnstileToken?: string | null) =>
+    api.post('/auth/forgot-password', { email }, { headers: turnstileHeaders(turnstileToken) }).then((r) => r.data),
 
   resetPassword: (payload: { token: string; password: string; password_confirm: string }) =>
     api.post('/auth/reset-password', payload).then((r) => r.data),

@@ -46,11 +46,11 @@
       والتغييرات الخاصة بالمطوّرين. استخدم عوامل التصفية لعرض نوع واحد من التغييرات، أو اكتب للبحث.
     </p>
     <div class="latest">
-      <div class="latest-version">1.0.0</div>
+      <div class="latest-version">1.1.0</div>
       <div>
-        <h2>أحدث إصدار: ArabDev 1.0.0، الإصدار العام الأول</h2>
-        <p>صدر في <time datetime="2026-09-19">19 سبتمبر 2026</time>.</p>
-        <ul class="stats" aria-label="التغييرات في 1.0.0">
+        <h2>أحدث إصدار: ArabDev 1.1.0 — الأمان والإعلانات والبحث</h2>
+        <p>صدر في <time datetime="2026-09-21">21 سبتمبر 2026</time>.</p>
+        <ul class="stats" aria-label="التغييرات في 1.1.0">
           <li>إجمالي التغييرات <strong data-count="all">—</strong></li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> جديد</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> تحسين</li>
@@ -80,7 +80,20 @@
     <h2>الإصدارات</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-0-0">1.0.0 <small>19 سبتمبر 2026 · الأحدث</small></a>
+        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 سبتمبر 2026 · الأحدث</small></a>
+        <ul>
+          <li><a href="#v110-signin">تسجيل الدخول وإنشاء الحساب</a></li>
+          <li><a href="#v110-botcheck">الحماية من الروبوتات</a></li>
+          <li><a href="#v110-settings">الإعدادات</a></li>
+          <li><a href="#v110-ads">الإعلانات</a></li>
+          <li><a href="#v110-search">محرّكات البحث</a></li>
+          <li><a href="#v110-mobile">الهواتف</a></li>
+          <li><a href="#v110-security">الأمان والخصوصية</a></li>
+          <li><a href="#v110-developer">الواجهة البرمجية والمطوّرون</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-0-0">1.0.0 <small>19 سبتمبر 2026</small></a>
         <ul>
           <li><a href="#v100-accounts">الحسابات وتسجيل الدخول</a></li>
           <li><a href="#v100-onboarding">إعداد الزيارة الأولى</a></li>
@@ -132,10 +145,105 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release" id="v1-1-0" aria-labelledby="v1-1-0-title">
+  <header class="release-header">
+    <h2 id="v1-1-0-title">ArabDev 1.1.0</h2>
+    <span class="badge">الأحدث</span>
+    <time datetime="2026-09-21">21 سبتمبر 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    إصدار للأمان والانتشار: رموز من ستة أرقام تصل بالبريد لتسجيل الدخول وتغيير البريد أو كلمة المرور، وفحص من Cloudflare على كل نموذج عام، وإعلانات Google، وحضور حقيقي في نتائج البحث، وقسم أمان جديد في الإعدادات.
+  </p>
+
+  <ul class="highlights" data-hide-when-filtered aria-label="التغييرات في 1.1.0">
+    <li><span class="highlight-icon" aria-hidden="true">✉</span><strong>رمز في بريدك</strong><span>يُؤكَّد تسجيل الدخول وإنشاء الحساب وتغيير البريد أو كلمة المرور برمز من ستة أرقام.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🛡</span><strong>فحص هادئ للروبوتات</strong><span>يحرس Cloudflare Turnstile كل نموذج عام، بلا أن يظهر لمعظم الناس.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">⚑</span><strong>إعلانات تغطّي التكاليف</strong><span>إعلانات Google في وضع غير مخصّص، وما زالت موسومة بوضوح.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🔎</span><strong>قابل للعثور عليه</strong><span>عناوين وأوصاف ومعاينات روابط لكل صفحة، وخريطة موقع وبيانات منظّمة.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">⚙</span><strong>خيارات أكثر بين يديك</strong><span>الأجهزة وتصدير البيانات والخلاصة الافتراضية وتقليل الحركة وتفضيلات البريد.</span></li>
+  </ul>
+
+  <section class="area" id="v110-signin" aria-labelledby="v110-signin-title">
+    <h3 id="v110-signin-title">تسجيل الدخول وإنشاء الحساب<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يُؤكَّد تسجيل الدخول وإنشاء الحساب برمز من ستة أرقام يصل إلى بريدك. الرمز صالح عشر دقائق ويُستخدم مرة واحدة.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">لا يُنشأ الحساب قبل تأكيد عنوانه، فلا يترك خطأ في كتابة البريد حسابًا لا تستطيع الوصول إليه أبدًا.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يمكن إرسال الرمز من جديد بعد ستين ثانية، وحتى أربع مرات، ولا يعمل إلا أحدث رمز في بريدك.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">عند تغيير البريد يُرسل الرمز إلى العنوان <em>الجديد</em>، ويُبلَّغ العنوان القديم بالتغيير بعد وقوعه.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يُؤكَّد تغيير كلمة المرور برمز كذلك، فلا تكفي شاشة مفتوحة للاستيلاء على حساب.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">تُخزَّن الرموز مجزّأة فقط، ولا تُجرَّب أكثر من خمس مرات، وتُتلَف بعد استخدامها.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">ثماني كلمات مرور خاطئة للعنوان نفسه خلال خمس عشرة دقيقة توقف تسجيل الدخول لذلك الحساب مؤقتًا، مهما تعدّدت الشبكات.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-botcheck" aria-labelledby="v110-botcheck-title">
+    <h3 id="v110-botcheck-title">الحماية من الروبوتات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صار Cloudflare Turnstile يحرس تسجيل الدخول وإنشاء الحساب وإعادة تعيين كلمة المرور وتغيير البريد وكلمة المرور ونشر المنشورات وكتابة التعليقات.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">الفحص غير مرئي لمعظم الناس: لا تظهر الأداة إلا حين يلزمها أن تسأل شيئًا فعلًا.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">يُفحص كل رمز على الخادم لدى Cloudflare، ويُربط بالإجراء الذي صدر له، ويُرفض إن أُعيد استخدامه أو تجاوز عمره خمس دقائق.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-settings" aria-labelledby="v110-settings-title">
+    <h3 id="v110-settings-title">الإعدادات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">قسم <strong>الأمان</strong> الجديد: رموز الدخول وتنبيهات الحساب والأجهزة المسجّل دخولها وبياناتك.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">قائمة الأجهزة تعرض كل متصفح له جلسة فعّالة، وتميّز الجهاز الذي تستخدمه، وتتيح إنهاء جلسة واحدة أو كل الجلسات الأخرى.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text"><strong>نزّل بياناتي</strong> يصدّر حسابك وملفك وإعداداتك ومنشوراتك ومسوداتك وتعليقاتك وإعجاباتك ومحفوظاتك ومتابعاتك في ملف JSON واحد.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">اختر الخلاصة التي تفتح بها الصفحة الرئيسية: لك، أو المتابَعون، أو الأحدث.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">مفتاح <strong>تقليل الحركة</strong> لمن يفضّل واجهة ساكنة.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">تفضيلات البريد: أبقِ تنبيهات الحساب وإعلانات الإصدارات أو أوقفها. ولا تزال لا توجد رسائل تسويقية.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صفحة الحساب تبيّن إن كان بريدك مؤكَّدًا.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-ads" aria-labelledby="v110-ads-title">
+    <h3 id="v110-ads-title">الإعلانات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صارت المساحات الإعلانية تُملأ عبر Google AdSense في وضع غير مخصّص: تُختار الإعلانات حسب الصفحة ومنطقتك العامة، لا حسب ملف تعريف عنك.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">ملف <code>ads.txt</code> يسمّي Google الجهة الوحيدة المخوّلة ببيع الإعلانات على arabdev.site.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تحتفظ الإعلانات بإطارها المتقطّع ووسم «إعلان»، وينطوي إطار الإعلان غير المملوء بدل أن يترك فراغًا.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">إعلانات الرعاة المباشرين ما زالت تُعرض من ArabDev نفسه بلا أي شيفرة من طرف ثالث.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-search" aria-labelledby="v110-search-title">
+    <h3 id="v110-search-title">محرّكات البحث<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صار كل منشور وملف شخصي وصفحة وسم يكتب عنوانه ووصفه وعنوانه المعياري ومعاينة رابطه، فتبدو الروابط المشاركة صحيحة وتقرأها محرّكات البحث.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">خريطة موقع على <code>/sitemap.xml</code> تسرد المنشورات والملفات القابلة للاكتشاف والوسوم النشطة، وتستثني من أوقف خيار «قابل للاكتشاف».</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">ملف <code>robots.txt</code> يبقي الإعدادات والمسودات والمحفوظات والإشعارات خارج نتائج البحث.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">بيانات منظّمة تصف الموقع وكل منشور، بما في ذلك كاتبه وتاريخه ووسومه.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-mobile" aria-labelledby="v110-mobile-title">
+    <h3 id="v110-mobile-title">الهواتف<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يمكن تثبيت ArabDev على شاشة الهاتف الرئيسية، بأيقونته واسمه وصفحة بدايته.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">كانت الإعدادات تتحرّك أفقيًا على الهاتف. لم تعد أعمدة الشبكة تتمدّد لتناسب أعرض عنصر فيها.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار المحتوى يتجاوز شريط الهاتف السفلي في الشاشات المستديرة الحواف.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-security" aria-labelledby="v110-security-title">
+    <h3 id="v110-security-title">الأمان والخصوصية<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">رسالة بريد عند تغيير كلمة المرور أو تسجيل دخول من متصفح جديد، ما لم توقف هذه التنبيهات.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صارت صلاحيات الوصول تحمل اسم الجلسة التي تنتمي إليها، وبذلك تعرف قائمة الأجهزة أي متصفح يسأل.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">ترويستان إضافيتان: سياسة صلاحيات ترفض الكاميرا والميكروفون والموقع والدفع، وسياسة نقل آمن صارمة في الإنتاج.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">حُدّثت سياسة الخصوصية لتصف إعلانات Google وفحص Cloudflare والرموز المرسلة بالبريد، باللغتين.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-developer" aria-labelledby="v110-developer-title">
+    <h3 id="v110-developer-title">الواجهة البرمجية والمطوّرون<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">صار <code>POST /auth/register</code> و<code>POST /auth/login</code> يردّان بحقل <code>status</code> ومعه إمّا <code>tokens</code> أو <code>challenge</code>؛ و<code>POST /auth/verify</code> يستبدل الرمز بصلاحيات، و<code>POST /auth/resend</code> يرسل رمزًا جديدًا.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">نقاط جديدة: <code>GET /auth/config</code> و<code>POST /users/me/email</code> و<code>/verify</code> و<code>POST /users/me/password</code> و<code>/verify</code> و<code>GET /users/me/sessions</code> و<code>DELETE /users/me/sessions/{id}</code> و<code>POST /users/me/sessions/revoke-others</code> و<code>GET /users/me/export</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">تقرأ النقاط المحميّة رمز Turnstile من ترويسة <code>X-Turnstile-Token</code>، فتبقى أجسام الطلبات كما هي.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعدادات جديدة: بيانات SMTP و<code>EMAIL_CODES_ENABLED</code> وعمر الرمز وحدود المحاولات ومفتاحا Turnstile. وبلا SMTP في الإنتاج تبقى الرموز متوقفة، فلا يحبس غياب مزوّد البريد أحدًا خارج حسابه.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-0-0" aria-labelledby="v1-0-0-title">
   <header class="release-header">
     <h2 id="v1-0-0-title">ArabDev 1.0.0</h2>
-    <span class="badge">الأحدث</span>
     <time datetime="2026-09-19">19 سبتمبر 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

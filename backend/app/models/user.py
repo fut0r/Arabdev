@@ -28,6 +28,8 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, index=True)
     updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
     last_login_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    password_changed_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    email_verified_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
 
     profile: Mapped["Profile"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan", lazy="joined"
@@ -74,6 +76,17 @@ class UserSettings(Base):
     discoverable: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true(), index=True)
     show_follow_lists: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     mentions_from: Mapped[str] = mapped_column(String(12), default="everyone", server_default="everyone")
+
+    # Reading
+    default_feed: Mapped[str] = mapped_column(String(10), default="for_you", server_default="for_you")
+    reduce_motion: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+
+    # Account security
+    login_code_required: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
+
+    # Email preferences
+    email_security_alerts: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
+    email_product_updates: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
 
     # Notification preferences
     notify_likes: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())

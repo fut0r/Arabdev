@@ -205,6 +205,20 @@
     "privacyNote": "We never sell your data.",
     "privacyLink": "Read our Privacy Policy"
   },
+  "verify": {
+    "title": "Check your email",
+    "subtitle": "We sent a six-digit code to",
+    "codeLabel": "Six-digit code",
+    "submit": "Confirm",
+    "resend": "Send another code",
+    "resendIn": "Send another code in {{seconds}}s",
+    "resent": "A new code is on its way.",
+    "expiresIn": "The code expires in {{time}}",
+    "expired": "This code has expired. Ask for a new one.",
+    "spamHint": "Nothing yet? Check your spam folder — and make sure the address is right.",
+    "useAnotherAccount": "Use another account",
+    "changeEmail": "Use a different email"
+  },
   "landing": {
     "eyebrow": "For Arabic-speaking developers",
     "headline": "Write, share and learn with developers who speak your language.",
@@ -406,7 +420,8 @@
     "emptyFollowingBody": "@{{username}} isn't following anyone yet.",
     "findDevelopers": "Find developers",
     "followersOf": "People following {{name}}",
-    "followingOf": "People {{name}} follows"
+    "followingOf": "People {{name}} follows",
+    "metaDescription": "{{name}} on ArabDev: posts, replies and the topics they follow."
   },
   "editProfile": {
     "title": "Edit profile",
@@ -474,7 +489,42 @@
     "updated": "Settings saved",
     "privacyPolicyTitle": "Privacy Policy",
     "privacyPolicyBody": "ArabDev never sells your information and never uses it to target ads. The policy explains exactly what we collect, why, and how long we keep it.",
-    "privacyPolicyLink": "Read the full Privacy Policy"
+    "privacyPolicyLink": "Read the full Privacy Policy",
+    "security": "Security",
+    "securityDesc": "Sign-in codes, devices and your data",
+    "emailHelp": "A code goes to the new address before it replaces the old one.",
+    "passwordHelp": "Changing your password signs out every other browser.",
+    "emailVerified": "Confirmed",
+    "emailUnverified": "Not confirmed",
+    "emailChanged": "Your email address has been changed.",
+    "signInSecurity": "Signing in",
+    "signInSecurityHelp": "What has to happen before someone reaches your account.",
+    "loginCode": "Email me a code when signing in",
+    "loginCodeHelp": "A password alone is not enough: each sign-in is confirmed from your inbox.",
+    "securityAlerts": "Tell me about account changes",
+    "securityAlertsHelp": "An email when your password changes or a new browser signs in.",
+    "devices": "Where you are signed in",
+    "devicesHelp": "Every browser holding a live session. Anything you do not recognise, end it.",
+    "thisDevice": "This device",
+    "unknownDevice": "Unknown browser",
+    "signedInAt": "Signed in {{date}}",
+    "endSession": "Sign out",
+    "signOutOthers": "Sign out everywhere else",
+    "sessionEnded": "That browser has been signed out.",
+    "othersSignedOut": "Every other browser has been signed out.",
+    "yourData": "Your data",
+    "yourDataHelp": "Everything your account holds, as one JSON file. Nothing is deleted by downloading it.",
+    "downloadData": "Download my data",
+    "emailPreferences": "Email",
+    "emailPreferencesHelp": "What ArabDev may send to your inbox.",
+    "productUpdates": "What changed in ArabDev",
+    "productUpdatesHelp": "An occasional note when a release adds something worth knowing about.",
+    "noMarketing": "No marketing email, ever. Your address is never shared or sold.",
+    "defaultFeed": "Feed to open first",
+    "defaultFeedHelp": "Which tab the home page starts on.",
+    "motion": "Motion",
+    "reduceMotion": "Reduce animation",
+    "reduceMotionHelp": "Fades and transitions are kept to a minimum across the site."
   },
   "explore": {
     "title": "Explore",
@@ -485,7 +535,8 @@
     "postsCount_one": "{{count}} post",
     "postsCount_other": "{{count}} posts",
     "noTags": "Tags will appear here as people start posting.",
-    "noTrending": "Nothing is trending yet."
+    "noTrending": "Nothing is trending yet.",
+    "metaDescription": "Discover what Arabic-speaking developers are writing: trending posts, popular tags and people to follow."
   },
   "search": {
     "label": "Search",
@@ -508,7 +559,8 @@
     "title": "#{{tag}}",
     "emptyTitle": "No posts with #{{tag}} yet",
     "emptyBody": "Write the first one.",
-    "notFound": "No posts use this tag yet."
+    "notFound": "No posts use this tag yet.",
+    "metaDescription": "Posts tagged #{{tag}} on ArabDev, written by Arabic-speaking developers."
   },
   "notifications": {
     "title": "Notifications",
@@ -605,6 +657,22 @@
     "media_in_use": "This image is still used by a post or draft.",
     "draft_not_found": "This draft no longer exists.",
     "forbidden": "You don't have permission to do that.",
-    "not_found": "Not found."
+    "not_found": "Not found.",
+    "turnstile_missing": "Please complete the security check and try again.",
+    "turnstile_failed": "That security check did not pass. Please try again.",
+    "turnstile_expired": "That security check expired. Please try again.",
+    "turnstile_unavailable": "We could not run the security check just now. Please try again.",
+    "code_invalid": "That code is not right. Check the email and try again.",
+    "code_expired": "This code has expired. Ask for a new one.",
+    "code_used": "This code was already used. Please start again.",
+    "code_attempts_exhausted": "Too many wrong codes. Please start again.",
+    "code_challenge_invalid": "This confirmation is no longer valid. Please start again.",
+    "code_resend_too_soon": "Please wait a moment before asking for another code.",
+    "code_resend_limit": "Too many codes were sent. Please start again.",
+    "mail_failed": "We couldn't send that email. Please try again in a moment.",
+    "mail_unavailable": "We can't send email right now. Please try again later.",
+    "email_unchanged": "That is already your email address.",
+    "session_not_found": "That session no longer exists.",
+    "service_unavailable": "Something we rely on is unavailable. Please try again shortly."
   }
 }

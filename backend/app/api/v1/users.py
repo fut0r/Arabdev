@@ -1,16 +1,19 @@
+import json
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Query, Request, Response, UploadFile, status
 
-from app.api.v1.auth import token_response
-from app.core.deps import CurrentUser, DbSession, OptionalUser
-from app.core.rate_limit import rate_limit
-from app.schemas.auth import TokenOut
+from app.api.v1.auth import challenge_out, token_response
+from app.core.config import settings
+from app.core.deps import CurrentUser, DbSession, OptionalUser, SessionFamily
+from app.core.rate_limit import client_ip, rate_limit
+from app.schemas.auth import PasswordChangeOut, TokenOut
 from app.schemas.comment import ReplyOut
-from app.schemas.common import Page
+from app.schemas.common import MessageOut, Page
 from app.schemas.post import PostOut
 from app.schemas.user import (
     AccountDelete,
+    EmailChangeOut,
     EmailUpdate,
     FollowState,
     InterestsUpdate,
@@ -18,12 +21,22 @@ from app.schemas.user import (
     PasswordUpdate,
     ProfileOut,
     ProfileUpdate,
+    SessionOut,
     SettingsOut,
     SettingsUpdate,
     UserCard,
     UsernameUpdate,
 )
-from app.services import auth_service, comment_service, media_service, post_service, presenters, user_service
+from app.schemas.verification import VerifyCodeIn
+from app.services import (
+    auth_service,
+    comment_service,
+    media_service,
+    post_service,
+    presenters,
+    turnstile_service,
+    user_service,
+)
 from app.utils.pagination import PageParams, page_params
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -48,23 +61,111 @@ def update_username(data: UsernameUpdate, db: DbSession, user: CurrentUser) -> M
     return presenters.me_out(db, user_service.update_username(db, user, data.username))
 
 
-@router.patch("/me/email", response_model=MeOut, summary="Change email (requires current password)")
-def update_email(data: EmailUpdate, db: DbSession, user: CurrentUser) -> MeOut:
-    return presenters.me_out(db, user_service.update_email(db, user, data.email, data.current_password))
+@router.post(
+    "/me/email",
+    response_model=EmailChangeOut,
+    summary="Change email; confirmed with a code sent to the new address",
+    dependencies=[
+        Depends(rate_limit("email_change", limit=10, window=900)),
+        Depends(turnstile_service.guard("email_change")),
+    ],
+)
+def update_email(data: EmailUpdate, db: DbSession, user: CurrentUser, request: Request) -> EmailChangeOut:
+    if settings.email_codes_required:
+        challenge = user_service.start_email_change(
+            db, user, data.email, data.current_password, ip=client_ip(request)
+        )
+        return EmailChangeOut(status="verification_required", challenge=challenge_out(challenge))
+    updated = user_service.update_email(db, user, data.email, data.current_password)
+    return EmailChangeOut(status="updated", user=presenters.me_out(db, updated))
 
 
-@router.put(
+@router.post(
+    "/me/email/verify",
+    response_model=MeOut,
+    summary="Confirm a new email address with the emailed code",
+    dependencies=[Depends(rate_limit("verify", limit=20, window=300))],
+)
+def verify_email(data: VerifyCodeIn, db: DbSession, user: CurrentUser) -> MeOut:
+    return presenters.me_out(db, user_service.complete_email_change(db, user, data.challenge_id, data.code))
+
+
+@router.post(
     "/me/password",
-    response_model=TokenOut,
-    summary="Change password; signs out other sessions and returns fresh tokens",
-    dependencies=[Depends(rate_limit("password_change", limit=10, window=900))],
+    response_model=PasswordChangeOut,
+    summary="Change password; confirmed with a code, then signs out other sessions",
+    dependencies=[
+        Depends(rate_limit("password_change", limit=10, window=900)),
+        Depends(turnstile_service.guard("password_change")),
+    ],
 )
 def change_password(
     data: PasswordUpdate, db: DbSession, user: CurrentUser, request: Request, response: Response
-) -> TokenOut:
+) -> PasswordChangeOut:
+    if settings.email_codes_required:
+        challenge = auth_service.start_password_change(
+            db, user, data.current_password, data.new_password, ip=client_ip(request)
+        )
+        return PasswordChangeOut(status="verification_required", challenge=challenge_out(challenge))
     auth_service.change_password(db, user, data.current_password, data.new_password)
     issued = auth_service.issue_tokens(db, user, remember=True, user_agent=request.headers.get("user-agent"))
+    return PasswordChangeOut(status="updated", tokens=token_response(db, response, issued))
+
+
+@router.post(
+    "/me/password/verify",
+    response_model=TokenOut,
+    summary="Confirm a new password with the emailed code",
+    dependencies=[Depends(rate_limit("verify", limit=20, window=300))],
+)
+def verify_password(
+    data: VerifyCodeIn, db: DbSession, user: CurrentUser, request: Request, response: Response
+) -> TokenOut:
+    auth_service.complete_password_change(db, user, data.challenge_id, data.code)
+    issued = auth_service.issue_tokens(db, user, remember=True, user_agent=request.headers.get("user-agent"))
     return token_response(db, response, issued)
+
+
+# ------------------------------------------------------------ signed-in devices
+
+
+@router.get("/me/sessions", response_model=list[SessionOut], summary="Browsers currently signed in")
+def sessions(db: DbSession, user: CurrentUser, family: SessionFamily) -> list[SessionOut]:
+    return [SessionOut(**vars(session)) for session in auth_service.list_sessions(db, user, family)]
+
+
+@router.delete(
+    "/me/sessions/{session_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Sign one browser out",
+)
+def end_session(session_id: int, db: DbSession, user: CurrentUser) -> Response:
+    auth_service.revoke_session(db, user, session_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post("/me/sessions/revoke-others", response_model=MessageOut, summary="Sign out everywhere else")
+def end_other_sessions(db: DbSession, user: CurrentUser, family: SessionFamily) -> MessageOut:
+    ended = auth_service.revoke_other_sessions(db, user, family)
+    return MessageOut(detail=f"Signed out of {ended} other session(s).")
+
+
+@router.get(
+    "/me/export",
+    summary="Download everything this account holds, as JSON",
+    dependencies=[Depends(rate_limit("export", limit=5, window=3600))],
+)
+def export_account(db: DbSession, user: CurrentUser) -> Response:
+    data = user_service.export_account(db, user)
+    filename = f"arabdev-{user.username}-{data['exported_at'][:10]}.json"
+    return Response(
+        json.dumps(data, ensure_ascii=False, indent=2),
+        media_type="application/json; charset=utf-8",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+        },
+    )
 
 
 @router.put("/me/interests", response_model=MeOut, summary="Replace the interests list")

@@ -33,11 +33,12 @@ import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { PagedPosts } from '@/features/posts/PagedPosts';
 import { FollowButton } from '@/features/users/FollowButton';
 import { interestName } from '@/features/users/UserCard';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo, summarise } from '@/utils/seo';
 import { displayFont } from '@/theme/typography';
 import type { Profile } from '@/types/api';
 import { formatCount, formatMonthYear, hostnameOf } from '@/utils/format';
-import { HOME_PATH } from '@/site';
+import { HOME_PATH, SITE_URL } from '@/site';
 
 type ProfileTab = 'posts' | 'replies' | 'saved';
 
@@ -281,7 +282,30 @@ export default function ProfilePage() {
   const [params, setParams] = useSearchParams();
   const query = useQuery({ queryKey: queryKeys.profile(username), queryFn: () => usersApi.profile(username) });
   const profile = query.data;
-  useDocumentTitle(profile ? `${profile.display_name} (@${profile.username})` : `@${username}`);
+  useSeo({
+    title: profile ? `${profile.display_name} (@${profile.username})` : `@${username}`,
+    description: profile?.bio
+      ? summarise(profile.bio)
+      : profile
+        ? t('profile.metaDescription', { name: profile.display_name })
+        : null,
+    canonical: `/u/${username}`,
+    type: 'profile',
+    image: profile?.avatar_url ? `${SITE_URL}${profile.avatar_url}` : null,
+    jsonLd: profile
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'ProfilePage',
+          mainEntity: {
+            '@type': 'Person',
+            name: profile.display_name,
+            alternateName: `@${profile.username}`,
+            description: profile.bio ?? undefined,
+            url: `${SITE_URL}/u/${profile.username}`,
+          },
+        }
+      : null,
+  });
 
   const requested = params.get('tab') as ProfileTab | null;
   const tabs: ProfileTab[] = profile?.is_me ? ['posts', 'replies', 'saved'] : ['posts', 'replies'];

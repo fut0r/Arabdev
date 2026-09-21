@@ -29,8 +29,8 @@ def register(client, username="layla"):
         f"{API}/auth/register",
         json={"username": username, "email": f"{username}@example.com", "password": PASSWORD, "password_confirm": PASSWORD},
     )
-    assert response.status_code == 201, response.text
-    return {"Authorization": f"Bearer {response.json()['access_token']}"}
+    assert response.status_code == 200, response.text
+    return {"Authorization": f"Bearer {response.json()['tokens']['access_token']}"}
 
 
 def test_images_are_stored_in_and_served_from_the_database(database_storage_client, db):

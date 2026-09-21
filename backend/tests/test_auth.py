@@ -24,14 +24,16 @@ def register_payload(**overrides):
 
 def test_register_signs_in_and_sets_refresh_cookie(client):
     response = client.post(f"{API}/auth/register", json=register_payload(username="Omar_Dev"))
-    assert response.status_code == 201
+    assert response.status_code == 200
     body = response.json()
-    assert body["access_token"]
-    assert body["user"]["username"] == "omar_dev"  # usernames are case-insensitive
-    assert body["user"]["onboarding_completed"] is False
-    assert body["user"]["settings"]["language"] == "ar"
+    assert body["status"] == "authenticated"  # no mail provider in tests, so no code step
+    tokens = body["tokens"]
+    assert tokens["access_token"]
+    assert tokens["user"]["username"] == "omar_dev"  # usernames are case-insensitive
+    assert tokens["user"]["onboarding_completed"] is False
+    assert tokens["user"]["settings"]["language"] == "ar"
     assert settings.refresh_cookie_name in response.cookies
-    assert "hashed_password" not in body["user"]
+    assert "hashed_password" not in tokens["user"]
 
 
 @pytest.mark.parametrize(
@@ -85,7 +87,8 @@ def test_login(client, make_user):
 
     ok = client.post(f"{API}/auth/login", json={"email": "LAYLA@example.com", "password": PASSWORD, "remember_me": True})
     assert ok.status_code == 200
-    me = client.get(f"{API}/users/me", headers={"Authorization": f"Bearer {ok.json()['access_token']}"})
+    tokens = ok.json()["tokens"]
+    me = client.get(f"{API}/users/me", headers={"Authorization": f"Bearer {tokens['access_token']}"})
     assert me.json()["username"] == "layla"
 
 
@@ -182,19 +185,20 @@ def test_password_reset_flow(client, make_user):
 
 def test_change_password_invalidates_existing_access_tokens(client, make_user):
     account = make_user("layla")
-    wrong = client.put(
+    wrong = client.post(
         f"{API}/users/me/password",
         json={"current_password": "Wrong1234", "new_password": "Moonlight2027", "new_password_confirm": "Moonlight2027"},
         headers=account.headers,
     )
     assert wrong.json()["code"] == "current_password_invalid"
 
-    changed = client.put(
+    changed = client.post(
         f"{API}/users/me/password",
         json={"current_password": PASSWORD, "new_password": "Moonlight2027", "new_password_confirm": "Moonlight2027"},
         headers=account.headers,
     )
     assert changed.status_code == 200
+    assert changed.json()["status"] == "updated"
     assert client.get(f"{API}/users/me", headers=account.headers).status_code == 401
-    new_headers = {"Authorization": f"Bearer {changed.json()['access_token']}"}
+    new_headers = {"Authorization": f"Bearer {changed.json()['tokens']['access_token']}"}
     assert client.get(f"{API}/users/me", headers=new_headers).status_code == 200

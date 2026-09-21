@@ -25,6 +25,7 @@ import { useCurrentUser } from '@/features/auth/AuthProvider';
 import { ImageAttachment, isValidLink, LinkAttachment, TagInput } from '@/features/editor/Attachments';
 import { PostEditor } from '@/features/editor/PostEditor';
 import { PostPreview } from '@/features/editor/PostPreview';
+import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
 import { useDocumentTitle } from '@/hooks';
 import { layout } from '@/theme/tokens';
 import type { Image, PostInput } from '@/types/api';
@@ -134,6 +135,8 @@ function EditorWorkspace({
   const [view, setView] = useState<'write' | 'preview'>('write');
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState<'draft' | 'publish' | null>(null);
+  // Publishing is the one step bots are interested in, so it carries a token.
+  const turnstile = useTurnstile({ action: 'publish_post', mode: 'invisible' });
   const [contentError, setContentError] = useState<string | null>(null);
   const [linkError, setLinkError] = useState<string | null>(null);
   const uploadedThisSession = useRef<Set<number>>(new Set());
@@ -226,7 +229,7 @@ function EditorWorkspace({
     try {
       const post = editing
         ? await postsApi.update(postId!, payload())
-        : await postsApi.create({ ...payload(), draft_id: currentDraftId });
+        : await postsApi.create({ ...payload(), draft_id: currentDraftId }, await turnstile.getToken());
       queryClient.setQueryData(queryKeys.post(post.id), post);
       for (const root of ['feed', 'user-posts', 'drafts', 'tag-posts', 'popular-tags', 'profile', 'trending']) {
         void queryClient.invalidateQueries({ queryKey: [root] });
@@ -237,6 +240,8 @@ function EditorWorkspace({
     } catch (error) {
       handleServerError(error);
       setBusy(null);
+    } finally {
+      turnstile.reset();
     }
   };
 
@@ -254,7 +259,14 @@ function EditorWorkspace({
         contentError={contentError}
       />
       <TagInput value={tags} onChange={touch(setTags)} />
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2, alignItems: 'start' }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 1fr) minmax(0, 1fr)' },
+          gap: 2,
+          alignItems: 'start',
+        }}
+      >
         <ImageAttachment
           image={image}
           onChange={changeImage}
@@ -320,6 +332,9 @@ function EditorWorkspace({
           </Button>
         </Stack>
       </Stack>
+
+      {/* Usually invisible: it only appears if Turnstile decides to ask something. */}
+      <TurnstileWidget handle={turnstile} />
 
       {split ? (
         <Box

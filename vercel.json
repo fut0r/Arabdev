@@ -18,6 +18,7 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/media/(.*)", "destination": "/api/index" },
+    { "source": "/sitemap.xml", "destination": "/api/index" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "crons": [{ "path": "/api/v1/internal/cron/purge-tokens", "schedule": "0 3 * * *" }]

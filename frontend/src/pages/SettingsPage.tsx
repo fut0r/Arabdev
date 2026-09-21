@@ -1,13 +1,20 @@
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
+import ComputerOutlinedIcon from '@mui/icons-material/ComputerOutlined';
+import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
+import PhoneIphoneOutlinedIcon from '@mui/icons-material/PhoneIphoneOutlined';
+import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 import Divider from '@mui/material/Divider';
-import Link from '@mui/material/Link';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -20,29 +27,35 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink, Navigate, useParams } from 'react-router';
 
+import { authApi } from '@/api/auth';
 import { applyFieldErrors, errorMessage } from '@/api/errors';
 import { usersApi } from '@/api/users';
 import { Surface } from '@/components/common';
-import { docUrls, newTab } from '@/components/DocLinks';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { docUrls, newTab } from '@/components/DocLinks';
 import { useNotify } from '@/components/Notifier';
 import { useAuth, useCurrentUser } from '@/features/auth/AuthProvider';
 import { PasswordField, PasswordStrength } from '@/features/auth/PasswordField';
+import { VerifyCode } from '@/features/auth/VerifyCode';
 import { LanguageToggle, ThemeModeToggle } from '@/features/preferences/AppearanceControls';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { ProfileEditor } from '@/features/profile/ProfileEditor';
-import { useDocumentTitle } from '@/hooks';
+import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
+import { useSeo } from '@/utils/seo';
 import { layout } from '@/theme/tokens';
-import type { UserSettings } from '@/types/api';
+import { formatFullDate } from '@/utils/format';
+import type { Challenge, UserSettings } from '@/types/api';
 
 const SECTIONS = [
   { key: 'account', icon: <BadgeOutlinedIcon /> },
   { key: 'profile', icon: <PersonOutlineOutlinedIcon /> },
+  { key: 'security', icon: <ShieldOutlinedIcon /> },
   { key: 'appearance', icon: <PaletteOutlinedIcon /> },
   { key: 'privacy', icon: <LockOutlinedIcon /> },
   { key: 'notifications', icon: <NotificationsNoneIcon /> },
@@ -122,6 +135,8 @@ function EmailForm() {
   const user = useCurrentUser();
   const { setUser } = useAuth();
   const notify = useNotify();
+  const turnstile = useTurnstile({ action: 'email_change' });
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
   const {
     register,
     handleSubmit,
@@ -132,17 +147,63 @@ function EmailForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      const me = await usersApi.updateEmail(values.email.trim(), values.current_password);
-      setUser(me);
-      reset({ email: me.email, current_password: '' });
-      notify(t('settings.updated'));
+      const result = await usersApi.updateEmail(
+        values.email.trim(),
+        values.current_password,
+        await turnstile.getToken(),
+      );
+      if (result.status === 'updated' && result.user) {
+        setUser(result.user);
+        reset({ email: result.user.email, current_password: '' });
+        notify(t('settings.updated'));
+      } else if (result.challenge) {
+        setChallenge(result.challenge);
+      }
     } catch (error) {
       if (!applyFieldErrors(error, setError, t, ['email', 'current_password'])) notify(errorMessage(error, t), 'error');
+    } finally {
+      turnstile.reset();
     }
   });
 
+  if (challenge) {
+    return (
+      <Box sx={{ maxWidth: 480 }}>
+        <VerifyCode
+          challenge={challenge}
+          submitLabel={t('settings.updateEmail')}
+          onVerify={async (code) => {
+            const me = await usersApi.verifyEmail({ challenge_id: challenge.challenge_id, code });
+            setUser(me);
+            reset({ email: me.email, current_password: '' });
+            setChallenge(null);
+            notify(t('settings.emailChanged'));
+          }}
+          onResend={() => authApi.resend(challenge.challenge_id)}
+          onCancel={() => setChallenge(null)}
+        />
+      </Box>
+    );
+  }
+
   return (
     <Stack component="form" noValidate onSubmit={onSubmit} spacing={2} sx={{ maxWidth: 480 }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <Typography variant="body2" color="text.secondary" dir="ltr">
+          {user.email}
+        </Typography>
+        {user.email_verified ? (
+          <Chip
+            size="small"
+            color="success"
+            variant="outlined"
+            icon={<VerifiedOutlinedIcon />}
+            label={t('settings.emailVerified')}
+          />
+        ) : (
+          <Chip size="small" variant="outlined" label={t('settings.emailUnverified')} />
+        )}
+      </Stack>
       <TextField
         label={t('settings.newEmail')}
         type="email"
@@ -159,6 +220,7 @@ function EmailForm() {
         helperText={errors.current_password?.message}
         {...register('current_password', { required: t('errors.required') })}
       />
+      <TurnstileWidget handle={turnstile} sx={{ justifyContent: 'flex-start' }} />
       <Box>
         <Button type="submit" variant="outlined" color="inherit" loading={isSubmitting}>
           {t('settings.updateEmail')}
@@ -172,6 +234,8 @@ function PasswordForm() {
   const { t } = useTranslation();
   const { acceptTokens } = useAuth();
   const notify = useNotify();
+  const turnstile = useTurnstile({ action: 'password_change' });
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
   const {
     register,
     handleSubmit,
@@ -183,15 +247,41 @@ function PasswordForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     try {
-      acceptTokens(await usersApi.changePassword(values));
-      reset();
-      notify(t('settings.passwordChanged'));
+      const result = await usersApi.changePassword(values, await turnstile.getToken());
+      if (result.status === 'updated' && result.tokens) {
+        acceptTokens(result.tokens);
+        reset();
+        notify(t('settings.passwordChanged'));
+      } else if (result.challenge) {
+        setChallenge(result.challenge);
+      }
     } catch (error) {
       if (!applyFieldErrors(error, setError, t, ['current_password', 'new_password', 'new_password_confirm'])) {
         notify(errorMessage(error, t), 'error');
       }
+    } finally {
+      turnstile.reset();
     }
   });
+
+  if (challenge) {
+    return (
+      <Box sx={{ maxWidth: 480 }}>
+        <VerifyCode
+          challenge={challenge}
+          submitLabel={t('settings.changePassword')}
+          onVerify={async (code) => {
+            acceptTokens(await usersApi.verifyPassword({ challenge_id: challenge.challenge_id, code }));
+            reset();
+            setChallenge(null);
+            notify(t('settings.passwordChanged'));
+          }}
+          onResend={() => authApi.resend(challenge.challenge_id)}
+          onCancel={() => setChallenge(null)}
+        />
+      </Box>
+    );
+  }
 
   return (
     <Stack component="form" noValidate onSubmit={onSubmit} spacing={2} sx={{ maxWidth: 480 }}>
@@ -223,6 +313,7 @@ function PasswordForm() {
           validate: (value, values) => value === values.new_password || t('errors.passwords_mismatch'),
         })}
       />
+      <TurnstileWidget handle={turnstile} sx={{ justifyContent: 'flex-start' }} />
       <Box>
         <Button type="submit" variant="outlined" color="inherit" loading={isSubmitting}>
           {t('settings.changePassword')}
@@ -304,11 +395,11 @@ function AccountSection() {
         </Stack>
       </SettingsGroup>
       <Divider />
-      <SettingsGroup title={t('settings.emailSection')}>
+      <SettingsGroup title={t('settings.emailSection')} description={t('settings.emailHelp')}>
         <EmailForm />
       </SettingsGroup>
       <Divider />
-      <SettingsGroup title={t('settings.passwordSection')}>
+      <SettingsGroup title={t('settings.passwordSection')} description={t('settings.passwordHelp')}>
         <PasswordForm />
       </SettingsGroup>
       <Divider />
@@ -319,8 +410,198 @@ function AccountSection() {
   );
 }
 
+/** Reads a user agent well enough to recognise your own phone in a list. */
+function describeDevice(agent: string | null, unknown: string): string {
+  if (!agent) return unknown;
+  const browser = /Edg\//.test(agent)
+    ? 'Edge'
+    : /OPR\/|Opera/.test(agent)
+      ? 'Opera'
+      : /Firefox\//.test(agent)
+        ? 'Firefox'
+        : /Chrome\//.test(agent)
+          ? 'Chrome'
+          : /Safari\//.test(agent)
+            ? 'Safari'
+            : unknown;
+  const system = /Android/.test(agent)
+    ? 'Android'
+    : /iPhone|iPad|iOS/.test(agent)
+      ? 'iOS'
+      : /Windows/.test(agent)
+        ? 'Windows'
+        : /Mac OS X/.test(agent)
+          ? 'macOS'
+          : /Linux/.test(agent)
+            ? 'Linux'
+            : '';
+  return system ? `${browser} · ${system}` : browser;
+}
+
+function SessionList() {
+  const { t } = useTranslation();
+  const { language } = usePreferences();
+  const notify = useNotify();
+  const queryClient = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const { data: sessions, isLoading } = useQuery({ queryKey: ['sessions'], queryFn: usersApi.sessions });
+
+  const refresh = () => queryClient.invalidateQueries({ queryKey: ['sessions'] });
+
+  const end = async (id: number) => {
+    setBusy(true);
+    try {
+      await usersApi.endSession(id);
+      await refresh();
+      notify(t('settings.sessionEnded'));
+    } catch (error) {
+      notify(errorMessage(error, t), 'error');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const endOthers = async () => {
+    setBusy(true);
+    try {
+      await usersApi.endOtherSessions();
+      await refresh();
+      notify(t('settings.othersSignedOut'));
+    } catch (error) {
+      notify(errorMessage(error, t), 'error');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (isLoading) return <Typography color="text.secondary">{t('common.loading')}</Typography>;
+
+  return (
+    <Stack spacing={1}>
+      {sessions?.map((session) => (
+        <Stack
+          key={session.id}
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1}
+          sx={{
+            alignItems: { sm: 'center' },
+            justifyContent: 'space-between',
+            p: 1.5,
+            border: 1,
+            borderColor: 'surface.border',
+            borderRadius: 2,
+          }}
+        >
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center', minWidth: 0 }}>
+            {/Android|iPhone|iPad|Mobile/.test(session.user_agent ?? '') ? (
+              <PhoneIphoneOutlinedIcon color="action" />
+            ) : (
+              <ComputerOutlinedIcon color="action" />
+            )}
+            <Box sx={{ minWidth: 0 }}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <Typography sx={{ fontWeight: 600 }}>
+                  {describeDevice(session.user_agent, t('settings.unknownDevice'))}
+                </Typography>
+                {session.current && <Chip size="small" color="primary" label={t('settings.thisDevice')} />}
+              </Stack>
+              <Typography variant="body2" color="text.secondary">
+                {t('settings.signedInAt', { date: formatFullDate(session.created_at, language) })}
+              </Typography>
+            </Box>
+          </Stack>
+          {!session.current && (
+            <Button size="small" color="inherit" disabled={busy} onClick={() => void end(session.id)}>
+              {t('settings.endSession')}
+            </Button>
+          )}
+        </Stack>
+      ))}
+      {(sessions?.length ?? 0) > 1 && (
+        <Box>
+          <Button color="error" variant="outlined" size="small" disabled={busy} onClick={() => void endOthers()}>
+            {t('settings.signOutOthers')}
+          </Button>
+        </Box>
+      )}
+    </Stack>
+  );
+}
+
+function DataExport() {
+  const { t } = useTranslation();
+  const notify = useNotify();
+  const [pending, setPending] = useState(false);
+
+  const download = async () => {
+    setPending(true);
+    try {
+      const blob = await usersApi.exportData();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'arabdev-data.json';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      notify(errorMessage(error, t), 'error');
+    } finally {
+      setPending(false);
+    }
+  };
+
+  return (
+    <Button
+      variant="outlined"
+      color="inherit"
+      startIcon={<DownloadOutlinedIcon />}
+      loading={pending}
+      onClick={() => void download()}
+    >
+      {t('settings.downloadData')}
+    </Button>
+  );
+}
+
+function SecuritySection() {
+  const { t } = useTranslation();
+  const { settings } = useCurrentUser();
+  const update = useSettingsUpdater();
+  return (
+    <>
+      <SettingsGroup title={t('settings.signInSecurity')} description={t('settings.signInSecurityHelp')}>
+        <SettingSwitch
+          label={t('settings.loginCode')}
+          help={t('settings.loginCodeHelp')}
+          checked={settings.login_code_required}
+          onChange={(value) => void update({ login_code_required: value })}
+        />
+        <Divider />
+        <SettingSwitch
+          label={t('settings.securityAlerts')}
+          help={t('settings.securityAlertsHelp')}
+          checked={settings.email_security_alerts}
+          onChange={(value) => void update({ email_security_alerts: value })}
+        />
+      </SettingsGroup>
+      <Divider />
+      <SettingsGroup title={t('settings.devices')} description={t('settings.devicesHelp')}>
+        <SessionList />
+      </SettingsGroup>
+      <Divider />
+      <SettingsGroup title={t('settings.yourData')} description={t('settings.yourDataHelp')}>
+        <DataExport />
+      </SettingsGroup>
+    </>
+  );
+}
+
 function AppearanceSection() {
   const { t } = useTranslation();
+  const { settings } = useCurrentUser();
+  const update = useSettingsUpdater();
   return (
     <>
       <SettingsGroup title={t('settings.theme')} description={t('settings.themeHelp')}>
@@ -329,6 +610,27 @@ function AppearanceSection() {
       <Divider />
       <SettingsGroup title={t('settings.language')} description={t('settings.languageHelp')}>
         <LanguageToggle size="medium" />
+      </SettingsGroup>
+      <Divider />
+      <SettingsGroup title={t('settings.defaultFeed')} description={t('settings.defaultFeedHelp')}>
+        <RadioGroup
+          value={settings.default_feed}
+          onChange={(event) => void update({ default_feed: event.target.value as UserSettings['default_feed'] })}
+          aria-label={t('settings.defaultFeed')}
+        >
+          <FormControlLabel value="for_you" control={<Radio />} label={t('feed.tabForYou')} />
+          <FormControlLabel value="following" control={<Radio />} label={t('feed.tabFollowing')} />
+          <FormControlLabel value="latest" control={<Radio />} label={t('feed.tabLatest')} />
+        </RadioGroup>
+      </SettingsGroup>
+      <Divider />
+      <SettingsGroup title={t('settings.motion')}>
+        <SettingSwitch
+          label={t('settings.reduceMotion')}
+          help={t('settings.reduceMotionHelp')}
+          checked={settings.reduce_motion}
+          onChange={(value) => void update({ reduce_motion: value })}
+        />
       </SettingsGroup>
     </>
   );
@@ -390,32 +692,53 @@ function NotificationsSection() {
     { key: 'notify_mentions', label: t('settings.notifyMentions') },
   ];
   return (
-    <SettingsGroup title={t('settings.notifications')} description={t('settings.notificationsHelp')}>
-      {items.map((item, index) => (
-        <Box key={item.key}>
-          {index > 0 && <Divider />}
-          <SettingSwitch
-            label={item.label}
-            checked={Boolean(settings[item.key])}
-            onChange={(value) => void update({ [item.key]: value })}
-          />
-        </Box>
-      ))}
-    </SettingsGroup>
+    <>
+      <SettingsGroup title={t('settings.notifications')} description={t('settings.notificationsHelp')}>
+        {items.map((item, index) => (
+          <Box key={item.key}>
+            {index > 0 && <Divider />}
+            <SettingSwitch
+              label={item.label}
+              checked={Boolean(settings[item.key])}
+              onChange={(value) => void update({ [item.key]: value })}
+            />
+          </Box>
+        ))}
+      </SettingsGroup>
+      <Divider />
+      <SettingsGroup title={t('settings.emailPreferences')} description={t('settings.emailPreferencesHelp')}>
+        <SettingSwitch
+          label={t('settings.securityAlerts')}
+          help={t('settings.securityAlertsHelp')}
+          checked={settings.email_security_alerts}
+          onChange={(value) => void update({ email_security_alerts: value })}
+        />
+        <Divider />
+        <SettingSwitch
+          label={t('settings.productUpdates')}
+          help={t('settings.productUpdatesHelp')}
+          checked={settings.email_product_updates}
+          onChange={(value) => void update({ email_product_updates: value })}
+        />
+        <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
+          {t('settings.noMarketing')}
+        </Alert>
+      </SettingsGroup>
+    </>
   );
 }
 
 export default function SettingsPage() {
   const { t } = useTranslation();
   const section = useParams().section as Section;
-  useDocumentTitle(t('settings.title'));
+  useSeo({ title: t('settings.title'), noindex: true });
   if (!SECTIONS.some((item) => item.key === section)) return <Navigate to="/settings/account" replace />;
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: '260px minmax(0, 1fr)' },
+        gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: '260px minmax(0, 1fr)' },
         gap: 2,
         alignItems: 'start',
       }}
@@ -465,6 +788,7 @@ export default function SettingsPage() {
       <Surface sx={{ p: { xs: 2, sm: 3 } }}>
         {section === 'account' && <AccountSection />}
         {section === 'profile' && <ProfileEditor />}
+        {section === 'security' && <SecuritySection />}
         {section === 'appearance' && <AppearanceSection />}
         {section === 'privacy' && <PrivacySection />}
         {section === 'notifications' && <NotificationsSection />}

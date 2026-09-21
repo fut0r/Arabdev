@@ -33,6 +33,17 @@ def get_current_user_optional(
     return user
 
 
+def get_session_family(
+    credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer_scheme)],
+) -> str | None:
+    """Which sign-in session this request belongs to, from the access token."""
+    if credentials is None:
+        return None
+    payload = decode_access_token(credentials.credentials)
+    family = payload.get("fam") if payload else None
+    return family if isinstance(family, str) else None
+
+
 def get_current_user(user: Annotated[User | None, Depends(get_current_user_optional)]) -> User:
     if user is None:
         raise Unauthorized("Sign in to continue", "not_authenticated")
@@ -53,5 +64,6 @@ def require_client_header(x_arabdev_client: Annotated[str | None, Header()] = No
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+SessionFamily = Annotated[str | None, Depends(get_session_family)]
 OptionalUser = Annotated[User | None, Depends(get_current_user_optional)]
 AdminUser = Annotated[User, Depends(get_admin_user)]

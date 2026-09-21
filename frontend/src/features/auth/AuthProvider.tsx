@@ -8,7 +8,7 @@ import { authApi, type RegisterPayload } from '@/api/auth';
 import { refreshSession, registerSessionHandlers, setAccessToken } from '@/api/client';
 import { useNotify } from '@/components/Notifier';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
-import type { Me, TokenResponse } from '@/types/api';
+import type { AuthResult, Challenge, Me, TokenResponse } from '@/types/api';
 
 type AuthStatus = 'loading' | 'authenticated' | 'anonymous';
 
@@ -35,11 +35,23 @@ const sessionHint = {
   },
 };
 
+/** Either the session started, or a six-digit code has to be entered first. */
+export type SignInOutcome =
+  { status: 'authenticated'; user: Me } | { status: 'verification_required'; challenge: Challenge };
+
 interface AuthContextValue {
   status: AuthStatus;
   user: Me | null;
-  login: (email: string, password: string, rememberMe: boolean) => Promise<Me>;
-  register: (payload: RegisterPayload) => Promise<Me>;
+  login: (
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    turnstileToken?: string | null,
+  ) => Promise<SignInOutcome>;
+  register: (payload: RegisterPayload, turnstileToken?: string | null) => Promise<SignInOutcome>;
+  /** Finishes a sign-in or sign-up with the emailed code. */
+  verifyCode: (challengeId: string, code: string) => Promise<Me>;
+  resendCode: (challengeId: string) => Promise<Challenge>;
   logout: () => Promise<void>;
   acceptTokens: (data: TokenResponse) => void;
   setUser: (user: Me) => void;
@@ -66,6 +78,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [setLanguage, setMode],
   );
+
+  // "Reduce animation" is a single attribute the stylesheet keys off (see theme.ts).
+  useEffect(() => {
+    const root = document.documentElement;
+    if (user?.settings.reduce_motion) root.setAttribute('data-reduce-motion', 'true');
+    else root.removeAttribute('data-reduce-motion');
+  }, [user?.settings.reduce_motion]);
 
   const acceptTokens = useCallback((data: TokenResponse) => {
     sessionHint.set(true);
@@ -111,9 +130,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
   }, [acceptTokens, applyPreferences]);
 
+  const start = useCallback(
+    (result: AuthResult, withPreferences: boolean): SignInOutcome => {
+      if (result.status === 'authenticated' && result.tokens) {
+        queryClient.clear();
+        acceptTokens(result.tokens);
+        if (withPreferences) applyPreferences(result.tokens.user);
+        return { status: 'authenticated', user: result.tokens.user };
+      }
+      // No account is created and no session exists until the code is confirmed.
+      return { status: 'verification_required', challenge: result.challenge! };
+    },
+    [acceptTokens, applyPreferences, queryClient],
+  );
+
   const login = useCallback(
-    async (email: string, password: string, rememberMe: boolean) => {
-      const data = await authApi.login({ email, password, remember_me: rememberMe });
+    async (email: string, password: string, rememberMe: boolean, turnstileToken?: string | null) =>
+      start(await authApi.login({ email, password, remember_me: rememberMe }, turnstileToken), true),
+    [start],
+  );
+
+  const register = useCallback(
+    async (payload: RegisterPayload, turnstileToken?: string | null) =>
+      start(await authApi.register(payload, turnstileToken), false),
+    [start],
+  );
+
+  const verifyCode = useCallback(
+    async (challengeId: string, code: string) => {
+      const data = await authApi.verify({ challenge_id: challengeId, code });
       queryClient.clear();
       acceptTokens(data);
       applyPreferences(data.user);
@@ -122,15 +167,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [acceptTokens, applyPreferences, queryClient],
   );
 
-  const register = useCallback(
-    async (payload: RegisterPayload) => {
-      const data = await authApi.register(payload);
-      queryClient.clear();
-      acceptTokens(data);
-      return data.user;
-    },
-    [acceptTokens, queryClient],
-  );
+  const resendCode = useCallback((challengeId: string) => authApi.resend(challengeId), []);
 
   const logout = useCallback(async () => {
     try {
@@ -142,8 +179,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [endSession, navigate]);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ status, user, login, register, logout, acceptTokens, setUser: setUserState }),
-    [status, user, login, register, logout, acceptTokens],
+    () => ({ status, user, login, register, verifyCode, resendCode, logout, acceptTokens, setUser: setUserState }),
+    [status, user, login, register, verifyCode, resendCode, logout, acceptTokens],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

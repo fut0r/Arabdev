@@ -46,8 +46,8 @@
     </p>
     <ul class="meta">
       <li><strong>Effective:</strong> 19 September 2026</li>
-      <li><strong>Last updated:</strong> 19 September 2026</li>
-      <li><strong>Version:</strong> 1.0</li>
+      <li><strong>Last updated:</strong> 21 September 2026</li>
+      <li><strong>Version:</strong> 1.1</li>
       <li><strong>Applies to:</strong> <a href="https://arabdev.site/dashboard" dir="ltr">arabdev.site</a> and its subdomains</li>
       <li><strong>Reading time:</strong> about 25 minutes</li>
     </ul>
@@ -66,7 +66,7 @@
         </li>
         <li>
           <span class="promise-icon" aria-hidden="true">✓</span>
-          <div><strong>No tracking, no profiling for ads</strong><span>No third-party analytics, trackers or advertising pixels. Ads are never targeted at you personally.</span></div>
+          <div><strong>Ads without a profile of you</strong><span>No analytics, trackers or advertising pixels of our own. Google ads are requested in non-personalised mode, so they are never targeted at you personally.</span></div>
         </li>
         <li>
           <span class="promise-icon" aria-hidden="true">✓</span>
@@ -205,7 +205,7 @@
     <li>Give or license your information to data brokers, marketing companies or list sellers.</li>
     <li>Share your information with advertisers. Advertisers never receive your name, username, email, interests, posts or activity.</li>
     <li>Build advertising profiles about you, or use your posts, likes, follows or searches to choose which ads you see.</li>
-    <li>Put third-party tracking pixels, analytics scripts, fingerprinting code or social-media “like” buttons on ArabDev.</li>
+    <li>Put analytics scripts, fingerprinting code or social-media “like” buttons on ArabDev. The only third-party code on the site is Google’s advertising script and Cloudflare’s Turnstile check, both described in <a href="#advertising">Advertising</a> and <a href="#security">Security</a>.</li>
     <li>Read your private information (such as your drafts or saved posts) for marketing purposes.</li>
     <li>Use your content to train commercial models for sale to third parties.</li>
   </ul>
@@ -450,7 +450,7 @@
     <li>Your contacts or address book.</li>
     <li>Precise location from your device's GPS. We also remove location data from uploaded photos.</li>
     <li>Special categories of data, such as health, religion, political opinions or biometric data. We never ask for them; please do not include them in your profile.</li>
-    <li>Your browsing on other websites. There are no trackers, analytics tags or advertising pixels on ArabDev.</li>
+    <li>Your browsing on other websites. ArabDev runs no analytics tags of its own, and asks Google for non-personalised ads.</li>
     <li>Device fingerprints, meaning hidden identifiers calculated from your screen, fonts or hardware.</li>
     <li>Keystrokes, mouse movements or session recordings.</li>
     <li>Information about you from data brokers or other companies.</li>
@@ -592,9 +592,11 @@
 
   <h3 id="sharing-providers">Service providers</h3>
   <p>
-    We use a small number of trusted companies to run ArabDev, such as the provider that hosts our servers
-    and database, the network that delivers the website's files, and, once configured, an email service
-    to deliver password reset messages. These providers:
+    We use a small number of trusted companies to run ArabDev: the provider that hosts our servers and
+    database, the network that delivers the website's files, the mail provider that delivers sign-in codes
+    and password resets, Cloudflare Turnstile for the bot check on forms, and Google AdSense for the ads
+    (see <a href="#advertising">Advertising</a>). Apart from Google's ad script, which runs in your browser
+    and never receives your account details, these providers:
   </p>
   <ul class="yes-list">
     <li>Receive only the information they need to do their job.</li>
@@ -633,49 +635,79 @@
   <h2 id="advertising-title">Advertising</h2>
   <div class="in-short">
     <strong>In short</strong>
-    <p>ArabDev shows a small number of clearly labelled ads. They are chosen by page position and language, never by who you are, and advertisers receive nothing about you.</p>
+    <p>ArabDev shows a small number of clearly labelled ads through Google AdSense. We ask Google for <em>non-personalised</em> ads, so they are chosen by the page and your general region, never by a profile of you. Google receives nothing from us about your account.</p>
   </div>
   <p>
-    Ads help keep ArabDev free. We designed them to respect your privacy completely.
+    Ads keep ArabDev free to use. They are the only way the platform pays for itself, and we set them up
+    to give away as little as possible about the people reading.
   </p>
+
   <h3 id="ads-how">How ads are chosen</h3>
-  <p>An ad is picked using only:</p>
+  <p>
+    Ad space on ArabDev is filled by <strong>Google AdSense</strong>. Google's script runs in your browser,
+    asks Google's ad servers for an ad, and displays it inside the labelled ad box. ArabDev sets the
+    <em>non-personalised ads</em> flag on every request. That means Google may use:
+  </p>
   <ul>
-    <li>Where it will appear: in the feed (after every eight posts) or in the sidebar.</li>
-    <li>The language of the interface, so Arabic readers see Arabic ads.</li>
-    <li>The page number in the feed, so that different pages show different ads.</li>
+    <li>The content of the page the ad appears on.</li>
+    <li>Your approximate region, worked out from your IP address the same way any website can.</li>
+    <li>Limits that stop the same ad being shown to you too many times, and checks that catch click fraud.</li>
   </ul>
   <p>
-    That is the whole list. Ads are <strong>not</strong> chosen using your identity, interests, posts,
-    likes, follows, searches, location or browsing history. Two different people reading the same page in
-    the same language see the same ads.
+    It does <strong>not</strong> mean Google builds an advertising profile from what you read on ArabDev.
+    Non-personalised ads are not based on your past browsing or on interests inferred about you.
   </p>
-  <h3 id="ads-measure">How ads are measured</h3>
+
+  <h3 id="ads-measure">What Google receives, and what it does not</h3>
+  <p>Because Google's ad code runs in your browser, Google can see what any embedded third party sees:</p>
+  <ul>
+    <li>Your IP address and the general location it suggests.</li>
+    <li>Your browser and device type, and the address of the ArabDev page you are on.</li>
+    <li>Cookies or similar storage it sets for frequency capping and fraud prevention.</li>
+  </ul>
   <p>
-    We count how many times each ad is displayed and clicked, as totals only. When you click an ad, ArabDev
-    adds one to that ad's click count and then opens the advertiser's site in a new tab. We do not record
-    which account clicked, and we do not tell the advertiser who you are.
+    Google does <strong>not</strong> receive your ArabDev account, username, email address, password,
+    drafts, bookmarks, likes, follows, interests or notifications. ArabDev never sends any of that to
+    Google or to anyone else, and it is not for sale. Google's handling of what it does collect is
+    governed by the <a href="https://policies.google.com/technologies/ads" rel="noopener" target="_blank">Google advertising policy</a>;
+    you can review and change what Google does with your data in
+    <a href="https://myadcenter.google.com/" rel="noopener" target="_blank">My Ad Center</a>. In the EEA, the
+    UK and Switzerland, Google shows its own consent message where the law requires one, and your answer
+    is recorded by Google, not by us.
   </p>
-  <h3 id="ads-advertisers">What advertisers receive</h3>
+
+  <h3 id="ads-advertisers">Who is allowed to sell our ad space</h3>
   <p>
-    Advertisers may receive the total impressions and clicks of their own ads. They receive no personal
-    information about ArabDev users. ArabDev does not load advertising code from advertisers or ad
-    networks: every ad is displayed by ArabDev itself.
+    ArabDev publishes an <a href="https://arabdev.site/ads.txt" rel="noopener" target="_blank">ads.txt</a> file
+    naming Google as the only company authorised to sell advertising on arabdev.site. Anyone offering
+    ArabDev ad space from anywhere else is not doing so with our agreement.
   </p>
-  <h3 id="ads-sponsors">For sponsors</h3>
+
+  <h3 id="ads-sponsors">Direct sponsors</h3>
   <p>
-    Businesses and communities that want to sponsor ArabDev or place an ad can write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>. Every
-    sponsor is bound by the same rules: no tracking code, no personal data, and clear labelling.
+    Businesses and communities can also sponsor ArabDev directly by writing to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.
+    A direct sponsor's ad is served by ArabDev itself, with no third-party code at all: we count total
+    impressions and clicks, and the sponsor receives those totals and nothing else, never information
+    about individual readers.
   </p>
+
   <h3 id="ads-after">After you click</h3>
   <p>
     Once you are on an advertiser's website, their privacy policy applies, not ours. They may see your IP
-    address and use their own cookies, as any website can. ArabDev opens ad links in a way that prevents
-    the advertiser's page from controlling the ArabDev tab.
+    address and use their own cookies, as any website can. Ad links open in a new tab in a way that
+    prevents the advertiser's page from controlling the ArabDev tab.
   </p>
+
+  <h3 id="ads-blocking">If you would rather not see ads</h3>
+  <p>
+    Ad blockers are your choice and ArabDev will not fight them: the site works the same with ads blocked,
+    and nothing is hidden behind them. ArabDev is also open source, so you can run your own copy with no
+    advertising at all.
+  </p>
+
   <div class="callout good">
     <span class="callout-title">Labelled, not disguised</span>
-    <p>Every ad is marked “Sponsored” and designed to look different from posts, so you always know what you are looking at.</p>
+    <p>Every ad is marked “Sponsored”, sits in its own dashed frame, and is designed to look different from posts, so you always know what you are looking at.</p>
   </div>
 </section>
 
@@ -684,13 +716,20 @@
   <h2 id="cookies-title">Cookies and browser storage</h2>
   <div class="in-short">
     <strong>In short</strong>
-    <p>ArabDev uses one essential cookie to keep you signed in and a few small browser-storage entries to remember your preferences. There are no advertising or tracking cookies.</p>
+    <p>ArabDev itself uses one essential cookie to keep you signed in and a few small browser-storage entries to remember your preferences. ArabDev sets no advertising or tracking cookies of its own; Google and Cloudflare may set their own for the ad box and the bot check.</p>
   </div>
   <p>
     Cookies and browser storage are small pieces of information that a website saves in your browser.
-    ArabDev uses them only where they are strictly necessary or remember a choice you made. Because none
-    of them track you, we do not show a cookie consent banner: there is nothing for you to accept or
-    refuse.
+    ArabDev uses them only where they are strictly necessary or remember a choice you made. None of the
+    cookies ArabDev sets track you.
+  </p>
+  <p>
+    Two third parties run code in your browser and may store something of their own: Google, for the ads
+    (frequency capping and fraud prevention — see <a href="#advertising">Advertising</a>), and Cloudflare
+    Turnstile, for the check that tells a person from a script on the sign-in, sign-up and posting forms.
+    Where the law requires consent for those, Google and Cloudflare ask for it themselves and record your
+    answer; ArabDev does not show a banner of its own, and nothing on this site depends on you accepting
+    one. Blocking them costs you nothing but the ads.
   </p>
 
   <h3 id="cookies-list">Cookies</h3>

@@ -7,7 +7,7 @@ from app.core.rate_limit import rate_limit
 from app.schemas.comment import CommentCreate, CommentOut
 from app.schemas.common import Page
 from app.schemas.post import PostCounters, PostCreate, PostOut, PostUpdate
-from app.services import comment_service, interaction_service, post_service
+from app.services import comment_service, interaction_service, post_service, turnstile_service
 from app.services.post_service import FeedTab
 from app.utils.pagination import PageParams, page_params
 
@@ -55,7 +55,10 @@ def get_post(post_id: int, db: DbSession, viewer: OptionalUser) -> PostOut:
     response_model=PostOut,
     status_code=status.HTTP_201_CREATED,
     summary="Publish a post",
-    dependencies=[Depends(rate_limit("post_create", limit=30, window=3600))],
+    dependencies=[
+        Depends(rate_limit("post_create", limit=30, window=3600)),
+        Depends(turnstile_service.guard("publish_post")),
+    ],
 )
 def create_post(data: PostCreate, db: DbSession, user: CurrentUser) -> PostOut:
     return post_service.create_post(db, user, data)
@@ -120,7 +123,10 @@ def list_comments(post_id: int, db: DbSession, viewer: OptionalUser, params: Pag
     response_model=CommentOut,
     status_code=status.HTTP_201_CREATED,
     summary="Comment on a post",
-    dependencies=[Depends(rate_limit("comment", limit=60, window=600))],
+    dependencies=[
+        Depends(rate_limit("comment", limit=60, window=600)),
+        Depends(turnstile_service.guard("comment")),
+    ],
 )
 def create_comment(post_id: int, data: CommentCreate, db: DbSession, user: CurrentUser) -> CommentOut:
     return comment_service.create(db, user, post_id, data)

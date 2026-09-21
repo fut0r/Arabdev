@@ -37,14 +37,15 @@ def test_change_username_and_email(client, make_user):
     assert client.patch(f"{API}/users/me/username", json={"username": "taken"}, headers=account.headers).json()["code"] == "username_taken"
     assert client.patch(f"{API}/users/me/username", json={"username": "Layla_New"}, headers=account.headers).json()["username"] == "layla_new"
 
-    wrong = client.patch(
+    wrong = client.post(
         f"{API}/users/me/email", json={"email": "new@example.com", "current_password": "nope"}, headers=account.headers
     )
     assert wrong.json()["code"] == "current_password_invalid"
-    ok = client.patch(
+    ok = client.post(
         f"{API}/users/me/email", json={"email": "New@Example.com", "current_password": PASSWORD}, headers=account.headers
     )
-    assert ok.json()["email"] == "new@example.com"
+    assert ok.json()["status"] == "updated"
+    assert ok.json()["user"]["email"] == "new@example.com"
 
 
 def test_avatar_upload_is_validated_and_reencoded(client, make_user):
@@ -149,7 +150,10 @@ def test_rate_limiting(client, make_user, monkeypatch):
         client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": "Wrong1234"}).status_code
         for _ in range(12)
     ]
-    assert codes[:10] == [401] * 10
+    # Eight wrong passwords for one address is where the account-level limit bites,
+    # before the per-network limit of ten would.
+    assert codes[:8] == [401] * 8
+    assert codes[8] == 429
     assert codes[-1] == 429
 
 

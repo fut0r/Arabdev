@@ -14,13 +14,18 @@ import { queryKeys } from '@/api/queryKeys';
 import { Surface } from '@/components/common';
 import { EmptyState } from '@/components/EmptyState';
 import { PagedPosts } from '@/features/posts/PagedPosts';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 
 export default function TagPage() {
   const { t } = useTranslation();
   const slug = (useParams().slug ?? '').toLowerCase();
   const [page, setPage] = usePageParam();
-  useDocumentTitle(`#${slug}`);
+  useSeo({
+    title: `#${slug}`,
+    description: t('tag.metaDescription', { tag: slug }),
+    canonical: `/tags/${slug}`,
+  });
 
   const detail = useQuery({ queryKey: queryKeys.tag(slug), queryFn: () => discoveryApi.tag(slug), retry: false });
   const posts = useQuery({

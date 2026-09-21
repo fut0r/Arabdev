@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 
 from app.schemas.user import MeOut
+from app.schemas.verification import ChallengeOut
 from app.utils.validators import normalize_username, validate_password_strength
 
 
@@ -47,6 +48,29 @@ class TokenOut(BaseModel):
     token_type: str = "bearer"
     expires_in: int
     user: MeOut
+
+
+class AuthResultOut(BaseModel):
+    """Either the session started, or a code has to be entered first."""
+
+    status: Literal["authenticated", "verification_required"]
+    tokens: TokenOut | None = None
+    challenge: ChallengeOut | None = None
+
+
+class PasswordChangeOut(BaseModel):
+    """Either the password changed, or a code has to confirm it first."""
+
+    status: Literal["updated", "verification_required"]
+    tokens: TokenOut | None = None
+    challenge: ChallengeOut | None = None
+
+
+class PublicConfigOut(BaseModel):
+    """What the sign-in screens need to know before anyone types anything."""
+
+    turnstile_site_key: str | None = None
+    email_codes: bool
 
 
 class FieldAvailability(BaseModel):

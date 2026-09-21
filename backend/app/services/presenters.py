@@ -81,6 +81,7 @@ def me_out(db: Session, user: User) -> MeOut:
         avatar_url=avatar_url(user),
         interests=interests_out(user),
         onboarding_completed=user.onboarding_completed,
+        email_verified=user.email_verified_at is not None,
         is_admin=user.is_admin,
         created_at=user.created_at,
         followers_count=users_repo.follower_counts(db, [user.id]).get(user.id, 0),

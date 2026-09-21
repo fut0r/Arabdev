@@ -69,8 +69,11 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [params, setParams] = useSearchParams();
   const [page, setPage] = usePageParam();
+  const { settings } = useCurrentUser();
   const requested = params.get('tab') as FeedTab | null;
-  const tab: FeedTab = requested && TABS.includes(requested) ? requested : 'for_you';
+  // ?tab= wins; otherwise the feed opens where Settings says it should.
+  const preferred = TABS.includes(settings.default_feed) ? settings.default_feed : 'for_you';
+  const tab: FeedTab = requested && TABS.includes(requested) ? requested : preferred;
   useDocumentTitle(t('feed.title'));
 
   const query = useQuery({
@@ -79,7 +82,7 @@ export default function HomePage() {
     placeholderData: keepPreviousData,
   });
 
-  const changeTab = (next: FeedTab) => setParams(next === 'for_you' ? {} : { tab: next });
+  const changeTab = (next: FeedTab) => setParams(next === preferred ? {} : { tab: next });
 
   const empty =
     tab === 'following' ? (

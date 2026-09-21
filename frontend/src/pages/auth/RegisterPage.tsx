@@ -21,9 +21,12 @@ import { useAuth } from '@/features/auth/AuthProvider';
 import { AuthSplitLayout } from '@/features/auth/AuthSplitLayout';
 import { PasswordField, PasswordStrength } from '@/features/auth/PasswordField';
 import { USERNAME_PATTERN, useUsernameAvailability } from '@/features/auth/useUsernameAvailability';
+import { VerifyCode } from '@/features/auth/VerifyCode';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
+import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
 import { useDocumentTitle } from '@/hooks';
 import { HOME_PATH } from '@/site';
+import type { Challenge } from '@/types/api';
 
 interface RegisterValues {
   username: string;
@@ -37,10 +40,12 @@ const FIELDS = ['username', 'email', 'password', 'password_confirm'] as const;
 
 export default function RegisterPage() {
   const { t } = useTranslation();
-  const { register: createAccount } = useAuth();
+  const { register: createAccount, verifyCode, resendCode } = useAuth();
   const { language } = usePreferences();
   const navigate = useNavigate();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const turnstile = useTurnstile({ action: 'register' });
   useDocumentTitle(t('register.title'));
 
   const {
@@ -74,18 +79,44 @@ export default function RegisterPage() {
     setServerError(null);
     if (usernameTaken) return;
     try {
-      await createAccount({
-        username: values.username.trim(),
-        email: values.email.trim(),
-        password: values.password,
-        password_confirm: values.password_confirm,
-        language,
-      });
-      navigate(HOME_PATH, { replace: true });
+      const token = await turnstile.getToken();
+      const outcome = await createAccount(
+        {
+          username: values.username.trim(),
+          email: values.email.trim(),
+          password: values.password,
+          password_confirm: values.password_confirm,
+          language,
+        },
+        token,
+      );
+      if (outcome.status === 'authenticated') navigate(HOME_PATH, { replace: true });
+      else setChallenge(outcome.challenge);
     } catch (error) {
       if (!applyFieldErrors(error, setError, t, FIELDS)) setServerError(errorMessage(error, t));
+    } finally {
+      // Each token is good for one request.
+      turnstile.reset();
     }
   });
+
+  if (challenge) {
+    return (
+      <AuthSplitLayout>
+        <VerifyCode
+          challenge={challenge}
+          submitLabel={t('register.submit')}
+          cancelLabel={t('verify.changeEmail')}
+          onVerify={async (code) => {
+            await verifyCode(challenge.challenge_id, code);
+            navigate(HOME_PATH, { replace: true });
+          }}
+          onResend={() => resendCode(challenge.challenge_id)}
+          onCancel={() => setChallenge(null)}
+        />
+      </AuthSplitLayout>
+    );
+  }
 
   let usernameHelper: ReactNode = t('register.usernameHelp');
   if (errors.username) usernameHelper = errors.username.message;
@@ -175,6 +206,7 @@ export default function RegisterPage() {
               validate: (value, values) => value === values.password || t('errors.passwords_mismatch'),
             })}
           />
+          <TurnstileWidget handle={turnstile} />
           <Button type="submit" variant="contained" size="large" fullWidth loading={isSubmitting}>
             {t('register.submit')}
           </Button>

@@ -12,6 +12,12 @@ os.environ["ENVIRONMENT"] = "test"
 os.environ["RATE_LIMIT_ENABLED"] = "false"
 os.environ["REDIS_URL"] = ""
 os.environ["MEDIA_ROOT"] = tempfile.mkdtemp(prefix="arabdev-media-")
+# Tests must not depend on whatever backend/.env happens to hold: no mail provider, no
+# emailed codes and no Turnstile unless a test switches them on for itself.
+os.environ["SMTP_HOST"] = ""
+os.environ["EMAIL_CODES_ENABLED"] = "false"
+os.environ["TURNSTILE_SITE_KEY"] = ""
+os.environ["TURNSTILE_SECRET_KEY"] = ""
 
 from dataclasses import dataclass  # noqa: E402
 
@@ -82,9 +88,13 @@ def make_user(client):
             f"{API}/auth/register",
             json={"username": username, "email": email, "password": password, "password_confirm": password},
         )
-        assert response.status_code == 201, response.text
+        assert response.status_code == 200, response.text
         body = response.json()
-        return Account(id=body["user"]["id"], username=username, email=email, token=body["access_token"])
+        # Without a mail provider the test settings create the account straight away;
+        # the emailed-code path has its own tests.
+        assert body["status"] == "authenticated", body
+        tokens = body["tokens"]
+        return Account(id=tokens["user"]["id"], username=username, email=email, token=tokens["access_token"])
 
     return _make
 

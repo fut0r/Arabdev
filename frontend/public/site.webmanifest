@@ -1,0 +1,23 @@
+{
+  "name": "ArabDev — منصة المطوّرين العرب",
+  "short_name": "ArabDev",
+  "description": "منصة اجتماعية للمطوّرين الناطقين بالعربية: اكتب بالعربية، شارك أفكارك، واعثر على مجتمعك.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e0e10",
+  "theme_color": "#D0152B",
+  "categories": ["social", "developer", "news"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "منشور جديد", "short_name": "اكتب", "url": "/create" },
+    { "name": "استكشاف", "short_name": "استكشاف", "url": "/explore" }
+  ]
+}

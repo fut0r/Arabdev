@@ -24,9 +24,9 @@ import { PostActions } from '@/features/posts/PostActions';
 import { PostByline, PostImage, PostLink, PostMenu, PostTags } from '@/features/posts/PostCard';
 import { PostContent } from '@/features/posts/PostContent';
 import { FollowButton } from '@/features/users/FollowButton';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo, summarise } from '@/utils/seo';
 import { headingFont } from '@/theme/typography';
-import { HOME_PATH } from '@/site';
+import { HOME_PATH, SITE_URL } from '@/site';
 
 /** Follow state comes from the author's profile (a post only carries a summary of its author). */
 function AuthorFollowButton({ userId, username }: { userId: number; username: string }) {
@@ -53,7 +53,36 @@ export default function PostPage() {
     enabled: Number.isInteger(postId),
   });
   const post = query.data;
-  useDocumentTitle(post?.title ?? (post ? t('post.by', { name: post.author.display_name }) : null));
+  const plainText = post ? post.content_html.replace(/<[^>]*>/g, ' ') : '';
+  useSeo({
+    title: post?.title ?? (post ? t('post.by', { name: post.author.display_name }) : null),
+    description: post ? summarise(plainText) : null,
+    canonical: `/posts/${postId}`,
+    type: 'article',
+    image: post?.image?.url ? `${SITE_URL}${post.image.url}` : null,
+    publishedAt: post?.created_at,
+    authorName: post?.author.display_name,
+    jsonLd: post
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'DiscussionForumPosting',
+          headline: post.title || summarise(plainText, 80),
+          articleBody: summarise(plainText, 500),
+          datePublished: post.created_at,
+          dateModified: post.edited_at ?? post.updated_at,
+          author: { '@type': 'Person', name: post.author.display_name, url: `${SITE_URL}/u/${post.author.username}` },
+          url: `${SITE_URL}/posts/${post.id}`,
+          keywords: post.tags.map((tag) => tag.name).join(', '),
+          commentCount: post.comments_count,
+          interactionStatistic: {
+            '@type': 'InteractionCounter',
+            interactionType: 'https://schema.org/LikeAction',
+            userInteractionCount: post.likes_count,
+          },
+          inLanguage: 'ar',
+        }
+      : null,
+  });
 
   const back = () => (window.history.length > 1 ? navigate(-1) : navigate(HOME_PATH));
 

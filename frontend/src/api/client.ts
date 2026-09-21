@@ -21,6 +21,12 @@ export const api = axios.create({
   headers: { 'X-ArabDev-Client': 'web' },
 });
 
+/** Cloudflare Turnstile proves a browser is behind the request; the header is dropped
+ * when there is no token, so endpoints that do not ask for one are unaffected. */
+export function turnstileHeaders(token?: string | null): Record<string, string> | undefined {
+  return token ? { 'X-Turnstile-Token': token } : undefined;
+}
+
 export function setAccessToken(token: string | null) {
   accessToken = token;
 }

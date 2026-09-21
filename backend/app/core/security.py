@@ -29,13 +29,18 @@ def password_needs_rehash(hashed: str) -> bool:
     return _hasher.check_needs_rehash(hashed)
 
 
-def create_access_token(user_id: int, token_version: int) -> tuple[str, int]:
-    """Return a signed access token and its lifetime in seconds."""
+def create_access_token(user_id: int, token_version: int, family_id: str | None = None) -> tuple[str, int]:
+    """Return a signed access token and its lifetime in seconds.
+
+    `fam` names the sign-in session this token belongs to, which is how the device list
+    knows which row is the browser asking.
+    """
     lifetime = timedelta(minutes=settings.access_token_expire_minutes)
     now = utcnow()
     payload = {
         "sub": str(user_id),
         "ver": token_version,
+        "fam": family_id,
         "type": "access",
         "iat": now,
         "exp": now + lifetime,

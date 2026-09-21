@@ -82,7 +82,7 @@ function PlatformPresentation() {
             p: 0,
             m: 0,
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+            gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'minmax(0, 1fr) minmax(0, 1fr)' },
             columnGap: 4,
             rowGap: 3.5,
           }}
@@ -151,7 +151,7 @@ export function AuthSplitLayout({ children }: { children: ReactNode }) {
       sx={{
         minHeight: '100vh',
         display: 'grid',
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(440px, 5fr) 6fr' },
+        gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(440px, 5fr) minmax(0, 6fr)' },
         bgcolor: 'background.paper',
       }}
     >

@@ -46,11 +46,11 @@
       changes for developers. Use the filters to see only one kind of change, or type to search.
     </p>
     <div class="latest">
-      <div class="latest-version">1.0.0</div>
+      <div class="latest-version">1.1.0</div>
       <div>
-        <h2>Latest release: ArabDev 1.0.0, the first public release</h2>
-        <p>Released on <time datetime="2026-09-19">19 September 2026</time>.</p>
-        <ul class="stats" aria-label="Changes in 1.0.0">
+        <h2>Latest release: ArabDev 1.1.0, security, ads and search</h2>
+        <p>Released on <time datetime="2026-09-21">21 September 2026</time>.</p>
+        <ul class="stats" aria-label="Changes in 1.1.0">
           <li><strong data-count="all">—</strong> changes</li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> new</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> improved</li>
@@ -80,7 +80,20 @@
     <h2>Releases</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-0-0">1.0.0 <small>19 September 2026 · Latest</small></a>
+        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 September 2026 · Latest</small></a>
+        <ul>
+          <li><a href="#v110-signin">Signing in and signing up</a></li>
+          <li><a href="#v110-botcheck">Bot protection</a></li>
+          <li><a href="#v110-settings">Settings</a></li>
+          <li><a href="#v110-ads">Ads</a></li>
+          <li><a href="#v110-search">Search engines</a></li>
+          <li><a href="#v110-mobile">Phones</a></li>
+          <li><a href="#v110-security">Security and privacy</a></li>
+          <li><a href="#v110-developer">API and developers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-0-0">1.0.0 <small>19 September 2026</small></a>
         <ul>
           <li><a href="#v100-accounts">Accounts and sign-in</a></li>
           <li><a href="#v100-onboarding">First-visit setup</a></li>
@@ -132,10 +145,105 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>No changes match your filters. Try another word, or show all changes.</div>
 
+<article class="release" id="v1-1-0" aria-labelledby="v1-1-0-title">
+  <header class="release-header">
+    <h2 id="v1-1-0-title">ArabDev 1.1.0</h2>
+    <span class="badge">Latest</span>
+    <time datetime="2026-09-21">21 September 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    A security and growth release: emailed six-digit codes for signing in and for changing an email or password, a Cloudflare check on every public form, Google ads, a proper presence in search results, and a new Security section under Settings.
+  </p>
+
+  <ul class="highlights" data-hide-when-filtered aria-label="Changes in 1.1.0">
+    <li><span class="highlight-icon" aria-hidden="true">✉</span><strong>A code in your inbox</strong><span>Signing in, signing up, and changing an email or password are confirmed by a six-digit code.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🛡</span><strong>A quiet bot check</strong><span>Cloudflare Turnstile guards every public form, invisibly for almost everyone.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">⚑</span><strong>Ads that pay the bills</strong><span>Google ads, requested in non-personalised mode, still clearly labelled.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🔎</span><strong>Findable</strong><span>Per-page titles, descriptions, link previews, a sitemap and structured data.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">⚙</span><strong>More to decide for yourself</strong><span>Devices, data export, default feed, reduced motion and email preferences.</span></li>
+  </ul>
+
+  <section class="area" id="v110-signin" aria-labelledby="v110-signin-title">
+    <h3 id="v110-signin-title">Signing in and signing up<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">Signing in and creating an account are confirmed with a six-digit code sent to your email address. The code is valid for 10 minutes and works once.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">An account is not created until its address is confirmed, so a mistyped email cannot leave an account you can never reach.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A code can be sent again after 60 seconds, up to four times, and only the newest code in your inbox works.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Changing your email address sends the code to the <em>new</em> address, and the old address is told about the change afterwards.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Changing your password is confirmed by a code as well, so a borrowed screen is not enough to take an account over.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Codes are stored only as a hash, cannot be tried more than five times, and are destroyed once used.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Eight wrong passwords for the same address within fifteen minutes now pauses sign-in for that account, however many networks the attempts come from.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-botcheck" aria-labelledby="v110-botcheck-title">
+    <h3 id="v110-botcheck-title">Bot protection<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">Cloudflare Turnstile now guards sign-in, sign-up, password resets, email and password changes, publishing a post and writing a comment.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">The check is invisible for almost everyone: it only shows a widget when it genuinely has to ask something.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Every token is checked on the server against Cloudflare, tied to the action it was issued for, and refused if it is replayed or older than five minutes.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-settings" aria-labelledby="v110-settings-title">
+    <h3 id="v110-settings-title">Settings<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">A new <strong>Security</strong> section: sign-in codes, account alerts, the devices you are signed in on, and your data.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">The devices list shows every browser holding a live session, marks the one you are using, and can sign out one of them or all the others.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text"><strong>Download my data</strong> exports your account, profile, settings, posts, drafts, comments, likes, bookmarks and follows as one JSON file.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Choose which feed the home page opens on: For you, Following or Latest.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A <strong>Reduce animation</strong> switch for people who would rather the interface held still.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Email preferences: keep or switch off account alerts and release announcements. There is still no marketing email.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The account page shows whether your email address has been confirmed.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-ads" aria-labelledby="v110-ads-title">
+    <h3 id="v110-ads-title">Ads<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">Ad space is now filled by Google AdSense, requested in non-personalised mode: ads are chosen by the page and your general region, never by a profile of you.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">An <code>ads.txt</code> file names Google as the only company allowed to sell advertising on arabdev.site.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Ads keep their dashed frame and “Sponsored” label, and an unfilled ad box now collapses instead of leaving a gap.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Direct sponsors are still served by ArabDev itself, with no third-party code.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-search" aria-labelledby="v110-search-title">
+    <h3 id="v110-search-title">Search engines<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">Every post, profile and tag page now writes its own title, description, canonical address and link preview, so shared links look right and search engines can read them.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A sitemap at <code>/sitemap.xml</code> lists posts, findable profiles and busy tags; profiles that switched off “discoverable” are left out.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A <code>robots.txt</code> file keeps settings, drafts, bookmarks and notifications out of search results.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Structured data describes the site and each post, including its author, date and tags.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-mobile" aria-labelledby="v110-mobile-title">
+    <h3 id="v110-mobile-title">Phones<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">ArabDev can be installed to a phone home screen, with its own icon, name and start page.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">Settings could be scrolled sideways on a phone. Grid columns no longer stretch to fit their widest child.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Content now clears the home indicator on phones with a rounded screen.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-security" aria-labelledby="v110-security-title">
+    <h3 id="v110-security-title">Security and privacy<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">An email when your password changes or a new browser signs in, unless you switch those alerts off.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Access tokens now name the session they belong to, which is how the devices list knows which browser is asking.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Two more response headers: a permissions policy that refuses camera, microphone, location and payment, and strict transport security in production.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The privacy policy has been updated to describe Google ads, the Cloudflare check and the emailed codes, in both languages.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v110-developer" aria-labelledby="v110-developer-title">
+    <h3 id="v110-developer-title">API and developers<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text"><code>POST /auth/register</code> and <code>POST /auth/login</code> now answer with <code>status</code>, plus either <code>tokens</code> or a <code>challenge</code>; <code>POST /auth/verify</code> exchanges a code for tokens and <code>POST /auth/resend</code> sends another.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New endpoints: <code>GET /auth/config</code>, <code>POST /users/me/email</code> and <code>/verify</code>, <code>POST /users/me/password</code> and <code>/verify</code>, <code>GET /users/me/sessions</code>, <code>DELETE /users/me/sessions/{id}</code>, <code>POST /users/me/sessions/revoke-others</code> and <code>GET /users/me/export</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Protected endpoints read the Turnstile token from an <code>X-Turnstile-Token</code> header, so request bodies are unchanged.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New settings: SMTP details, <code>EMAIL_CODES_ENABLED</code>, the code lifetime and attempt limits, and the two Turnstile keys. Without SMTP in production the codes stay off, so a missing mail provider cannot lock anyone out.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-0-0" aria-labelledby="v1-0-0-title">
   <header class="release-header">
     <h2 id="v1-0-0-title">ArabDev 1.0.0</h2>
-    <span class="badge">Latest</span>
     <time datetime="2026-09-19">19 September 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

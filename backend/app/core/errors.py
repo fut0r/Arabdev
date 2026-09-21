@@ -73,6 +73,13 @@ class TooManyRequests(AppError):
     code = "rate_limited"
 
 
+class ServiceUnavailable(AppError):
+    """Something we depend on is down. The request itself was fine: retrying may work."""
+
+    status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    code = "service_unavailable"
+
+
 def _error_body(detail: str, code: str, **extra) -> dict:
     body = {"detail": detail, "code": code}
     body.update({key: value for key, value in extra.items() if value is not None})

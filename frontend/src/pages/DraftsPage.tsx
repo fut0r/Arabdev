@@ -24,7 +24,8 @@ import { UserListSkeleton } from '@/components/LoadingState';
 import { useNotify } from '@/components/Notifier';
 import { Pagination } from '@/components/Pagination';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import type { Draft } from '@/types/api';
 import { formatRelativeTime } from '@/utils/format';
 import { htmlToText } from '@/utils/html';
@@ -36,7 +37,7 @@ export default function DraftsPage() {
   const queryClient = useQueryClient();
   const [page, setPage] = usePageParam();
   const [deleting, setDeleting] = useState<Draft | null>(null);
-  useDocumentTitle(t('drafts.title'));
+  useSeo({ title: t('drafts.title'), noindex: true });
 
   const query = useQuery({
     queryKey: queryKeys.drafts(page),

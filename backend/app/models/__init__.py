@@ -10,6 +10,7 @@ from app.models.post import Draft, Post
 from app.models.tag import Tag, post_tags
 from app.models.token import PasswordResetToken, RefreshToken
 from app.models.user import Profile, User, UserSettings
+from app.models.verification import VerificationCode
 
 __all__ = [
     "Ad",
@@ -29,6 +30,7 @@ __all__ = [
     "Tag",
     "User",
     "UserSettings",
+    "VerificationCode",
     "post_tags",
     "user_interests",
 ]

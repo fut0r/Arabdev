@@ -5,6 +5,7 @@ Usage in a route::
     @router.post("/login", dependencies=[Depends(rate_limit("login", limit=10, window=60))])
 """
 
+import hashlib
 import logging
 import threading
 import time
@@ -75,6 +76,19 @@ def client_ip(request: Request) -> str:
     if forwarded:
         return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
+
+
+def consume(scope: str, identifier: str, limit: int, window: int) -> tuple[bool, int]:
+    """Count one attempt against `identifier` (an email, a user id) outside the request
+    dependency chain. Returns (allowed, seconds until the window resets)."""
+    if not settings.rate_limit_enabled:
+        return True, 0
+    key = f"{scope}:{hashlib.sha256(identifier.lower().encode()).hexdigest()[:32]}"
+    try:
+        return get_limiter().hit(key, limit, window)
+    except Exception:  # Never take the API down because Redis hiccupped.
+        logger.warning("Rate limiter unavailable, allowing request", exc_info=True)
+        return True, 0
 
 
 def rate_limit(scope: str, limit: int, window: int) -> Callable[[Request], None]:

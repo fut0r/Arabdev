@@ -7,13 +7,14 @@ import { usersApi } from '@/api/users';
 import { PageHeader, Surface } from '@/components/common';
 import { EmptyState } from '@/components/EmptyState';
 import { PagedPosts } from '@/features/posts/PagedPosts';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import { HOME_PATH } from '@/site';
 
 export default function BookmarksPage() {
   const { t } = useTranslation();
   const [page, setPage] = usePageParam();
-  useDocumentTitle(t('bookmarks.title'));
+  useSeo({ title: t('bookmarks.title'), noindex: true });
   const query = useQuery({
     queryKey: queryKeys.bookmarks(page),
     queryFn: () => usersApi.bookmarks(page),

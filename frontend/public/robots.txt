@@ -1,0 +1,16 @@
+# ArabDev — https://arabdev.site
+User-agent: *
+Allow: /
+
+# Private or throwaway pages: nothing here is useful in search results.
+Disallow: /settings
+Disallow: /drafts
+Disallow: /bookmarks
+Disallow: /notifications
+Disallow: /create
+Disallow: /profile/edit
+Disallow: /reset-password
+Disallow: /search
+Disallow: /api/
+
+Sitemap: https://arabdev.site/sitemap.xml

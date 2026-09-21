@@ -69,8 +69,33 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
     support_email: str = "support@arabdev.site"
     hello_email: str = "hi@arabdev.site"
-    # Sender of outgoing emails, once a mail provider is connected.
-    mail_from: str = "ArabDev <support@arabdev.site>"
+    # Sender of outgoing mail. Replies go to support, since nobody reads noreply@.
+    mail_from: str = "ArabDev <noreply@arabdev.site>"
+
+    # SMTP. Without a host, mail is logged instead of sent (see services/email_service.py).
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: str | None = None
+    smtp_starttls: bool = True
+    smtp_ssl: bool = False
+    smtp_timeout_seconds: float = 10.0
+
+    # Six-digit codes emailed when signing in, signing up and changing an email or password.
+    verification_code_ttl_minutes: int = 10
+    verification_max_attempts: int = 5
+    verification_resend_seconds: int = 60
+    # Leave unset to follow the mail setup: on in development, and in production only once
+    # SMTP is configured, so a missing mail provider cannot lock everyone out.
+    email_codes_enabled: bool | None = None
+
+    # Cloudflare Turnstile. Both keys must be present for the checks to run.
+    turnstile_site_key: str | None = None
+    turnstile_secret_key: str | None = None
+    turnstile_verify_url: str = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+    turnstile_timeout_seconds: float = 8.0
+    # Refuse a token whose Turnstile hostname is not one of these (empty: accept any).
+    turnstile_hostnames: Annotated[list[str], NoDecode] = []
 
     # "local" writes files under media_root; "database" keeps them in the media table, for
     # hosts without a persistent disk such as Vercel.
@@ -81,7 +106,7 @@ class Settings(BaseSettings):
 
     rate_limit_enabled: bool = True
 
-    @field_validator("cors_origins", mode="before")
+    @field_validator("cors_origins", "turnstile_hostnames", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
         if isinstance(value, str):
@@ -121,6 +146,21 @@ class Settings(BaseSettings):
     @property
     def is_sqlite(self) -> bool:
         return self.database_url.startswith("sqlite")
+
+    @property
+    def smtp_configured(self) -> bool:
+        return bool(self.smtp_host)
+
+    @property
+    def turnstile_configured(self) -> bool:
+        return bool(self.turnstile_site_key and self.turnstile_secret_key)
+
+    @property
+    def email_codes_required(self) -> bool:
+        """Whether sign-in, sign-up and account changes ask for an emailed code."""
+        if self.email_codes_enabled is not None:
+            return self.email_codes_enabled
+        return self.smtp_configured or self.environment == "development"
 
     @property
     def migration_url(self) -> str:

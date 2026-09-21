@@ -15,6 +15,7 @@ import { authApi } from '@/api/auth';
 import { errorMessage } from '@/api/errors';
 import { AuthSplitLayout } from '@/features/auth/AuthSplitLayout';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
+import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
 import { useDocumentTitle } from '@/hooks';
 
 export default function ForgotPasswordPage() {
@@ -22,6 +23,7 @@ export default function ForgotPasswordPage() {
   const { direction } = usePreferences();
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
+  const turnstile = useTurnstile({ action: 'forgot_password' });
   useDocumentTitle(t('auth.forgotTitle'));
 
   const {
@@ -33,10 +35,12 @@ export default function ForgotPasswordPage() {
   const onSubmit = handleSubmit(async ({ email }) => {
     setServerError(null);
     try {
-      await authApi.forgotPassword(email.trim());
+      await authApi.forgotPassword(email.trim(), await turnstile.getToken());
       setSentTo(email.trim());
     } catch (error) {
       setServerError(errorMessage(error, t));
+    } finally {
+      turnstile.reset();
     }
   });
 
@@ -83,6 +87,7 @@ export default function ForgotPasswordPage() {
                   pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: t('errors.email_invalid') },
                 })}
               />
+              <TurnstileWidget handle={turnstile} />
               <Button type="submit" variant="contained" size="large" fullWidth loading={isSubmitting}>
                 {t('auth.sendResetLink')}
               </Button>

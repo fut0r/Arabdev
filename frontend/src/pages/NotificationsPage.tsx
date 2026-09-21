@@ -17,7 +17,8 @@ import { UserListSkeleton } from '@/components/LoadingState';
 import { useNotify } from '@/components/Notifier';
 import { Pagination } from '@/components/Pagination';
 import { NotificationItem } from '@/features/notifications/NotificationItem';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import type { Notification, Page } from '@/types/api';
 
 export default function NotificationsPage() {
@@ -25,7 +26,7 @@ export default function NotificationsPage() {
   const notify = useNotify();
   const queryClient = useQueryClient();
   const [page, setPage] = usePageParam();
-  useDocumentTitle(t('notifications.title'));
+  useSeo({ title: t('notifications.title'), noindex: true });
 
   const query = useQuery({
     queryKey: queryKeys.notifications(page),

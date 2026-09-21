@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AdCard, useFeedAds } from '@/features/ads/AdCard';
+import { AdSenseUnit, hasAdSense } from '@/features/ads/AdSense';
 import type { Post } from '@/types/api';
 
 import { PostCard } from './PostCard';
@@ -18,22 +19,24 @@ interface PostListProps {
 
 export function PostList({ posts, page = 1, withAds = false }: PostListProps) {
   const { t } = useTranslation();
-  const ads = useFeedAds(page, withAds);
-  const showAds = withAds && Boolean(ads?.length);
+  const google = hasAdSense('feed');
+  const ads = useFeedAds(page, withAds && !google);
+  const showAds = withAds && (google || Boolean(ads?.length));
 
   return (
     <div role="feed" aria-label={t('feed.feedLabel')} aria-busy="false">
       {posts.map((post, index) => {
         const slot = Math.floor(index / AD_INTERVAL);
-        const adAfter = showAds && (index + 1) % AD_INTERVAL === 0 && ads ? ads[slot % ads.length] : null;
+        const adHere = showAds && (index + 1) % AD_INTERVAL === 0 && index + 1 < posts.length;
+        const houseAd = adHere && !google && ads ? ads[slot % ads.length] : null;
         return (
           <Fragment key={`${post.id}-${post.reposted_by?.id ?? 'own'}`}>
             {index > 0 && <Divider component="div" role="presentation" />}
             <PostCard post={post} />
-            {adAfter && (
+            {adHere && (google || houseAd) && (
               <>
                 <Divider component="div" role="presentation" />
-                <AdCard ad={adAfter} />
+                {google ? <AdSenseUnit placement="feed" /> : houseAd && <AdCard ad={houseAd} />}
               </>
             )}
           </Fragment>

@@ -12,12 +12,13 @@ import { PopularTags } from '@/features/discovery/PopularTags';
 import { PagedPosts } from '@/features/posts/PagedPosts';
 import { SearchBar } from '@/features/search/SearchBar';
 import { RecommendedDevelopers } from '@/features/users/RecommendedDevelopers';
-import { useDocumentTitle, usePageParam } from '@/hooks';
+import { usePageParam } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 
 export default function ExplorePage() {
   const { t } = useTranslation();
   const [page, setPage] = usePageParam();
-  useDocumentTitle(t('explore.title'));
+  useSeo({ title: t('explore.title'), description: t('explore.metaDescription'), canonical: '/explore' });
 
   const trending = useQuery({
     queryKey: queryKeys.trending(page),
@@ -35,7 +36,13 @@ export default function ExplorePage() {
       </Surface>
 
       {/* On large screens these live in the sidebar; here they lead the page. */}
-      <Box sx={{ display: { xs: 'grid', lg: 'none' }, gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+      <Box
+        sx={{
+          display: { xs: 'grid', lg: 'none' },
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', sm: 'minmax(0, 1fr) minmax(0, 1fr)' },
+          gap: 2,
+        }}
+      >
         <Surface>
           <SectionHeading>{t('explore.popularTags')}</SectionHeading>
           <PopularTags limit={6} />

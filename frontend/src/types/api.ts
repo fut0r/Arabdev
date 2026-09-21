@@ -46,9 +46,14 @@ export type MentionsFrom = 'everyone' | 'following' | 'none';
 export interface UserSettings {
   theme: ThemeMode;
   language: 'ar' | 'en';
+  default_feed: FeedTab;
+  reduce_motion: boolean;
   discoverable: boolean;
   show_follow_lists: boolean;
   mentions_from: MentionsFrom;
+  login_code_required: boolean;
+  email_security_alerts: boolean;
+  email_product_updates: boolean;
   notify_likes: boolean;
   notify_comments: boolean;
   notify_follows: boolean;
@@ -67,6 +72,7 @@ export interface Me {
   avatar_url: string | null;
   interests: Interest[];
   onboarding_completed: boolean;
+  email_verified: boolean;
   is_admin: boolean;
   created_at: string;
   followers_count: number;
@@ -79,6 +85,48 @@ export interface TokenResponse {
   token_type: string;
   expires_in: number;
   user: Me;
+}
+
+/** A six-digit code is waiting in an inbox. */
+export interface Challenge {
+  challenge_id: string;
+  /** Partly hidden, e.g. l***a@example.com */
+  email: string;
+  purpose: 'register' | 'login' | 'email_change' | 'password_change';
+  expires_in: number;
+  resend_in: number;
+}
+
+export interface AuthResult {
+  status: 'authenticated' | 'verification_required';
+  tokens: TokenResponse | null;
+  challenge: Challenge | null;
+}
+
+export interface EmailChangeResult {
+  status: 'updated' | 'verification_required';
+  user: Me | null;
+  challenge: Challenge | null;
+}
+
+export interface PasswordChangeResult {
+  status: 'updated' | 'verification_required';
+  tokens: TokenResponse | null;
+  challenge: Challenge | null;
+}
+
+export interface PublicConfig {
+  turnstile_site_key: string | null;
+  email_codes: boolean;
+}
+
+export interface SignedInSession {
+  id: number;
+  user_agent: string | null;
+  created_at: string;
+  expires_at: string;
+  remember: boolean;
+  current: boolean;
 }
 
 export interface FieldAvailability {

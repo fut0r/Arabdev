@@ -9,6 +9,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 
+from app.api import seo
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import SessionLocal
@@ -100,6 +101,10 @@ def create_app() -> FastAPI:
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "DENY")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+        response.headers.setdefault("Permissions-Policy", "geolocation=(), microphone=(), camera=(), payment=()")
+        if settings.cookie_secure:
+            response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         return response
 
     app.add_middleware(GZipMiddleware, minimum_size=1024)
@@ -108,11 +113,19 @@ def create_app() -> FastAPI:
         allow_origins=settings.cors_origins,
         allow_credentials=True,
         allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allow_headers=["Authorization", "Content-Type", "X-ArabDev-Client", "Accept-Language"],
+        allow_headers=[
+            "Authorization",
+            "Content-Type",
+            "X-ArabDev-Client",
+            "Accept-Language",
+            "X-Turnstile-Token",
+        ],
         expose_headers=["Retry-After"],
     )
 
     app.include_router(api_router, prefix=settings.api_v1_prefix)
+    # Served from the root, where crawlers look for them.
+    app.include_router(seo.router)
 
     media_path = urlparse(settings.media_url).path.rstrip("/") or "/media"
     if settings.storage_backend == "local":

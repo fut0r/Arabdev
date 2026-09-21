@@ -30,7 +30,12 @@ export function AppLayout() {
   const wide = matches.some((match) => (match.handle as RouteHandle | undefined)?.wide);
 
   return (
-    <Box sx={{ minHeight: '100vh', pb: { xs: `${layout.mobileNavHeight + 8}px`, md: 0 } }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        pb: { xs: `calc(${layout.mobileNavHeight + 8}px + env(safe-area-inset-bottom))`, md: 0 },
+      }}
+    >
       <Link
         href="#main"
         sx={{

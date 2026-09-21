@@ -123,6 +123,13 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
               animationDuration: '0.01ms !important',
             },
           },
+          // The same, for people who asked for it under Settings rather than in the OS.
+          '[data-reduce-motion="true"] *, [data-reduce-motion="true"] *::before, [data-reduce-motion="true"] *::after':
+            {
+              transitionDuration: '0.01ms !important',
+              animationDuration: '0.01ms !important',
+              scrollBehavior: 'auto !important',
+            },
         }),
       },
       MuiButtonBase: { defaultProps: { disableRipple: false } },

@@ -1,6 +1,7 @@
 """Vercel entry point: serves the ArabDev API (backend/app) as a Python function.
 
-vercel.json sends /api/* and /media/* here; everything else is the static app in frontend/dist.
+vercel.json sends /api/*, /media/* and /sitemap.xml here; everything else is the static app in
+frontend/dist.
 """
 
 import sys

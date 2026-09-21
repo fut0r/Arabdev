@@ -5,6 +5,7 @@ from pydantic import BaseModel, EmailStr, Field, StringConstraints, field_valida
 from pydantic_core import PydanticCustomError
 
 from app.schemas.common import ORMModel
+from app.schemas.verification import ChallengeOut
 from app.utils.validators import (
     clean_optional_text,
     normalize_http_url,
@@ -47,12 +48,20 @@ class ProfileOut(UserCard):
     follow_lists_visible: bool = True
 
 
+Feed = Literal["for_you", "following", "latest"]
+
+
 class SettingsOut(ORMModel):
     theme: Literal["light", "dark", "system"]
     language: Literal["ar", "en"]
+    default_feed: Feed
+    reduce_motion: bool
     discoverable: bool
     show_follow_lists: bool
     mentions_from: Literal["everyone", "following", "none"]
+    login_code_required: bool
+    email_security_alerts: bool
+    email_product_updates: bool
     notify_likes: bool
     notify_comments: bool
     notify_follows: bool
@@ -63,9 +72,14 @@ class SettingsOut(ORMModel):
 class SettingsUpdate(BaseModel):
     theme: Literal["light", "dark", "system"] | None = None
     language: Literal["ar", "en"] | None = None
+    default_feed: Feed | None = None
+    reduce_motion: bool | None = None
     discoverable: bool | None = None
     show_follow_lists: bool | None = None
     mentions_from: Literal["everyone", "following", "none"] | None = None
+    login_code_required: bool | None = None
+    email_security_alerts: bool | None = None
+    email_product_updates: bool | None = None
     notify_likes: bool | None = None
     notify_comments: bool | None = None
     notify_follows: bool | None = None
@@ -84,6 +98,7 @@ class MeOut(BaseModel):
     avatar_url: str | None = None
     interests: list[InterestOut] = []
     onboarding_completed: bool
+    email_verified: bool = False
     is_admin: bool
     created_at: datetime
     followers_count: int = 0
@@ -134,6 +149,25 @@ class PasswordUpdate(BaseModel):
         if value != info.data.get("new_password"):
             raise PydanticCustomError("passwords_mismatch", "Passwords do not match")
         return value
+
+
+class EmailChangeOut(BaseModel):
+    """Either the address changed, or a code went to the new one first."""
+
+    status: Literal["updated", "verification_required"]
+    user: MeOut | None = None
+    challenge: ChallengeOut | None = None
+
+
+class SessionOut(BaseModel):
+    """One signed-in browser, listed under Settings so strangers can be thrown out."""
+
+    id: int
+    user_agent: str | None = None
+    created_at: datetime
+    expires_at: datetime
+    remember: bool
+    current: bool
 
 
 class InterestsUpdate(BaseModel):

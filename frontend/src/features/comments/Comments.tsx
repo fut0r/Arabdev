@@ -26,6 +26,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { EmptyState } from '@/components/EmptyState';
 import { UserListSkeleton } from '@/components/LoadingState';
 import { useNotify } from '@/components/Notifier';
+import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
 import { Pagination } from '@/components/Pagination';
 import { useAuth } from '@/features/auth/AuthProvider';
 import type { Comment } from '@/types/api';
@@ -158,8 +159,10 @@ export const CommentComposer = forwardRef<HTMLTextAreaElement, ComposerProps>(fu
   const queryClient = useQueryClient();
   const [text, setText] = useState('');
 
+  const turnstile = useTurnstile({ action: 'comment', mode: 'invisible' });
+
   const mutation = useMutation({
-    mutationFn: () => postsApi.addComment(postId, text.trim(), replyTo?.id),
+    mutationFn: async () => postsApi.addComment(postId, text.trim(), replyTo?.id, await turnstile.getToken()),
     onSuccess: () => {
       setText('');
       onCancelReply();
@@ -167,6 +170,7 @@ export const CommentComposer = forwardRef<HTMLTextAreaElement, ComposerProps>(fu
       onPosted();
     },
     onError: (error) => notify(errorMessage(error, t), 'error'),
+    onSettled: () => turnstile.reset(),
   });
 
   if (!user) {
@@ -215,6 +219,7 @@ export const CommentComposer = forwardRef<HTMLTextAreaElement, ComposerProps>(fu
               if (event.key === 'Enter' && (event.ctrlKey || event.metaKey) && text.trim()) mutation.mutate();
             }}
           />
+          <TurnstileWidget handle={turnstile} sx={{ mt: 1 }} />
           <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', mt: 1 }}>
             <Typography variant="caption" color="text.secondary">
               {t('common.characters', { count: text.length, max: MAX_LENGTH })}
