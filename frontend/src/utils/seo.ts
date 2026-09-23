@@ -123,6 +123,9 @@ export function useSeo(input: SeoInput) {
 
     return () => {
       document.getElementById(JSON_LD_ID)?.remove();
+      // A page without its own canonical must not inherit the previous page's.
+      link('canonical', null);
+      meta('meta[property="og:url"]', 'property', 'og:url', null);
       meta('meta[name="robots"]', 'name', 'robots', null);
       meta('meta[property="article:published_time"]', 'property', 'article:published_time', null);
       meta('meta[property="article:author"]', 'property', 'article:author', null);

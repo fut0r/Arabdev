@@ -7,7 +7,7 @@ import { docUrls, newTab } from '@/components/DocLinks';
 import { useAuth } from '@/features/auth/AuthProvider';
 import '@/features/landing/landing.css';
 import { useAppearance } from '@/features/preferences/useAppearance';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import { HELLO_EMAIL, HOME_PATH, SUPPORT_EMAIL } from '@/site';
 
 function Svg({ children, size = 17 }: { children: ReactNode; size?: number }) {
@@ -87,7 +87,7 @@ export default function LandingPage() {
   const { mode, systemMode } = useColorScheme();
   const root = useReveal();
   const header = useStickyHeader();
-  useDocumentTitle(t('home.metaTitle'));
+  useSeo({ title: t('home.metaTitle'), description: t('home.heroLead'), canonical: '/' });
 
   // Signed in: straight to the dashboard. Otherwise sign in first.
   const signedIn = status === 'authenticated';

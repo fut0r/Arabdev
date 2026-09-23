@@ -10,7 +10,11 @@
     />
     <meta name="theme-color" content="#D0152B" />
     <meta name="color-scheme" content="light dark" />
-    <link rel="canonical" href="https://arabdev.site/" />
+    <!--
+      No canonical link or og:url here on purpose: this file is served for every address on
+      the site, so a fixed value would tell Google that every post and profile is a copy of the
+      homepage. Each page writes its own (see src/utils/seo.ts).
+    -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -28,7 +32,6 @@
       property="og:description"
       content="منصة اجتماعية للمطوّرين الناطقين بالعربية: اكتب بالعربية، شارك أفكارك، واعثر على مجتمعك."
     />
-    <meta property="og:url" content="https://arabdev.site/" />
     <meta property="og:image" content="https://arabdev.site/screenshots/dashboard.webp" />
     <meta property="og:image:width" content="1600" />
     <meta property="og:image:height" content="944" />

@@ -24,10 +24,10 @@ MAX_POSTS = 5000
 MAX_PROFILES = 2000
 MAX_TAGS = 500
 
+# Paths exactly as the pages name themselves in their canonical link, so the two agree.
 STATIC_PAGES: list[tuple[str, str, str]] = [
-    ("", "daily", "1.0"),
+    ("/", "daily", "1.0"),
     ("/explore", "hourly", "0.9"),
-    ("/login", "monthly", "0.3"),
     ("/register", "monthly", "0.5"),
 ]
 
@@ -77,7 +77,8 @@ def build_sitemap(db: Session) -> str:
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</urlset>'
 
 
-@router.get("/sitemap.xml")
+# HEAD too: crawlers and Search Console check the sitemap with it before downloading.
+@router.api_route("/sitemap.xml", methods=["GET", "HEAD"])
 def sitemap(db: DbSession) -> Response:
     return Response(
         build_sitemap(db),

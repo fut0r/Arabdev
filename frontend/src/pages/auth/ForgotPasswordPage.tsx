@@ -16,7 +16,7 @@ import { errorMessage } from '@/api/errors';
 import { AuthSplitLayout } from '@/features/auth/AuthSplitLayout';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
   const [sentTo, setSentTo] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
   const turnstile = useTurnstile({ action: 'forgot_password' });
-  useDocumentTitle(t('auth.forgotTitle'));
+  useSeo({ title: t('auth.forgotTitle'), noindex: true });
 
   const {
     register,

@@ -6,12 +6,12 @@ import { Link as RouterLink } from 'react-router';
 import { PageHeader, Surface } from '@/components/common';
 import { useCurrentUser } from '@/features/auth/AuthProvider';
 import { ProfileEditor } from '@/features/profile/ProfileEditor';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 
 export default function EditProfilePage() {
   const { t } = useTranslation();
   const user = useCurrentUser();
-  useDocumentTitle(t('editProfile.title'));
+  useSeo({ title: t('editProfile.title'), noindex: true });
   return (
     <Surface sx={{ maxWidth: 760 }}>
       <PageHeader

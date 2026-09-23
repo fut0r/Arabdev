@@ -314,3 +314,10 @@ def test_sitemap_lists_posts_and_findable_profiles(client, make_user, make_post)
     assert "/u/layla</loc>" in body
     assert "/tags/python</loc>" in body
     assert "/u/ghost</loc>" not in body  # opted out of being findable
+
+
+def test_sitemap_root_matches_the_homepage_canonical_and_answers_head(client):
+    body = client.get("/sitemap.xml").text
+    assert "<loc>http://localhost:5173/</loc>" in body  # same form as the page's own canonical
+    assert "/login</loc>" not in body
+    assert client.head("/sitemap.xml").status_code == 200

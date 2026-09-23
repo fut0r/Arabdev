@@ -26,7 +26,7 @@ import { ImageAttachment, isValidLink, LinkAttachment, TagInput } from '@/featur
 import { PostEditor } from '@/features/editor/PostEditor';
 import { PostPreview } from '@/features/editor/PostPreview';
 import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import { layout } from '@/theme/tokens';
 import type { Image, PostInput } from '@/types/api';
 import { isEditorEmpty } from '@/utils/html';
@@ -124,7 +124,7 @@ function EditorWorkspace({
   const notify = useNotify();
   const queryClient = useQueryClient();
   const editing = postId !== null;
-  useDocumentTitle(editing ? t('editor.editTitle') : t('editor.createTitle'));
+  useSeo({ title: editing ? t('editor.editTitle') : t('editor.createTitle'), noindex: true });
 
   const [title, setTitle] = useState(initial.title);
   const [html, setHtml] = useState(initial.html);

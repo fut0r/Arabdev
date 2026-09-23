@@ -12,7 +12,7 @@ import { authApi } from '@/api/auth';
 import { applyFieldErrors, errorMessage } from '@/api/errors';
 import { AuthSplitLayout } from '@/features/auth/AuthSplitLayout';
 import { PasswordField, PasswordStrength } from '@/features/auth/PasswordField';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 
 interface ResetValues {
   password: string;
@@ -25,7 +25,7 @@ export default function ResetPasswordPage() {
   const token = params.get('token') ?? '';
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  useDocumentTitle(t('auth.resetTitle'));
+  useSeo({ title: t('auth.resetTitle'), noindex: true });
 
   const {
     register,

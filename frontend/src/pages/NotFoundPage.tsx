@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next';
 
 import { Surface } from '@/components/common';
 import { EmptyState } from '@/components/EmptyState';
-import { useDocumentTitle } from '@/hooks';
+import { useSeo } from '@/utils/seo';
 import { HOME_PATH } from '@/site';
 
 export default function NotFoundPage() {
   const { t } = useTranslation();
-  useDocumentTitle(t('common.notFoundTitle'));
+  useSeo({ title: t('common.notFoundTitle'), noindex: true });
   return (
     <Surface>
       <EmptyState
