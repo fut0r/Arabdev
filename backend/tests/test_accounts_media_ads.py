@@ -1,3 +1,7 @@
+import io
+
+from PIL import Image
+
 from app.core.config import settings
 from tests.conftest import API, PASSWORD, image_bytes
 
@@ -170,3 +174,86 @@ def test_errors_never_leak_internals(client):
     assert response.status_code == 422
     assert set(response.json()) == {"detail", "code", "errors"}
     assert client.get(f"{API}/nope").json() == {"detail": "Not Found", "code": "not_found"}
+
+
+def test_image_bombs_are_refused_before_decoding(client, make_user):
+    account = make_user("layla")
+    # A small file whose pixels would take far more memory than any real photo is refused from
+    # its header, before decoding. (9000x5000 is within the side limit for post images.)
+    bomb = io.BytesIO()
+    Image.new("1", (9000, 5000)).save(bomb, format="PNG")
+    assert len(bomb.getvalue()) < 100_000
+    response = client.post(
+        f"{API}/media", files={"file": ("big.png", bomb.getvalue(), "image/png")}, headers=account.headers
+    )
+    assert response.json()["code"] == "image_too_large"
+
+
+def test_forged_forwarded_for_cannot_dodge_rate_limits(client, monkeypatch):
+    monkeypatch.setattr(settings, "rate_limit_enabled", True)
+    # A proxy appends the address it saw, so the client's own value ends up on the left. Each
+    # attempt uses a different email, so only the per-network limit (10 a minute) is in play.
+    codes = [
+        client.post(
+            f"{API}/auth/login",
+            json={"email": f"nobody{attempt}@example.com", "password": "Wrong1234"},
+            headers={"X-Forwarded-For": f"10.0.0.{attempt}, 203.0.113.7"},
+        ).status_code
+        for attempt in range(12)
+    ]
+    assert codes[:10] == [401] * 10
+    assert codes[-1] == 429
+
+    # Someone else behind the same proxy is counted separately.
+    other = client.post(
+        f"{API}/auth/login",
+        json={"email": "someone@example.com", "password": "Wrong1234"},
+        headers={"X-Forwarded-For": "198.51.100.4"},
+    )
+    assert other.status_code == 401
+
+
+def test_logins_are_limited_per_account_across_networks(client, make_user, monkeypatch):
+    make_user("layla")
+    make_user("omar")
+    monkeypatch.setattr(settings, "rate_limit_enabled", True)
+
+    def attempt(email, address):
+        return client.post(
+            f"{API}/auth/login",
+            json={"email": email, "password": "Wrong1234"},
+            headers={"X-Forwarded-For": address},
+        ).status_code
+
+    # Guesses spread over many addresses (and letter cases) still run out for the target...
+    codes = [attempt("Layla@Example.com" if n % 2 else "layla@example.com", f"198.51.100.{n}") for n in range(9)]
+    assert codes[:8] == [401] * 8
+    assert codes[-1] == 429
+    # ...without affecting anyone else.
+    assert attempt("omar@example.com", "198.51.100.200") == 401
+
+
+def test_reset_emails_are_limited_per_inbox(client, make_user, monkeypatch):
+    make_user("layla", "layla@example.com")
+    monkeypatch.setattr(settings, "rate_limit_enabled", True)
+    codes = [
+        client.post(
+            f"{API}/auth/forgot-password",
+            json={"email": "layla@example.com"},
+            headers={"X-Forwarded-For": f"198.51.100.{n}"},
+        ).status_code
+        for n in range(6)
+    ]
+    assert codes[:5] == [202] * 5
+    assert codes[-1] == 429
+
+
+def test_deleting_the_account_limits_password_guesses(client, make_user, monkeypatch):
+    account = make_user("layla")
+    monkeypatch.setattr(settings, "rate_limit_enabled", True)
+    codes = [
+        client.request("DELETE", f"{API}/users/me", json={"password": "Wrong1234"}, headers=account.headers).status_code
+        for _ in range(11)
+    ]
+    assert codes[:10] == [422] * 10
+    assert codes[-1] == 429

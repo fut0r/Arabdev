@@ -72,18 +72,28 @@ def get_limiter() -> MemoryRateLimiter | RedisRateLimiter:
 
 
 def client_ip(request: Request) -> str:
-    forwarded = request.headers.get("x-forwarded-for")
-    if forwarded:
-        return forwarded.split(",")[0].strip()
+    """The address a request came from, as recorded by the proxies in front of the API.
+
+    Each proxy appends the address it received the request from to X-Forwarded-For, so only the
+    right-most entries can be trusted. Anything to their left was sent by the client, and taking
+    it would let anyone dodge rate limits by sending a different value with every request.
+    """
+    hops = settings.trusted_proxy_hops
+    if hops > 0:
+        entries = [
+            entry.strip()
+            for header in request.headers.getlist("x-forwarded-for")
+            for entry in header.split(",")
+            if entry.strip()
+        ]
+        if entries:
+            return entries[-min(hops, len(entries))]
     return request.client.host if request.client else "unknown"
 
 
-def consume(scope: str, identifier: str, limit: int, window: int) -> tuple[bool, int]:
-    """Count one attempt against `identifier` (an email, a user id) outside the request
-    dependency chain. Returns (allowed, seconds until the window resets)."""
+def _hit(key: str, limit: int, window: int) -> tuple[bool, int]:
     if not settings.rate_limit_enabled:
         return True, 0
-    key = f"{scope}:{hashlib.sha256(identifier.lower().encode()).hexdigest()[:32]}"
     try:
         return get_limiter().hit(key, limit, window)
     except Exception:  # Never take the API down because Redis hiccupped.
@@ -91,20 +101,32 @@ def consume(scope: str, identifier: str, limit: int, window: int) -> tuple[bool,
         return True, 0
 
 
+def _refuse(retry_after: int) -> TooManyRequests:
+    return TooManyRequests(
+        "Too many requests. Please wait a moment and try again.",
+        headers={"Retry-After": str(max(retry_after, 1))},
+    )
+
+
+def consume(scope: str, identifier: str, limit: int, window: int) -> tuple[bool, int]:
+    """Count one attempt against `identifier` (an email, a user id) outside the request
+    dependency chain. Returns (allowed, seconds until the window resets). The identifier is
+    hashed, so an email address never appears in Redis."""
+    digest = hashlib.sha256(identifier.strip().lower().encode("utf-8")).hexdigest()[:32]
+    return _hit(f"{scope}:{digest}", limit, window)
+
+
+def limit_identifier(scope: str, identifier: str, limit: int, window: int) -> None:
+    """Like consume(), but answers 429 straight away once the allowance is used up."""
+    allowed, retry_after = consume(scope, identifier, limit, window)
+    if not allowed:
+        raise _refuse(retry_after)
+
+
 def rate_limit(scope: str, limit: int, window: int) -> Callable[[Request], None]:
     def dependency(request: Request) -> None:
-        if not settings.rate_limit_enabled:
-            return
-        key = f"{scope}:{client_ip(request)}"
-        try:
-            allowed, retry_after = get_limiter().hit(key, limit, window)
-        except Exception:  # Never take the API down because Redis hiccupped.
-            logger.warning("Rate limiter unavailable, allowing request", exc_info=True)
-            return
+        allowed, retry_after = _hit(f"{scope}:{client_ip(request)}", limit, window)
         if not allowed:
-            raise TooManyRequests(
-                "Too many requests. Please wait a moment and try again.",
-                headers={"Retry-After": str(max(retry_after, 1))},
-            )
+            raise _refuse(retry_after)
 
     return dependency

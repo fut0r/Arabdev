@@ -204,7 +204,12 @@ def remove_avatar(db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user_service.remove_avatar(db, user))
 
 
-@router.delete("/me", status_code=status.HTTP_204_NO_CONTENT, summary="Permanently delete the account")
+@router.delete(
+    "/me",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Permanently delete the account",
+    dependencies=[Depends(rate_limit("password_check", limit=10, window=900))],
+)
 def delete_account(data: AccountDelete, db: DbSession, user: CurrentUser) -> Response:
     user_service.delete_account(db, user, data.password)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

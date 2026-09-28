@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .venv/
 .pytest_cache/
+*.egg-info/
 backend/media/
 *.db
 *.db-wal

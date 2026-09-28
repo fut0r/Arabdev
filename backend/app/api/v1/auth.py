@@ -4,7 +4,7 @@ from fastapi import APIRouter, Cookie, Depends, Query, Request, Response, status
 
 from app.core.config import settings
 from app.core.deps import DbSession, require_client_header
-from app.core.rate_limit import client_ip, rate_limit
+from app.core.rate_limit import client_ip, limit_identifier, rate_limit
 from app.schemas.auth import (
     AuthResultOut,
     AvailabilityOut,
@@ -197,6 +197,8 @@ def availability(
     ],
 )
 def forgot_password(data: ForgotPasswordIn, db: DbSession) -> MessageOut:
+    # The per-address limit above can be spread over many machines; this one guards each inbox.
+    limit_identifier("forgot_account", data.email, limit=5, window=3600)
     auth_service.request_password_reset(db, data.email)
     return MessageOut(detail="If an account exists for this email, a reset link is on its way.")
 

@@ -76,6 +76,14 @@ def test_hosted_postgres_urls_use_the_psycopg_driver():
     assert Settings(_env_file=None, database_url="sqlite:///x.db").database_url == "sqlite:///x.db"
 
 
+def test_production_refuses_published_placeholder_secrets():
+    for placeholder in ("change-me", "CHANGE_ME", "dev-only-insecure-secret-change-me-0123456789"):
+        with pytest.raises(ValueError, match="SECRET_KEY"):
+            Settings(_env_file=None, environment="production", secret_key=placeholder)
+    assert Settings(_env_file=None, environment="production", secret_key="k" * 48).secret_key == "k" * 48
+    assert Settings(_env_file=None, environment="development", secret_key="change-me")
+
+
 def test_vercel_defaults(monkeypatch):
     monkeypatch.setenv("VERCEL", "1")
     monkeypatch.delenv("ENVIRONMENT", raising=False)

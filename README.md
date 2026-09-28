@@ -148,7 +148,14 @@ re-encoding), ads and rate limiting.
 - Cookie endpoints require an `X-ArabDev-Client` header, which cross-site forms can't send (CSRF).
 - Changing or resetting the password bumps a token version, so every outstanding access token dies.
 - Rate limits protect login, registration, password reset, search, uploads, posting and commenting
-  (Redis when configured, otherwise in-process).
+  (Redis when configured, otherwise in-process). They count per address, taken from the right-hand end
+  of `X-Forwarded-For` so a client can't forge its way around them (see `TRUSTED_PROXY_HOPS`), and
+  sign-in and password reset are also limited per account, so guesses spread over many machines
+  still run out.
+- The app is served with HSTS, `X-Frame-Options: DENY`, a Content-Security-Policy that blocks
+  framing, plugins, `<base>` hijacking and off-site form posts, and related headers (`vercel.json`, and
+  `frontend/nginx-security-headers.conf` for Docker). Scripts and frames are not allow-listed, because
+  Google AdSense and Cloudflare Turnstile load from hosts that change without notice.
 
 ### Posts and the editor
 - The editor is TipTap with a deliberately small toolbar: headings, bold/italic/underline/strike,
@@ -225,6 +232,7 @@ Backend settings (env vars or `backend/.env`, see `backend/.env.example`):
 | `DATABASE_URL` | `backend/arabdev.db` | `sqlite:///` + path (four slashes for an absolute Linux path), or a PostgreSQL URL |
 | `SECRET_KEY` | dev value | **Required** in production |
 | `REDIS_URL` | unset | Enables shared rate limiting and caching |
+| `TRUSTED_PROXY_HOPS` | `1` | Reverse proxies in front of the API that append to `X-Forwarded-For` (`1` fits Vercel, which replaces the header, and the Docker nginx). Raise it for each extra proxy in front, such as Cloudflare; `0` ignores the header |
 | `CORS_ORIGINS` | `http://localhost:5173,…` | Comma separated |
 | `FRONTEND_URL` | `http://localhost:5173` | Used in password reset links. Production: `https://arabdev.site` |
 | `SUPPORT_EMAIL` / `HELLO_EMAIL` | `support@` / `hi@arabdev.site` | Shown in emails and the API docs |

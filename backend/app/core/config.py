@@ -10,6 +10,9 @@ from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 _INSECURE_DEFAULT_SECRET = "dev-only-insecure-secret-change-me-0123456789"
+# The built-in secret and the placeholders from the .env.example files. Anyone can read these,
+# so a server using one would let anyone sign valid access tokens.
+_PLACEHOLDER_SECRETS = {_INSECURE_DEFAULT_SECRET, "change-me", "change_me", "changeme", "secret", ""}
 
 
 def _normalize_database_url(url: str) -> str:
@@ -105,6 +108,11 @@ class Settings(BaseSettings):
     max_upload_bytes: int = 5 * 1024 * 1024
 
     rate_limit_enabled: bool = True
+    # How many reverse proxies in front of the API append to X-Forwarded-For. Rate limits key on
+    # the address the outermost of them saw; entries further left come from the client and can be
+    # forged. 1 fits Vercel (which replaces the header) and the nginx in docker-compose; add one for
+    # each further proxy in front, such as Cloudflare's orange-cloud proxy. 0 ignores the header.
+    trusted_proxy_hops: int = 1
 
     @field_validator("cors_origins", "turnstile_hostnames", mode="before")
     @classmethod
@@ -139,7 +147,7 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def _check_production_secret(self) -> "Settings":
-        if self.environment == "production" and self.secret_key == _INSECURE_DEFAULT_SECRET:
+        if self.environment == "production" and self.secret_key.lower() in _PLACEHOLDER_SECRETS:
             raise ValueError("SECRET_KEY must be set in production")
         return self
 

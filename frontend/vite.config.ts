@@ -83,12 +83,21 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/@tiptap') || id.includes('node_modules/prosemirror')) return 'editor';
-          if (id.includes('node_modules/@mui') || id.includes('node_modules/@emotion')) return 'mui';
-          return undefined;
+        codeSplitting: {
+          // A group also takes in the dependencies of what it captures, so React needs the highest
+          // priority: otherwise it lands in "editor" (TipTap depends on it) and every page downloads
+          // the whole editor just to get React.
+          groups: [
+            {
+              name: 'react',
+              test: /node_modules[\\/](react|react-dom|scheduler|use-sync-external-store)[\\/]/,
+              priority: 3,
+            },
+            { name: 'mui', test: /node_modules[\\/]@(mui|emotion)[\\/]/, priority: 2 },
+            { name: 'editor', test: /node_modules[\\/](@tiptap|prosemirror-[a-z]+)[\\/]/, priority: 1 },
+          ],
         },
       },
     },

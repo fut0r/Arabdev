@@ -24,6 +24,7 @@ ALLOWED_FORMATS = {"JPEG", "PNG", "WEBP", "GIF"}
 ALLOWED_CONTENT_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 MAX_PIXELS = 40_000_000
 Image.MAX_IMAGE_PIXELS = MAX_PIXELS
+_DECODE_ERRORS = (UnidentifiedImageError, OSError, SyntaxError, ValueError, Image.DecompressionBombError)
 
 
 @dataclass(frozen=True)
@@ -57,21 +58,27 @@ def process_image(raw: bytes, kind: str) -> ProcessedImage:
         probe = Image.open(io.BytesIO(raw))
         image_format = probe.format
         probe.verify()
-        image = Image.open(io.BytesIO(raw))
-        image.load()
-    except (UnidentifiedImageError, OSError, SyntaxError, ValueError, Image.DecompressionBombError):
+    except _DECODE_ERRORS:
         raise UnprocessableEntity("This file is not a valid image", "file_not_image", field="file") from None
 
     if image_format not in ALLOWED_FORMATS:
         raise UnprocessableEntity("Use a JPEG, PNG, WebP or GIF image", "file_type_not_allowed", field="file")
 
-    width, height = image.size
+    # The header gives the dimensions, so images that are too big are turned away before their
+    # pixels are decoded: a few megabytes of compressed data can expand to gigabytes in memory.
+    width, height = probe.size
     if min(width, height) < rules.min_side:
         raise UnprocessableEntity(
             f"Image is too small (minimum {rules.min_side}×{rules.min_side}px)", "image_too_small", field="file"
         )
-    if max(width, height) > rules.max_side:
+    if max(width, height) > rules.max_side or width * height > MAX_PIXELS:
         raise UnprocessableEntity("Image dimensions are too large", "image_too_large", field="file")
+
+    try:
+        image = Image.open(io.BytesIO(raw))
+        image.load()
+    except _DECODE_ERRORS:
+        raise UnprocessableEntity("This file is not a valid image", "file_not_image", field="file") from None
 
     image = ImageOps.exif_transpose(image)
     has_alpha = image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info)
