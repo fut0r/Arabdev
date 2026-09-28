@@ -46,11 +46,11 @@
       والتغييرات الخاصة بالمطوّرين. استخدم عوامل التصفية لعرض نوع واحد من التغييرات، أو اكتب للبحث.
     </p>
     <div class="latest">
-      <div class="latest-version">1.1.0</div>
+      <div class="latest-version">1.1.1</div>
       <div>
-        <h2>أحدث إصدار: ArabDev 1.1.0 — الأمان والإعلانات والبحث</h2>
-        <p>صدر في <time datetime="2026-09-21">21 سبتمبر 2026</time>.</p>
-        <ul class="stats" aria-label="التغييرات في 1.1.0">
+        <h2>أحدث إصدار: ArabDev 1.1.1 — أمان أشدّ وبداية أسرع</h2>
+        <p>صدر في <time datetime="2026-09-28">28 سبتمبر 2026</time>.</p>
+        <ul class="stats" aria-label="التغييرات في 1.1.1">
           <li>إجمالي التغييرات <strong data-count="all">—</strong></li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> جديد</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> تحسين</li>
@@ -80,7 +80,17 @@
     <h2>الإصدارات</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 سبتمبر 2026 · الأحدث</small></a>
+        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 سبتمبر 2026 · الأحدث</small></a>
+        <ul>
+          <li><a href="#v111-security">الأمان</a></li>
+          <li><a href="#v111-search">محرّكات البحث</a></li>
+          <li><a href="#v111-performance">الأداء</a></li>
+          <li><a href="#v111-service">تشغيل الخدمة</a></li>
+          <li><a href="#v111-developer">للمطوّرين</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 سبتمبر 2026</small></a>
         <ul>
           <li><a href="#v110-signin">تسجيل الدخول وإنشاء الحساب</a></li>
           <li><a href="#v110-botcheck">الحماية من الروبوتات</a></li>
@@ -145,10 +155,63 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release" id="v1-1-1" aria-labelledby="v1-1-1-title">
+  <header class="release-header">
+    <h2 id="v1-1-1-title">ArabDev 1.1.1</h2>
+    <span class="badge">الأحدث</span>
+    <time datetime="2026-09-28">28 سبتمبر 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    إصدار للأمان والسرعة: حدود لمعدّل الطلبات لا يمكن الالتفاف عليها وتصمد على كل الخوادم، وترويسات أمان على كل صفحة، ورفع صور أكثر أمانًا، وصفحات صار بإمكان محرّكات البحث فهرستها أخيرًا، ومحرّر لم يعد يبطئ كل صفحة أخرى.
+  </p>
+
+  <section class="area" id="v111-security" aria-labelledby="v111-security-title">
+    <h3 id="v111-security-title">الأمان<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صارت حدود معدّل الطلبات تحصي العنوان الذي سجّلته استضافتنا لكل طلب، لا العنوان الذي يدّعيه متصفح الزائر، فلم تعد ترويسة <code>X-Forwarded-For</code> مزوّرة تمنح محاولات غير محدودة لتسجيل الدخول أو إنشاء الحساب أو إعادة التعيين.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صارت عدّادات تحديد المعدّل مشتركة بين كل خوادم ArabDev عبر Redis بدل أن يحصي كل خادم وحده، فتصمد الحدود عند قيمها المعلنة.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">لا يتلقّى كل بريد أكثر من خمس رسائل لإعادة تعيين كلمة المرور في الساعة، مهما تعدّدت الشبكات التي تطلبها.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صار حذف الحساب يشارك حدّ تخمين كلمة المرور الذي كان لتغيير البريد وكلمة المرور: عشر محاولات كل خمس عشرة دقيقة.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">تُقاس الصور المرفوعة من ترويسة ملفها وتُرفض قبل فكّ ترميزها إن كانت كبيرة جدًا، فلم يعد ملف صغير قادرًا على التمدّد إلى مئات الميغابايتات في الذاكرة.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صارت كل صفحة تُرسَل مع ترويسات أمان: يُفرض HTTPS ‏(HSTS)، ولا يستطيع موقع آخر عرض ArabDev داخل إطار، وتُحجب الإضافات والنماذج التي ترسل إلى مواقع أخرى، ويتوقف الوصول إلى الكاميرا والميكروفون والموقع والدفع.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">يرفض الخادم العمل في الإنتاج بمفتاح توقيع مفقود أو بأحد المفاتيح النموذجية المنشورة.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-search" aria-labelledby="v111-search-title">
+    <h3 id="v111-search-title">محرّكات البحث<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">كانت كل صفحة تخبر محرّكات البحث بأنها نسخة من الصفحة الرئيسية، فبقيت المنشورات والملفات الشخصية والوسوم خارج Google. صارت كل صفحة تسمّي عنوانها الخاص.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">صار مدخل الصفحة الرئيسية في خريطة الموقع يطابق عنوانها تمامًا، ولم تعد صفحة تسجيل الدخول مدرجة فيها، وصارت خريطة الموقع تجيب عن طلبات <code>HEAD</code>.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صارت صفحات إعادة تعيين كلمة المرور والمحرّر وتعديل الملف الشخصي وصفحة «غير موجود» تطلب من محرّكات البحث عدم إدراجها.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-performance" aria-labelledby="v111-performance-title">
+    <h3 id="v111-performance-title">الأداء<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">لم يعد محرّر المنشورات (نحو 137 كيلوبايت مضغوطًا) يُنزَّل مع كل صفحة، بل عند فتح المحرّر فقط، فتفتح الصفحة الرئيسية والخلاصة والمنشورات أسرع، وخاصة على الهواتف.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-service" aria-labelledby="v111-service-title">
+    <h3 id="v111-service-title">تشغيل الخدمة<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صارت الرسائل البريدية، ومنها رموز تسجيل الدخول والتنبيهات الأمنية وروابط إعادة تعيين كلمة المرور، تصل من <code>noreply@arabdev.site</code>.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار arabdev.site العنوان الوحيد للموقع، وأُوقف عنوان www القديم.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-developer" aria-labelledby="v111-developer-title">
+    <h3 id="v111-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعداد جديد <code>TRUSTED_PROXY_HOPS</code> (القيمة الافتراضية 1): عدد الوسطاء أمام الواجهة البرمجية الذين يضيفون إلى <code>X-Forwarded-For</code>. ارفعه لكل وسيط إضافي، مثل وكيل Cloudflare البرتقالي.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">ترويسات الأمان في <code>vercel.json</code>، وفي <code>frontend/nginx-security-headers.conf</code> لـ Docker. ولا تضع سياسة أمان المحتوى قائمة سماح للسكربتات عمدًا، لأن Google AdSense وCloudflare Turnstile يُحمَّلان من عناوين تتغيّر دون إشعار.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يشغّل التكامل المستمر اختبارات الواجهة الخلفية وفحص تنسيق الواجهة الأمامية وبناءها مع كل طلب دمج وكل دفع إلى <code>main</code>. ويقترح Dependabot تحديثات الاعتماديات، ويشرح <code>SECURITY.md</code> كيف تُبلَّغ الثغرات بشكل خاص.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">لم تعد مخرجات البناء (<code>*.egg-info</code>) تُحفظ في المستودع. وصار في مجموعة اختبارات الواجهة الخلفية 74 اختبارًا.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-1-0" aria-labelledby="v1-1-0-title">
   <header class="release-header">
     <h2 id="v1-1-0-title">ArabDev 1.1.0</h2>
-    <span class="badge">الأحدث</span>
     <time datetime="2026-09-21">21 سبتمبر 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

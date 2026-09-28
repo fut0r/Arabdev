@@ -46,11 +46,11 @@
       changes for developers. Use the filters to see only one kind of change, or type to search.
     </p>
     <div class="latest">
-      <div class="latest-version">1.1.0</div>
+      <div class="latest-version">1.1.1</div>
       <div>
-        <h2>Latest release: ArabDev 1.1.0, security, ads and search</h2>
-        <p>Released on <time datetime="2026-09-21">21 September 2026</time>.</p>
-        <ul class="stats" aria-label="Changes in 1.1.0">
+        <h2>Latest release: ArabDev 1.1.1, tighter security and a faster start</h2>
+        <p>Released on <time datetime="2026-09-28">28 September 2026</time>.</p>
+        <ul class="stats" aria-label="Changes in 1.1.1">
           <li><strong data-count="all">—</strong> changes</li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> new</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> improved</li>
@@ -80,7 +80,17 @@
     <h2>Releases</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 September 2026 · Latest</small></a>
+        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 September 2026 · Latest</small></a>
+        <ul>
+          <li><a href="#v111-security">Security</a></li>
+          <li><a href="#v111-search">Search engines</a></li>
+          <li><a href="#v111-performance">Performance</a></li>
+          <li><a href="#v111-service">Running the service</a></li>
+          <li><a href="#v111-developer">For developers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-1-0">1.1.0 <small>21 September 2026</small></a>
         <ul>
           <li><a href="#v110-signin">Signing in and signing up</a></li>
           <li><a href="#v110-botcheck">Bot protection</a></li>
@@ -145,10 +155,63 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>No changes match your filters. Try another word, or show all changes.</div>
 
+<article class="release" id="v1-1-1" aria-labelledby="v1-1-1-title">
+  <header class="release-header">
+    <h2 id="v1-1-1-title">ArabDev 1.1.1</h2>
+    <span class="badge">Latest</span>
+    <time datetime="2026-09-28">28 September 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    A security and speed release: rate limits that cannot be dodged and hold across every server, security headers on every page, safer image uploads, pages that search engines can finally index, and an editor that no longer slows down every other page.
+  </p>
+
+  <section class="area" id="v111-security" aria-labelledby="v111-security-title">
+    <h3 id="v111-security-title">Security<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Rate limits now count the address our hosting recorded for each request, not the one the visitor’s browser claims, so a forged <code>X-Forwarded-For</code> header no longer buys unlimited sign-in, sign-up or reset attempts.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Rate-limit counters are now shared by all of ArabDev’s servers through Redis, instead of each server counting on its own, so the limits hold at their stated values.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Each inbox receives at most five password reset emails an hour, however many networks ask for them.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Deleting your account now shares the password-guess limit that changing your email and password already had: ten tries every fifteen minutes.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Uploaded images are measured from their file header and refused before being decoded when they are too large, so a small file can no longer expand into hundreds of megabytes of memory.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Every page is now sent with security headers: HTTPS is enforced (HSTS), no other site can show ArabDev inside a frame, plugins and forms that post elsewhere are blocked, and camera, microphone, location and payment access are switched off.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">The server refuses to start in production with a missing signing key or one of the published placeholder keys.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-search" aria-labelledby="v111-search-title">
+    <h3 id="v111-search-title">Search engines<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">Every page used to tell search engines it was a copy of the homepage, which kept posts, profiles and tags out of Google. Each page now names its own address.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">The sitemap’s homepage entry now matches the homepage’s own address exactly, the sign-in page is no longer listed, and the sitemap answers <code>HEAD</code> requests.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Password reset, the editor, profile editing and the not-found page now ask search engines not to list them.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-performance" aria-labelledby="v111-performance-title">
+    <h3 id="v111-performance-title">Performance<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The post editor (about 137 KB compressed) is no longer downloaded on every page. It now loads only when you open the editor, so the homepage, feed and posts open faster, especially on phones.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-service" aria-labelledby="v111-service-title">
+    <h3 id="v111-service-title">Running the service<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Emails, including sign-in codes, security alerts and password reset links, are now delivered from <code>noreply@arabdev.site</code>.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">arabdev.site is now the one address of the site; the old www address has been retired.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v111-developer" aria-labelledby="v111-developer-title">
+    <h3 id="v111-developer-title">For developers<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New setting <code>TRUSTED_PROXY_HOPS</code> (default 1): how many proxies in front of the API append to <code>X-Forwarded-For</code>. Raise it for each extra proxy, such as Cloudflare’s orange-cloud proxy.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Security headers live in <code>vercel.json</code> and, for Docker, <code>frontend/nginx-security-headers.conf</code>. The Content-Security-Policy deliberately does not allow-list scripts, because Google AdSense and Cloudflare Turnstile load from hosts that change without notice.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Continuous integration runs the backend tests and the frontend format check and build on every pull request and every push to <code>main</code>. Dependabot proposes dependency updates, and <code>SECURITY.md</code> explains how to report vulnerabilities privately.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Build output (<code>*.egg-info</code>) is no longer committed. The backend test suite now has 74 tests.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-1-0" aria-labelledby="v1-1-0-title">
   <header class="release-header">
     <h2 id="v1-1-0-title">ArabDev 1.1.0</h2>
-    <span class="badge">Latest</span>
     <time datetime="2026-09-21">21 September 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

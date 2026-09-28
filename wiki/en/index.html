@@ -116,6 +116,7 @@
     <tr><th scope="row">Audience</th><td>Developers, especially Arabic speakers</td></tr>
     <tr><th scope="row">Languages</th><td>Arabic (right-to-left) and English (left-to-right)</td></tr>
     <tr><th scope="row">First release</th><td>Version 1.0.0, 19 September 2026</td></tr>
+    <tr><th scope="row">Latest release</th><td>Version 1.1.1, 28 September 2026</td></tr>
     <tr><th scope="row">License</th><td>GNU General Public License v3.0 or later</td></tr>
     <tr><th scope="row">Frontend</th><td>React, TypeScript, Material UI</td></tr>
     <tr><th scope="row">Backend</th><td>Python, FastAPI, SQLite</td></tr>
@@ -172,10 +173,10 @@
 </div>
 
 <h2 id="main-page-about">About this wiki</h2>
-<p>This wiki documents ArabDev version 1.0.0. When a new version changes how something works, the matching article is updated and the change is listed in the <a href="https://patch.arabdev.site/en/" target="_blank" rel="noopener">patch notes</a>.</p>
+<p>This wiki documents ArabDev version 1.1.1. When a new version changes how something works, the matching article is updated and the change is listed in the <a href="https://patch.arabdev.site/en/" target="_blank" rel="noopener">patch notes</a>.</p>
 <p>The wiki is a set of static pages. It has no accounts, no comments, no analytics and no tracking. The only thing it remembers is your light or dark mode choice, which it shares with ArabDev in your browser's local storage.</p>
 <div class="categories">Categories: <a href="#main-page">Wiki</a><a href="#getting-started">Start here</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== GETTING STARTED -->
@@ -189,10 +190,11 @@
 <p>Open <a href="https://arabdev.site/" dir="ltr">arabdev.site</a> and choose <strong>Create account</strong>. You need four things:</p>
 <ol>
   <li><strong>Username</strong>, the unique handle people use to mention you (for example <code>@layla_dev</code>).</li>
-  <li><strong>Email address</strong>, used to sign in and to reset your password. It is never shown on your profile.</li>
+  <li><strong>Email address</strong>, used to sign in, to receive confirmation codes and to reset your password. It is never shown on your profile.</li>
   <li><strong>Password</strong>, entered twice to make sure there is no typo.</li>
   <li>The interface language you are using when you sign up is saved as your starting preference. You can change it at any time.</li>
 </ol>
+<p>After you choose <strong>Create account</strong>, ArabDev emails a six-digit code to the address you entered. Type it in within 10 minutes to finish: your account is created only then, and you are signed in straight away. If the email does not arrive, check your spam folder, make sure the address is right, or ask for another code after 60 seconds. See <a href="#account-security-codes">Confirmation codes</a>.</p>
 <p>As you type a username, ArabDev checks whether it is free and shows a green check mark or a message such as "This username is already taken". When you leave the email field it also checks that no account already uses that address.</p>
 
 <h3 id="getting-started-username-rules">Username rules</h3>
@@ -215,12 +217,13 @@
 <div class="callout tip"><span class="callout-title">Tip</span><p>A long passphrase of four or five unrelated words plus a number is both strong and easy to remember. A password manager is even better.</p></div>
 
 <h2 id="getting-started-sign-in">Signing in</h2>
-<p>Sign in with your email address and password. Creating an account signs you in automatically, so you only need this page when you come back.</p>
+<p>Sign in with your email address and password, then enter the six-digit code ArabDev emails you. Confirming a new account signs you in automatically, so you only need this page when you come back.</p>
 <ul>
   <li><strong>Keep me signed in</strong> (checked by default) keeps you signed in on this browser for up to 30 days.</li>
   <li>If you uncheck it, your session ends when you close the browser, and in any case after 12 hours.</li>
   <li>If you type the wrong email or password, ArabDev says only "Email or password is incorrect". It never reveals whether an email address has an account.</li>
-  <li>After 10 attempts in one minute from the same network, sign-in pauses briefly. Wait a moment and try again.</li>
+  <li>After 10 attempts in one minute from the same network, or 8 attempts for the same account in 15 minutes, sign-in pauses briefly. Wait a moment and try again.</li>
+  <li>You can switch the sign-in code off under <a href="#settings-security-signin">Settings → Security</a>, though keeping it on is much safer.</li>
 </ul>
 <p class="hatnote">Forgot your password? See <a href="#account-security-reset">Resetting a forgotten password</a>.</p>
 
@@ -257,7 +260,7 @@
 </div>
 <p>Your picture in the top corner opens the account menu, with links to Edit profile, Drafts, Bookmarks and Settings, quick theme and language switches, links to this wiki, the privacy policy and the patch notes, and Sign out.</p>
 <div class="categories">Categories: <a href="#main-page">Start here</a><a href="#profiles">Accounts</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== PROFILES -->
@@ -323,7 +326,7 @@
 <h2 id="profiles-lists">Followers and following lists</h2>
 <p>Open the lists from the counts on a profile, or go to <code>/u/username/followers</code> and <code>/u/username/following</code>. Each person is shown as a card with their bio, interests and a follow button. If someone has turned off <strong>Show my followers and following lists</strong>, other people see "This account keeps its connections private" instead. The owner can always see their own lists.</p>
 <div class="categories">Categories: <a href="#profiles">Accounts</a><a href="#following-and-discovery">Community</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== HOME FEED -->
@@ -335,7 +338,7 @@
 
 <h2 id="home-feed-tabs">The three tabs</h2>
 <h3 id="home-feed-for-you">For you</h3>
-<p>The default tab. It shows every post on ArabDev, arranged like this:</p>
+<p>The default tab, unless you chose another under <a href="#settings-appearance">Settings → Appearance → Feed to open first</a>. It shows every post on ArabDev, arranged like this:</p>
 <ol>
   <li>Posts are grouped by the day they were published (in Coordinated Universal Time), newest day first.</li>
   <li>Within the same day, posts from people you follow come first, then posts tagged with one of your interests, then everything else.</li>
@@ -380,7 +383,7 @@
   <li>If the Following tab is empty, you see "Nothing from people you follow" and a button that takes you to Explore to find developers.</li>
 </ul>
 <div class="categories">Categories: <a href="#home-feed">Feed</a><a href="#following-and-discovery">Discovery</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== WRITING POSTS -->
@@ -478,7 +481,7 @@
 <h2 id="writing-posts-safety">What happens to your post when you publish</h2>
 <p>The server checks and cleans every post before saving it. It keeps only the formatting the editor offers and removes anything else, including scripts, unknown tags, styles outside the allowed fonts, sizes and colors, and links that do not use <code>http</code>, <code>https</code> or <code>mailto</code>. Links in posts open in a new tab and are marked so search engines do not treat them as endorsements. The browser checks the post again before showing it. This double check keeps everyone who reads your post safe.</p>
 <div class="categories">Categories: <a href="#writing-posts">Posts</a><a href="#formatting-reference">Editor</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== FORMATTING REFERENCE -->
@@ -593,7 +596,7 @@
 </div>
 <p>Do not rely on color alone to carry meaning: some readers cannot tell colors apart. Pair color with words such as "Warning:".</p>
 <div class="categories">Categories: <a href="#formatting-reference">Editor</a><a href="#writing-posts">Posts</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== TAGS AND INTERESTS -->
@@ -681,7 +684,7 @@
 <h2 id="tags-and-interests-popular">Popular tags</h2>
 <p>The Popular tags list (in the side column and on Explore) ranks tags by how many posts used them in the last 30 days. If no posts were tagged in that time, it falls back to the all-time ranking. The list is refreshed every two minutes. The top three ranks are shown in red.</p>
 <div class="categories">Categories: <a href="#tags-and-interests">Discovery</a><a href="#writing-posts">Posts</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== COMMENTS AND INTERACTIONS -->
@@ -730,7 +733,7 @@
 <h2 id="comments-and-interactions-limits">Limits</h2>
 <p>To prevent abuse, each network can make up to 300 likes, saves and reposts per hour, and up to 60 comments per 10 minutes. Normal use never comes close.</p>
 <div class="categories">Categories: <a href="#comments-and-interactions">Community</a><a href="#notifications">Notifications</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== FOLLOWING AND DISCOVERY -->
@@ -765,7 +768,7 @@
   <li><strong>Popular tags</strong> and <strong>developers to follow</strong>. On large screens these live in the side column; on smaller screens they appear at the top of Explore.</li>
 </ul>
 <div class="categories">Categories: <a href="#following-and-discovery">Discovery</a><a href="#profiles">Community</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== SEARCH -->
@@ -808,7 +811,7 @@
 <h2 id="search-results-page">The results page</h2>
 <p>Pressing <kbd>Enter</kbd> or choosing "See all results" opens <code>/search?q=…</code>. Its tabs are All, Posts, Developers and Tags. <strong>All</strong> shows a short preview of each group with a "View all" button, and the other tabs show the complete list, 20 per page. If nothing matches, ArabDev suggests checking the spelling, trying a shorter phrase or searching for a tag.</p>
 <div class="categories">Categories: <a href="#search">Discovery</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== NOTIFICATIONS -->
@@ -848,7 +851,7 @@
 <p>Go to <a href="#settings-notifications">Settings → Notifications</a> to turn each kind on or off. Turning a kind off stops new notifications of that kind; ones you already have stay. To control who can notify you with a mention, see <a href="#settings-privacy">Settings → Privacy</a>.</p>
 <div class="callout note"><span class="callout-title">No email notifications</span><p>ArabDev does not send notifications by email. The only emails it sends are password reset links you ask for.</p></div>
 <div class="categories">Categories: <a href="#notifications">Notifications</a><a href="#settings">Settings</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== SETTINGS -->
@@ -856,34 +859,64 @@
 <div class="breadcrumbs"><a href="#main-page">Main Page</a> › Using ArabDev</div>
 <h1 class="article-title">Settings</h1>
 <p class="article-tagline">From ArabDev Wiki, the community's guide to ArabDev</p>
-<p>Settings are grouped into five sections: Account, Profile, Appearance, Privacy and Notifications. On large screens the sections are listed on the side; on phones they are tabs across the top. Switches save as soon as you change them and show "Settings saved"; if saving fails, the switch returns to its previous position and an error explains why.</p>
+<p>Settings are grouped into six sections: Account, Profile, Security, Appearance, Privacy and Notifications. On large screens the sections are listed on the side; on phones they are tabs across the top. Switches save as soon as you change them and show "Settings saved"; if saving fails, the switch returns to its previous position and an error explains why.</p>
 
 <h2 id="settings-account">Account</h2>
 <h3 id="settings-account-username">Username</h3>
 <p>Shows your current username. The <strong>Edit</strong> link takes you to the Profile section, where you can change it.</p>
 <h3 id="settings-account-email">Email</h3>
-<p>Enter a new email address and your current password, then choose <strong>Update email</strong>. The password is required so that someone using your unlocked device cannot take over your account. The new address must not belong to another account.</p>
+<p>Your current address is shown with a <strong>Confirmed</strong> or <strong>Not confirmed</strong> badge. To change it:</p>
+<ol>
+  <li>Enter the new address and your current password, then choose <strong>Update email</strong>. The password is required so that someone using your unlocked device cannot take over your account.</li>
+  <li>ArabDev emails a six-digit code to the <em>new</em> address. Enter it within 10 minutes. This proves the new inbox is yours and that you typed it correctly.</li>
+  <li>The address changes, and your old address receives an email saying so, so a change you did not make never goes unnoticed.</li>
+</ol>
+<p>The new address must not belong to another account. Until the code is entered, nothing changes. See <a href="#account-security-codes">Confirmation codes</a>.</p>
 <h3 id="settings-account-password">Password</h3>
-<p>Enter your current password, a new one and the new one again. The new password must follow the <a href="#getting-started-password-rules">password rules</a> and differ from the current one. Changing your password signs you out everywhere else; you stay signed in on the device you used.</p>
+<p>Enter your current password, a new one and the new one again. The new password must follow the <a href="#getting-started-password-rules">password rules</a> and differ from the current one. ArabDev then emails a six-digit code to your address; the new password takes effect only when you enter it. Changing your password signs you out everywhere else, you stay signed in on the device you used, and you receive an email confirming the change.</p>
 <h3 id="settings-account-delete">Deleting your account</h3>
-<p><strong>Delete my account</strong> permanently removes your account after you confirm with your password. Your posts, comments, replies, likes, reposts, bookmarks, follows, drafts, notifications and uploaded files are all deleted, and the counts on other people's posts are updated. This cannot be undone.</p>
+<p><strong>Delete my account</strong> permanently removes your account after you confirm with your password. Your posts, comments, replies, likes, reposts, bookmarks, follows, drafts, notifications and uploaded files are all deleted, and the counts on other people's posts are updated. This cannot be undone. If you want to keep a copy of your work, use <a href="#settings-security-data">Download my data</a> first.</p>
 
 <h2 id="settings-profile">Profile</h2>
 <p>The same editor as <strong>Edit profile</strong>: picture, display name, username, bio, location, website and interests. See <a href="#profiles-editing">Editing your profile</a>.</p>
+
+<h2 id="settings-security">Security</h2>
+<h3 id="settings-security-signin">Signing in</h3>
+<div class="table-wrap">
+<table class="wikitable">
+  <thead><tr><th scope="col">Setting</th><th scope="col">When on (default)</th><th scope="col">When off</th></tr></thead>
+  <tbody>
+    <tr><td>Email me a code when signing in</td><td>Every sign-in is confirmed with a six-digit code sent to your email, so a stolen password alone is not enough.</td><td>Your password is enough to sign in. Creating an account and changing your email or password still need a code.</td></tr>
+    <tr><td>Tell me about account changes</td><td>You get an email when your password changes or a new browser signs in.</td><td>No such emails. A notice to your <em>old</em> address when your email changes is always sent.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="callout tip"><span class="callout-title">Tip</span><p>Keep both switched on. They are the two things most likely to stop someone who has learned your password.</p></div>
+<h3 id="settings-security-devices">Where you are signed in</h3>
+<p>A list of every browser that currently holds a sign-in to your account: the browser and system (for example "Chrome · Android"), a phone or computer icon, and when it signed in. The browser you are using is marked <strong>This device</strong>.</p>
+<ul>
+  <li><strong>Sign out</strong> next to any other entry ends that session straight away. Its next request fails and it has to sign in again, with a code.</li>
+  <li><strong>Sign out everywhere else</strong> ends every session except this one.</li>
+</ul>
+<p>If you see a browser you do not recognise, sign it out and <a href="#settings-account-password">change your password</a>.</p>
+<h3 id="settings-security-data">Your data</h3>
+<p><strong>Download my data</strong> saves one JSON file with everything your account holds: your account details, profile, settings, interests, posts, drafts, comments, the posts you liked and saved, and the people you follow. Downloading changes nothing. Passwords, session tokens and other people's private information are never included. You can download it five times an hour.</p>
 
 <h2 id="settings-appearance">Appearance</h2>
 <ul>
   <li><strong>Theme:</strong> Light, Dark or System. System follows your device and switches automatically when your device does.</li>
   <li><strong>Language:</strong> العربية or English. The whole layout changes direction with the language: right-to-left for Arabic, left-to-right for English.</li>
+  <li><strong>Feed to open first:</strong> For you (default), Following or Latest. The home page opens on this tab; the other tabs are one tap away.</li>
+  <li><strong>Reduce animation:</strong> keeps fades and transitions to a minimum across the site, whatever your device is set to. See <a href="#accessibility-and-languages">Accessibility and languages</a>.</li>
 </ul>
-<p>When you are signed in, your theme and language are saved to your account and applied when you sign in on another device. The same switches are in the account menu.</p>
+<p>When you are signed in, these choices are saved to your account and applied when you sign in on another device. The theme and language switches are also in the account menu.</p>
 
 <h2 id="settings-privacy">Privacy</h2>
 <div class="table-wrap">
 <table class="wikitable">
   <thead><tr><th scope="col">Setting</th><th scope="col">When on (default)</th><th scope="col">When off</th></tr></thead>
   <tbody>
-    <tr><td>Show me in search and suggestions</td><td>You can appear in developer search and "Developers to follow".</td><td>You are left out of both. People can still open your profile from a direct link, your posts, or by typing your exact username.</td></tr>
+    <tr><td>Show me in search and suggestions</td><td>You can appear in developer search, "Developers to follow" and the list of profiles offered to search engines.</td><td>You are left out of all three. People can still open your profile from a direct link, your posts, or by typing your exact username.</td></tr>
     <tr><td>Show my followers and following lists</td><td>Anyone can open your lists.</td><td>Only you can see your lists. The counts stay visible.</td></tr>
   </tbody>
 </table>
@@ -892,8 +925,14 @@
 
 <h2 id="settings-notifications">Notifications</h2>
 <p>Five switches, all on by default: likes on your posts, comments and replies, new followers, reposts of your posts, and mentions.</p>
+<h3 id="settings-notifications-email">Email</h3>
+<ul>
+  <li><strong>Tell me about account changes</strong>: the same switch as under Security.</li>
+  <li><strong>What changed in ArabDev</strong>: an occasional note when a release adds something worth knowing about. Off by default.</li>
+</ul>
+<p>ArabDev never sends marketing email, and your address is never shared or sold.</p>
 <div class="categories">Categories: <a href="#settings">Settings</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== PRIVACY AND SAFETY -->
@@ -902,7 +941,7 @@
 <h1 class="article-title">Privacy and safety</h1>
 <p class="article-tagline">From ArabDev Wiki, the community's guide to ArabDev</p>
 <p>This article is a practical summary. The full, binding text is the <a href="https://privacy.arabdev.site/en/" target="_blank" rel="noopener">ArabDev Privacy Policy</a>.</p>
-<div class="callout important"><span class="callout-title">Our promise</span><p>ArabDev does not sell, rent or trade your personal information, and it does not use it to target ads. There are no third-party trackers, analytics scripts or advertising pixels on ArabDev.</p></div>
+<div class="callout important"><span class="callout-title">Our promise</span><p>ArabDev does not sell, rent or trade your personal information, and it does not use it to target ads. ArabDev runs no analytics or tracking scripts of its own; the only outside code is Google’s ad script, which is asked for non-personalised ads, and Cloudflare’s security check. See <a href="#ads">Ads on ArabDev</a> and <a href="#account-security-bots">The security check</a>.</p></div>
 
 <h2 id="privacy-and-safety-public">What is public and what is private</h2>
 <div class="table-wrap">
@@ -937,7 +976,7 @@
   </tbody>
 </table>
 </div>
-<p>That is the complete list. There are no advertising or analytics cookies.</p>
+<p>That is the complete list of what ArabDev itself stores. ArabDev sets no advertising or analytics cookies; Google (for the ads) and Cloudflare (for the security check) may store their own, as the <a href="https://privacy.arabdev.site/en/#cookies-and-storage" target="_blank" rel="noopener">Privacy Policy</a> explains.</p>
 
 <h2 id="privacy-and-safety-images">Images and hidden metadata</h2>
 <p>Photos taken on phones often carry hidden information such as the date, the camera and the GPS location. ArabDev re-encodes every uploaded image into a new file, which leaves that information behind. Only the picture itself is stored and shown.</p>
@@ -960,7 +999,7 @@
   <li>Links in posts lead to other websites that have their own privacy practices.</li>
 </ul>
 <div class="categories">Categories: <a href="#privacy-and-safety">Privacy</a><a href="#account-security">Security</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== ACCOUNT SECURITY -->
@@ -973,38 +1012,71 @@
 <h2 id="account-security-passwords">How passwords are stored</h2>
 <p>ArabDev never stores your password. It stores a one-way hash made with Argon2id, a method designed to be slow and memory-hungry for anyone trying to guess passwords. Even the people running ArabDev cannot see your password. When you sign in, ArabDev hashes what you typed and compares the results.</p>
 
+<h2 id="account-security-codes">Confirmation codes</h2>
+<p>A password can be guessed, reused from another site or read over someone's shoulder. So the actions that matter most are confirmed with a six-digit code sent to your email:</p>
+<ul>
+  <li><strong>Creating an account.</strong> The account is created only once the code is entered, so a mistyped address cannot leave behind an account nobody can reach.</li>
+  <li><strong>Signing in</strong>, unless you switched this off under <a href="#settings-security-signin">Settings → Security</a>.</li>
+  <li><strong>Changing your email.</strong> The code goes to the <em>new</em> address.</li>
+  <li><strong>Changing your password.</strong> The new password takes effect only when the code is entered.</li>
+</ul>
+<p>The screen shows which inbox to check, partly hidden (for example <span dir="ltr">l***a@example.com</span>), and a countdown. The code:</p>
+<ul>
+  <li>arrives from <span dir="ltr">noreply@arabdev.site</span>, with the code at the start of the subject line;</li>
+  <li>is valid for 10 minutes and works once;</li>
+  <li>allows five tries; after that, start again;</li>
+  <li>can be sent again after 60 seconds, up to four times. Only the newest code works.</li>
+</ul>
+<p>Typing the sixth digit submits the code; you do not need to press a button. ArabDev stores only a keyed hash of each code, never the code itself.</p>
+<div class="callout warning"><span class="callout-title">Never share a code</span><p>ArabDev will never ask you for a code or your password, by email, message or anywhere else. If someone asks, it is an attempt to take over your account.</p></div>
+<h3 id="account-security-alerts">Security alerts</h3>
+<p>ArabDev emails you when your password changes and when a new browser signs in, with the browser and network address it used, so you can tell whether it was you. When your email address changes, the <em>old</em> address is always told. You can switch the other alerts off under <a href="#settings-security-signin">Settings → Security</a>.</p>
+
+<h2 id="account-security-bots">The security check</h2>
+<p>Sign-in, sign-up, password reset, account changes, publishing and commenting are protected by Cloudflare Turnstile, which checks that a real browser, not a script, is sending the request. For almost everyone it is invisible. Occasionally it shows a small box to tick above the button.</p>
+<ul>
+  <li>Each pass is used once and expires after five minutes, and ArabDev checks it with Cloudflare before doing anything.</li>
+  <li>If you see "Please complete the security check and try again", reload the page and try again. Strict privacy extensions or blocked scripts from <span dir="ltr">challenges.cloudflare.com</span> can stop the check from running.</li>
+  <li>Turnstile does not tell ArabDev who you are, and its result is not stored.</li>
+</ul>
+
 <h2 id="account-security-sessions">How sessions work</h2>
 <ul>
   <li>When you sign in, your browser receives a short-lived access pass that lasts 15 minutes and is kept only in the page's memory, never in storage.</li>
   <li>A longer-lived sign-in cookie renews that pass automatically. The cookie is HttpOnly, so scripts on the page cannot read it, and it is only sent to ArabDev's sign-in endpoints.</li>
   <li>Every renewal replaces the cookie with a new one. If an old cookie is ever used again, which is a sign it was copied, ArabDev ends that whole session. A short grace period prevents this from happening by mistake when two tabs renew at the same moment.</li>
   <li>The server stores only a hash of each sign-in cookie, the browser description, and when it was created and when it expires.</li>
+  <li>You can see every signed-in browser under <a href="#settings-security-devices">Settings → Security → Where you are signed in</a>, and end any of them.</li>
 </ul>
 
 <h2 id="account-security-signout">Signing out</h2>
-<p>Choose <strong>Sign out</strong> from the account menu. This ends the session on that browser and removes the sign-in cookie. Changing your password or resetting a forgotten password signs you out of every other browser too.</p>
+<p>Choose <strong>Sign out</strong> from the account menu. This ends the session on that browser and removes the sign-in cookie. To sign out somewhere else, use <a href="#settings-security-devices">Where you are signed in</a>. Changing your password or resetting a forgotten password signs you out of every other browser too.</p>
 
 <h2 id="account-security-reset">Resetting a forgotten password</h2>
 <ol>
   <li>On the sign-in page choose <strong>Forgot password?</strong></li>
   <li>Enter the email address you signed up with and choose <strong>Send reset link</strong>.</li>
   <li>ArabDev always answers the same way, whether or not the address has an account, so nobody can use this form to find out who is registered.</li>
-  <li>Open the link in the email within 30 minutes. It works only once.</li>
-  <li>Choose a new password. All your existing sessions are signed out, and you can sign in with the new password.</li>
+  <li>Open the link in the email within 30 minutes. It works only once. Each inbox receives at most five reset emails an hour.</li>
+  <li>Choose a new password. All your existing sessions are signed out, you receive an email confirming the change, and you can sign in with the new password.</li>
 </ol>
-<div class="callout note"><span class="callout-title">For people running ArabDev</span><p>Version 1.0.0 does not include an email provider. Until one is connected, reset links are written to the server log. See <a href="#self-hosting-email">Email</a>.</p></div>
 
 <h2 id="account-security-limits">Protection against guessing and abuse</h2>
-<p>ArabDev limits how often the same network can repeat sensitive actions. When a limit is reached you see "Too many attempts. Wait a moment and try again."</p>
+<p>ArabDev limits how often sensitive actions can be repeated. When a limit is reached you see "Too many attempts. Wait a moment and try again." The limits are shared by all of ArabDev's servers, and the network address they count is the one ArabDev's own hosting recorded, which a visitor cannot fake.</p>
 <div class="table-wrap">
 <table class="wikitable">
   <thead><tr><th scope="col">Action</th><th scope="col">Limit per network</th></tr></thead>
   <tbody>
     <tr><td>Sign in</td><td>10 per minute</td></tr>
     <tr><td>Create account</td><td>10 per hour</td></tr>
+    <tr><td>Enter a confirmation code</td><td>20 per 5 minutes</td></tr>
+    <tr><td>Send another code</td><td>10 per 15 minutes</td></tr>
     <tr><td>Forgot password</td><td>5 per 15 minutes</td></tr>
     <tr><td>Reset password</td><td>10 per 15 minutes</td></tr>
+    <tr><td>Change email</td><td>10 per 15 minutes</td></tr>
     <tr><td>Change password</td><td>10 per 15 minutes</td></tr>
+    <tr><td>Delete account</td><td>10 per 15 minutes</td></tr>
+    <tr><td>Download my data</td><td>5 per hour</td></tr>
     <tr><td>Username and email availability checks</td><td>60 per minute</td></tr>
     <tr><td>Session renewal</td><td>60 per minute</td></tr>
     <tr><td>Publish a post</td><td>30 per hour</td></tr>
@@ -1016,23 +1088,36 @@
   </tbody>
 </table>
 </div>
+<p>Some limits also apply to each account, however many networks the attempts come from:</p>
+<div class="table-wrap">
+<table class="wikitable">
+  <thead><tr><th scope="col">Action</th><th scope="col">Limit per account</th></tr></thead>
+  <tbody>
+    <tr><td>Sign in</td><td>8 attempts per 15 minutes</td></tr>
+    <tr><td>Password reset emails</td><td>5 per hour for each inbox</td></tr>
+    <tr><td>Wrong confirmation codes</td><td>5 per code</td></tr>
+  </tbody>
+</table>
+</div>
 
 <h2 id="account-security-other">Other protections</h2>
 <ul>
   <li>Every request that changes something is checked on the server. The buttons you see in the app are for convenience; permission is always decided by the server.</li>
   <li>Post content is cleaned on the server and again in the browser. See <a href="#writing-posts-safety">What happens to your post when you publish</a>.</li>
-  <li>Uploads are decoded as images and re-encoded; any other kind of file is refused.</li>
-  <li>The site tells browsers not to guess file types and not to show ArabDev inside other websites' frames.</li>
+  <li>Uploads are decoded as images and re-encoded; any other kind of file is refused. An image's size is read from its header first, so an oversized image is refused before it is ever decoded.</li>
+  <li>Every page is sent with security headers: browsers must use HTTPS, no other website can show ArabDev inside a frame, plugins and forms that post elsewhere are blocked, files are never guessed as another type, and camera, microphone, location and payment access are switched off.</li>
 </ul>
 
 <h2 id="account-security-tips">Tips</h2>
 <ul>
   <li>Use a unique password for ArabDev and keep it in a password manager.</li>
+  <li>Keep <strong>Email me a code when signing in</strong> and the account alerts switched on.</li>
+  <li>Protect the email account itself with its own two-step verification: whoever reads your inbox can confirm codes.</li>
   <li>Uncheck "Keep me signed in" on shared or public computers, and sign out when you are done.</li>
-  <li>If you think someone else knows your password, change it: that signs every other device out.</li>
+  <li>Check <a href="#settings-security-devices">Where you are signed in</a> now and then. If you think someone else knows your password, change it: that signs every other device out.</li>
 </ul>
 <div class="categories">Categories: <a href="#account-security">Security</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== ADS -->
@@ -1040,32 +1125,40 @@
 <div class="breadcrumbs"><a href="#main-page">Main Page</a> › Trust and safety</div>
 <h1 class="article-title">Ads on ArabDev</h1>
 <p class="article-tagline">From ArabDev Wiki, the community's guide to ArabDev</p>
-<p>ArabDev shows a small number of ads to help keep the platform free. They follow strict rules so they never get in the way of reading or mislead anyone.</p>
+<p>ArabDev shows a small number of ads to keep the platform free. Most come from Google AdSense; direct sponsors and ArabDev's own messages fill the rest. They follow strict rules so they never get in the way of reading or mislead anyone.</p>
 
 <h2 id="ads-placement">Where ads appear</h2>
 <ul>
   <li><strong>In feeds:</strong> after every 8 posts, so after the 8th and the 16th post of a 20-post page. Never at random places.</li>
   <li><strong>In the side column:</strong> one ad slot, only on large screens.</li>
-  <li><strong>Nowhere else:</strong> no ads inside posts, comments, profiles, search results, notifications or settings, and no pop-ups.</li>
+  <li><strong>Automatic placements:</strong> Google may also place a few ads of its own elsewhere on the page, for example a bar along the edge of the screen. These are always marked as ads by Google.</li>
+  <li><strong>Never inside content:</strong> no ads inside posts or comments, and no ads disguised as posts.</li>
 </ul>
 
 <h2 id="ads-labels">How to recognise an ad</h2>
 <ul>
-  <li>Every ad carries a boxed <strong>Sponsored</strong> label and says who is promoting it.</li>
-  <li>Ads sit on a tinted background with a dashed frame, and have no profile picture or action row, so they cannot be mistaken for posts.</li>
-  <li>An information icon explains why the ad is there.</li>
+  <li>ArabDev's ad boxes carry a <strong>Sponsored</strong> label and sit on a tinted background with a dashed frame, with no profile picture or action row, so they cannot be mistaken for posts.</li>
+  <li>Ads placed by Google carry Google's own "Ad" marking.</li>
+  <li>Direct sponsor and ArabDev messages also say who is promoting them, with an information icon explaining why the ad is there.</li>
 </ul>
 
 <h2 id="ads-selection">How ads are chosen</h2>
-<p>An ad is chosen only by where it appears (feed or side column), your interface language and the page number, which rotates the ads predictably. <strong>Your personal information is never used to choose ads.</strong> ArabDev does not build advertising profiles and does not share anything about you with advertisers.</p>
+<ul>
+  <li><strong>Google ads</strong> are requested in <em>non-personalised</em> mode. Google chooses them by the content of the page and your approximate region, never by a profile of what you read or who you are.</li>
+  <li><strong>Direct sponsor and ArabDev ads</strong> are chosen only by where they appear, your interface language and the page number, which rotates them predictably.</li>
+</ul>
+<p><strong>ArabDev never gives your account information to Google or to any advertiser.</strong> Your name, username, email, interests, posts, likes and follows stay with ArabDev. Because Google's ad code runs in your browser, Google can see what any website can, such as your IP address and the page you are on; see the <a href="https://privacy.arabdev.site/en/#advertising" target="_blank" rel="noopener">Advertising section of the Privacy Policy</a>.</p>
 
 <h2 id="ads-counting">What is counted</h2>
-<p>For each ad, ArabDev keeps two totals: how many times it was shown and how many times it was clicked. These totals are not linked to you or to any account.</p>
+<p>For direct sponsor and ArabDev ads, ArabDev keeps two totals: how many times each was shown and how many times it was clicked. Google counts views and clicks of its own ads to pay ArabDev, and ArabDev sees only those totals. None of these numbers are linked to you or to any account.</p>
 
-<h2 id="ads-house">House ads</h2>
-<p>At launch, the ads you see are ArabDev's own messages, for example inviting you to share an open-source project or complete your profile. They are labelled "Promoted by ArabDev".</p>
+<h2 id="ads-house">House and sponsor ads</h2>
+<p>Where no Google ad is set up for a slot, ArabDev shows a direct sponsor's ad or one of its own messages, for example inviting you to share an open-source project or complete your profile. ArabDev's messages are labelled "Promoted by ArabDev". To sponsor ArabDev, write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
+
+<h2 id="ads-blocking">If you use an ad blocker</h2>
+<p>That is your choice. ArabDev works the same with ads blocked and never hides anything behind them. If a blocker also stops Cloudflare's security check, sign-in and posting may ask you to try again; see <a href="#account-security-bots">The security check</a>.</p>
 <div class="categories">Categories: <a href="#ads">Ads</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== COMMUNITY GUIDELINES -->
@@ -1101,9 +1194,9 @@
 <p>Discussing vulnerabilities, defensive techniques and how attacks work is welcome, because it is how developers learn to build safer software. Publish details about a specific, unpatched vulnerability in someone else's product only after giving them a reasonable chance to fix it. If you find a security problem in ArabDev itself, report it privately to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> rather than posting it (see <a href="#contact-security">Reporting a security problem</a>).</p>
 
 <h2 id="community-guidelines-moderation">Moderation</h2>
-<p>Post authors can delete comments on their own posts. ArabDev administrators can delete any post or comment that breaks these guidelines. Accounts that repeatedly or seriously break them may be deactivated. Version 1.0.0 has no in-app report button yet; until it does, send the link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> (see <a href="#contact-reports">Reporting content</a>).</p>
+<p>Post authors can delete comments on their own posts. ArabDev administrators can delete any post or comment that breaks these guidelines. Accounts that repeatedly or seriously break them may be deactivated. ArabDev has no in-app report button yet; until it does, send the link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> (see <a href="#contact-reports">Reporting content</a>).</p>
 <div class="categories">Categories: <a href="#community-guidelines">Community</a><a href="#privacy-and-safety">Safety</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== ACCESSIBILITY AND LANGUAGES -->
@@ -1143,11 +1236,11 @@
 <ul>
   <li>Text and buttons meet common contrast guidelines in both light and dark mode.</li>
   <li>State is never shown by color alone. Unread notifications also have a "New" label, and selected interests have a check mark.</li>
-  <li>If your device asks for reduced motion, ArabDev turns animations off.</li>
+  <li>If your device asks for reduced motion, ArabDev turns animations off. You can also switch on <strong>Reduce animation</strong> under Settings → Appearance, which works on any device and follows your account.</li>
   <li>The layout works from small phones to wide screens, and you can zoom in without losing content.</li>
 </ul>
 <div class="categories">Categories: <a href="#accessibility-and-languages">Accessibility</a><a href="#settings">Settings</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== FAQ -->
@@ -1160,7 +1253,7 @@
 <h3 id="faq-free">Is ArabDev free?</h3>
 <p>Yes. ArabDev is free to use, and its source code is free software under the GNU General Public License v3.</p>
 <h3 id="faq-email-visible">Can other people see my email address?</h3>
-<p>No. Your email address is only used to sign in and to reset your password.</p>
+<p>No. Your email address is only used to sign in, to send you confirmation codes and security alerts, and to reset your password.</p>
 <h3 id="faq-change-username">Can I change my username?</h3>
 <p>Yes, under Settings → Profile or Edit profile. Your profile address changes with it. See <a href="#profiles-editing">Editing your profile</a>.</p>
 <h3 id="faq-arabic-username">Why can't my username be in Arabic?</h3>
@@ -1172,7 +1265,7 @@
 <h3 id="faq-title-required">Does a post need a title?</h3>
 <p>No, but it helps people decide whether to read it. Without a title, the post is shown as "by" and your name.</p>
 <h3 id="faq-images">How many images can I add to a post?</h3>
-<p>One attached image per post in version 1.0.0.</p>
+<p>One attached image per post.</p>
 <h3 id="faq-colors-gone">Why did my pasted colors disappear?</h3>
 <p>ArabDev keeps only its own five text colors, three fonts and six sizes so posts stay readable in both light and dark mode. See <a href="#writing-posts-fonts">Fonts, sizes and colors</a>.</p>
 <h3 id="faq-schedule">Can I schedule a post?</h3>
@@ -1196,19 +1289,21 @@
 <h3 id="faq-bookmarks-private">Are bookmarks private?</h3>
 <p>Yes, completely.</p>
 <h3 id="faq-ads-count">How many ads will I see?</h3>
-<p>At most two in each 20-post page of a feed, plus one in the side column on large screens.</p>
+<p>At most two ad boxes in each 20-post page of a feed, plus one in the side column on large screens. Google may add a few automatic placements elsewhere on the page, always marked as ads. See <a href="#ads">Ads on ArabDev</a>.</p>
 
 <h2 id="faq-other">Other</h2>
 <h3 id="faq-messages">Is there private messaging?</h3>
-<p>Not in version 1.0.0.</p>
+<p>Not yet.</p>
 <h3 id="faq-app">Is there a mobile app?</h3>
-<p>ArabDev is a responsive website designed for phones as well as computers. There is no separate app to install.</p>
+<p>ArabDev is a responsive website designed for phones as well as computers, and you can add it to your home screen: in your phone’s browser menu choose <strong>Add to Home screen</strong> (or <strong>Install app</strong>). It then opens full screen with its own icon. There is no separate app-store app.</p>
+<h3 id="faq-code">Why does ArabDev email me a code?</h3>
+<p>To make sure it is really you. Signing in, creating an account and changing your email or password are confirmed with a six-digit code, so a stolen password alone cannot open your account. See <a href="#account-security-codes">Confirmation codes</a>.</p>
 <h3 id="faq-contribute">Can I contribute to ArabDev?</h3>
 <p>Yes. See <a href="#contributing-and-license">Contributing and license</a>, or write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
 <h3 id="faq-contact">How do I contact ArabDev?</h3>
 <p>For help, bugs and reports write to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a>; for sponsorship, contributions and other questions write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>. See <a href="#contact">Contact and support</a>.</p>
 <div class="categories">Categories: <a href="#faq">Help</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== TROUBLESHOOTING -->
@@ -1228,6 +1323,10 @@
     <tr><td>"Your session has expired. Please sign in again."</td><td>Your sign-in ended: you were signed out elsewhere, you changed your password, or "Keep me signed in" was off and the session ran out. Sign in again.</td></tr>
     <tr><td>You keep being signed out when closing the browser</td><td>Check "Keep me signed in" when signing in. Browsers set to delete cookies on exit also sign you out.</td></tr>
     <tr><td>The reset link says it is invalid or expired</td><td>Links last 30 minutes and work only once. Request a new one.</td></tr>
+    <tr><td>The six-digit code does not arrive</td><td>Check your spam folder and that the address shown is yours. Wait a minute, then choose <strong>Send another code</strong>. The email comes from noreply@arabdev.site.</td></tr>
+    <tr><td>"That code is not right."</td><td>Check the newest email: each new code replaces the previous one. After five wrong tries, start again.</td></tr>
+    <tr><td>"This code has expired."</td><td>Codes last 10 minutes. Ask for a new one.</td></tr>
+    <tr><td>"Please complete the security check and try again."</td><td>Reload the page and try again. If it keeps happening, allow <span dir="ltr">challenges.cloudflare.com</span> in your blocker or privacy extension. See <a href="#account-security-bots">The security check</a>.</td></tr>
   </tbody>
 </table>
 </div>
@@ -1276,7 +1375,7 @@
   <li><strong>"Can't reach the server."</strong> Check your internet connection and reload the page.</li>
 </ul>
 <div class="categories">Categories: <a href="#troubleshooting">Help</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== CONTACT -->
@@ -1310,7 +1409,7 @@
 <p>Before writing, the <a href="#troubleshooting">Troubleshooting</a> and <a href="#faq">Frequently asked questions</a> articles may already have the answer.</p>
 
 <h3 id="contact-reports">Reporting content</h3>
-<p>Version 1.0.0 has no in-app report button yet. To report a post, comment or profile, send its link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with a short explanation. Reports are handled confidentially; the person reported is not told who reported them.</p>
+<p>ArabDev has no in-app report button yet. To report a post, comment or profile, send its link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with a short explanation. Reports are handled confidentially; the person reported is not told who reported them.</p>
 
 <h3 id="contact-security">Reporting a security problem</h3>
 <p>Send security problems privately to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with the subject "Security", and do not publish them until they are fixed. Include the steps to reproduce the problem and what an attacker could do with it. Please do not access other people's data or disrupt the service while testing.</p>
@@ -1341,7 +1440,7 @@
 </div>
 <p>ArabDev will only ever email you from an <span dir="ltr">@arabdev.site</span> address, and never asks for your password by email. Treat any other message claiming to be from ArabDev as suspicious.</p>
 <div class="categories">Categories: <a href="#troubleshooting">Help</a> · <a href="#privacy-and-safety">Safety</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== GLOSSARY -->
@@ -1355,7 +1454,9 @@
   <dt><strong>Draft</strong></dt><dd>An unpublished post that only you can see.</dd>
   <dt><strong>Feed</strong></dt><dd>A list of posts. The home feed has three tabs: For you, Following and Latest.</dd>
   <dt><strong>Follow</strong></dt><dd>Subscribing to someone's posts and reposts in your Following feed.</dd>
-  <dt><strong>House ad</strong></dt><dd>An ad in which ArabDev promotes its own features.</dd>
+  <dt><strong>Confirmation code</strong></dt><dd>A six-digit code emailed to confirm a sign-in, a new account, or a change of email or password. Valid for 10 minutes, once.</dd>
+  <dt><strong>House ad</strong></dt><dd>An ad in which ArabDev promotes its own features, shown where no Google or sponsor ad is set up.</dd>
+  <dt><strong>Security check</strong></dt><dd>Cloudflare Turnstile, which checks that a real browser is behind sign-ins, sign-ups, posts and comments. Usually invisible.</dd>
   <dt><strong>Interest</strong></dt><dd>One of 25 topics you can pick to shape your feed and suggestions.</dd>
   <dt><strong>Mention</strong></dt><dd>Writing <code>@username</code> in a post or comment, which notifies that person.</dd>
   <dt><strong>Onboarding</strong></dt><dd>The four-step setup window shown on your first visit.</dd>
@@ -1367,7 +1468,7 @@
   <dt><strong>Username</strong></dt><dd>Your unique handle, used in your profile address and in mentions.</dd>
 </dl>
 <div class="categories">Categories: <a href="#glossary">Reference</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== DEVELOPERS OVERVIEW -->
@@ -1389,11 +1490,11 @@
     <tr><td>Build</td><td>Vite 8</td></tr>
     <tr><td>API</td><td>Python, FastAPI, Pydantic 2</td></tr>
     <tr><td>Database</td><td>SQLAlchemy 2 with Alembic migrations: SQLite for development and single-server hosting, PostgreSQL (Neon) on Vercel</td></tr>
-    <tr><td>Security</td><td>Argon2id password hashing, JWT access tokens, rotating refresh tokens</td></tr>
+    <tr><td>Security</td><td>Argon2id password hashing, JWT access tokens, rotating refresh tokens, emailed six-digit codes, Cloudflare Turnstile, security headers</td></tr>
     <tr><td>Content safety</td><td>nh3 on the server, DOMPurify in the browser</td></tr>
     <tr><td>Images</td><td>Pillow, re-encoding to WebP</td></tr>
-    <tr><td>Optional</td><td>Redis for shared rate limiting and caching</td></tr>
-    <tr><td>Tests</td><td>pytest (51 tests, run against SQLite and PostgreSQL)</td></tr>
+    <tr><td>Redis</td><td>Shared rate limits and caching (Upstash in production; optional elsewhere)</td></tr>
+    <tr><td>Tests</td><td>pytest (74 tests, run against SQLite and PostgreSQL), run by continuous integration on every pull request</td></tr>
   </tbody>
 </table>
 </div>
@@ -1451,12 +1552,13 @@
     <tr><td><code>media</code></td><td>Uploaded images: owner, kind, storage key, size and dimensions</td></tr>
     <tr><td><code>ads</code></td><td>Ads with placement, language, schedule and total counts</td></tr>
     <tr><td><code>refresh_tokens</code>, <code>password_reset_tokens</code></td><td>Hashed session and reset tokens with expiry</td></tr>
+    <tr><td><code>verification_codes</code></td><td>Hashed six-digit codes, what each confirms, attempts and expiry</td></tr>
   </tbody>
 </table>
 </div>
 <p>Foreign keys, usernames, emails, creation dates, tags and follow relationships are indexed. SQLite runs in WAL mode with foreign keys enforced.</p>
 <div class="categories">Categories: <a href="#developers-overview">Developers</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== SELF-HOSTING -->
@@ -1500,6 +1602,12 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td><code>ACCESS_TOKEN_EXPIRE_MINUTES</code></td><td>15</td><td>Access token lifetime.</td></tr>
     <tr><td><code>REFRESH_TOKEN_EXPIRE_DAYS</code></td><td>30</td><td>"Keep me signed in" lifetime.</td></tr>
     <tr><td><code>RATE_LIMIT_ENABLED</code></td><td><code>true</code></td><td>Turns rate limiting on or off.</td></tr>
+    <tr><td><code>TRUSTED_PROXY_HOPS</code></td><td>1</td><td>How many proxies in front of the API append to <code>X-Forwarded-For</code>. 1 fits Vercel and the Docker nginx; add one per extra proxy, such as Cloudflare’s orange-cloud proxy.</td></tr>
+    <tr><td><code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SMTP_USERNAME</code>, <code>SMTP_PASSWORD</code>, <code>SMTP_STARTTLS</code> or <code>SMTP_SSL</code></td><td>unset, 587</td><td>Outgoing mail. Without a host, emails are written to the log instead.</td></tr>
+    <tr><td><code>MAIL_FROM</code></td><td><code>ArabDev &lt;noreply@arabdev.site&gt;</code></td><td>Sender of every email. Replies go to the support address.</td></tr>
+    <tr><td><code>EMAIL_CODES_ENABLED</code></td><td>follows the mail setup</td><td>Emailed six-digit codes. Unset: on in development, and in production only once SMTP is configured. <code>false</code> switches them off instantly if mail breaks.</td></tr>
+    <tr><td><code>TURNSTILE_SITE_KEY</code>, <code>TURNSTILE_SECRET_KEY</code></td><td>unset</td><td>Cloudflare Turnstile. The check runs only when both are set. Cloudflare’s test keys work on localhost.</td></tr>
+    <tr><td><code>VITE_ADSENSE_FEED_SLOT</code>, <code>VITE_ADSENSE_SIDEBAR_SLOT</code></td><td>unset</td><td>Build-time ad unit ids for Google AdSense. Without them the house ads fill those slots.</td></tr>
   </tbody>
 </table>
 </div>
@@ -1520,7 +1628,7 @@ npm run dev                   # http://localhost:5173</code></pre>
 <h2 id="self-hosting-deploy">Deploying</h2>
 <ul>
   <li><strong>Vercel</strong> (how arabdev.site runs): one project built from the repository root. <code>vercel.json</code> builds the app into <code>frontend/dist</code> and serves the API from <code>api/index.py</code>, so the app and the API share one address and no cross-site settings are needed.</li>
-  <li>That project needs a PostgreSQL database (add Neon under <em>Storage</em>, which sets <code>DATABASE_URL</code>), plus <code>SECRET_KEY</code> and <code>CRON_SECRET</code>. <code>VERCEL=1</code> is set for you and switches on production mode, secure cookies and database image storage.</li>
+  <li>That project needs a PostgreSQL database (add Neon under <em>Storage</em>, which sets <code>DATABASE_URL</code>), a Redis store for rate limits (add Upstash under <em>Storage</em> with the prefix <code>REDIS</code>, which sets <code>REDIS_URL</code>), plus <code>SECRET_KEY</code>, <code>CRON_SECRET</code>, the SMTP settings and the two Turnstile keys. Security headers for the app are set in <code>vercel.json</code>. <code>VERCEL=1</code> is set for you and switches on production mode, secure cookies and database image storage.</li>
   <li>The <code>wiki</code>, <code>privacy</code> and <code>patch-notes</code> folders are complete static sites with no build step, deployed as their own projects to <code>wiki.arabdev.site</code>, <code>privacy.arabdev.site</code> and <code>patch.arabdev.site</code>.</li>
   <li><strong>One server instead</strong> (VPS, Docker): keep SQLite and store images on disk. The API then needs a persistent disk for the database file and uploads, and runs as a single process. Serve the app build (<code>frontend/dist</code>, including <code>LICENSE.txt</code>) as a static site; set <code>VITE_API_ORIGIN</code> when the API is on another address.</li>
   <li>Serve everything over HTTPS and set <code>COOKIE_SECURE=true</code>.</li>
@@ -1530,9 +1638,9 @@ npm run dev                   # http://localhost:5173</code></pre>
 <p>With SQLite, back up <code>arabdev.db</code> and the media folder; while the API is running, use <code>sqlite3 arabdev.db ".backup backup.db"</code> for a consistent copy. With PostgreSQL, use your provider's backups (Neon keeps a restore window) or <code>pg_dump</code>; images are inside the database, so one dump covers everything.</p>
 
 <h2 id="self-hosting-email">Email</h2>
-<p>Version 1.0.0 writes password reset emails to the server log. To send real email, connect a provider in <code>backend/app/services/email_service.py</code>.</p>
+<p>ArabDev sends mail over SMTP (<code>backend/app/services/email_service.py</code>): confirmation codes, security alerts and password reset links, each in the reader’s language with a plain-text copy. Any SMTP service works; arabdev.site sends through Google’s mail service as <code>noreply@arabdev.site</code>. Without <code>SMTP_HOST</code>, messages are written to the server log, which is how you read codes when developing locally. In production, codes stay switched off until SMTP is configured, so a missing mail provider cannot lock anyone out; after connecting one, sign in once to check that codes arrive.</p>
 <div class="categories">Categories: <a href="#self-hosting">Developers</a><a href="#developers-overview">Operations</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== API REFERENCE -->
@@ -1545,7 +1653,9 @@ npm run dev                   # http://localhost:5173</code></pre>
 <h2 id="api-reference-auth">Authentication</h2>
 <ul>
   <li>Send the access token as <code>Authorization: Bearer &lt;token&gt;</code>.</li>
-  <li><code>POST /auth/login</code> and <code>POST /auth/register</code> return <code>{access_token, token_type, expires_in, user}</code> and set the refresh cookie.</li>
+  <li><code>POST /auth/login</code> and <code>POST /auth/register</code> return <code>{status, tokens, challenge}</code>. With <code>status: "authenticated"</code>, <code>tokens</code> holds <code>{access_token, token_type, expires_in, user}</code> and the refresh cookie is set. With <code>status: "verification_required"</code>, <code>challenge</code> holds <code>{challenge_id, email, purpose, expires_in, resend_in}</code>: send <code>{challenge_id, code}</code> to <code>POST /auth/verify</code> to receive the tokens, or <code>{challenge_id}</code> to <code>POST /auth/resend</code> for another code.</li>
+  <li>Sign-in, sign-up, password reset requests, email and password changes, new posts and new comments need a Cloudflare Turnstile token in the <code>X-Turnstile-Token</code> header when Turnstile is configured. <code>GET /auth/config</code> returns the public site key and whether codes are on.</li>
+  <li>Changing email (<code>POST /users/me/email</code>) and password (<code>POST /users/me/password</code>) answer with <code>{status, challenge}</code> the same way and are finished at <code>/verify</code> under the same path.</li>
   <li><code>POST /auth/refresh</code> and <code>POST /auth/logout</code> use the cookie and require an <code>X-ArabDev-Client</code> header, which protects them from cross-site requests.</li>
 </ul>
 
@@ -1556,15 +1666,15 @@ npm run dev                   # http://localhost:5173</code></pre>
 <h2 id="api-reference-errors">Errors</h2>
 <p>Errors always have a readable <code>detail</code> and a stable <code>code</code>. Validation errors add an <code>errors</code> list; errors about one field add <code>field</code>.</p>
 <pre><code>{ "detail": "Username is already taken", "code": "username_taken", "field": "username" }</code></pre>
-<p>Common codes include <code>invalid_credentials</code>, <code>token_invalid</code>, <code>session_expired</code>, <code>rate_limited</code>, <code>username_taken</code>, <code>email_taken</code>, <code>password_too_weak</code>, <code>post_empty</code>, <code>not_post_author</code>, <code>cannot_repost_own</code>, <code>cannot_follow_self</code>, <code>follow_lists_private</code>, <code>file_too_large</code>, <code>file_not_image</code> and <code>media_not_owned</code>.</p>
+<p>Common codes include <code>invalid_credentials</code>, <code>token_invalid</code>, <code>session_expired</code>, <code>rate_limited</code>, <code>username_taken</code>, <code>email_taken</code>, <code>password_too_weak</code>, <code>post_empty</code>, <code>not_post_author</code>, <code>cannot_repost_own</code>, <code>cannot_follow_self</code>, <code>follow_lists_private</code>, <code>file_too_large</code>, <code>file_not_image</code>, <code>media_not_owned</code>, <code>code_invalid</code>, <code>code_expired</code>, <code>code_used</code>, <code>code_attempts_exhausted</code>, <code>code_resend_too_soon</code>, <code>turnstile_missing</code>, <code>turnstile_expired</code> and <code>turnstile_failed</code>.</p>
 
 <h2 id="api-reference-endpoints">Endpoints</h2>
 <div class="table-wrap">
 <table class="wikitable">
   <thead><tr><th scope="col">Group</th><th scope="col">Endpoints</th></tr></thead>
   <tbody>
-    <tr><td>Authentication</td><td><code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>POST /auth/refresh</code>, <code>POST /auth/logout</code>, <code>GET /auth/availability</code>, <code>POST /auth/forgot-password</code>, <code>POST /auth/reset-password</code></td></tr>
-    <tr><td>Your account</td><td><code>GET /users/me</code>, <code>PATCH /users/me/profile</code>, <code>PATCH /users/me/username</code>, <code>PATCH /users/me/email</code>, <code>PUT /users/me/password</code>, <code>PUT /users/me/interests</code>, <code>GET|PATCH /users/me/settings</code>, <code>POST /users/me/onboarding/complete</code>, <code>POST|DELETE /users/me/avatar</code>, <code>DELETE /users/me</code>, <code>GET /users/me/bookmarks</code></td></tr>
+    <tr><td>Authentication</td><td><code>GET /auth/config</code>, <code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>POST /auth/verify</code>, <code>POST /auth/resend</code>, <code>POST /auth/refresh</code>, <code>POST /auth/logout</code>, <code>GET /auth/availability</code>, <code>POST /auth/forgot-password</code>, <code>POST /auth/reset-password</code></td></tr>
+    <tr><td>Your account</td><td><code>GET /users/me</code>, <code>PATCH /users/me/profile</code>, <code>PATCH /users/me/username</code>, <code>POST /users/me/email</code>, <code>POST /users/me/email/verify</code>, <code>POST /users/me/password</code>, <code>POST /users/me/password/verify</code>, <code>GET /users/me/sessions</code>, <code>DELETE /users/me/sessions/{id}</code>, <code>POST /users/me/sessions/revoke-others</code>, <code>GET /users/me/export</code>, <code>PUT /users/me/interests</code>, <code>GET|PATCH /users/me/settings</code>, <code>POST /users/me/onboarding/complete</code>, <code>POST|DELETE /users/me/avatar</code>, <code>DELETE /users/me</code>, <code>GET /users/me/bookmarks</code></td></tr>
     <tr><td>Users</td><td><code>GET /users/recommended</code>, <code>GET /users/{username}</code>, <code>GET /users/{username}/posts</code>, <code>GET /users/{username}/replies</code>, <code>GET /users/{username}/followers</code>, <code>GET /users/{username}/following</code>, <code>POST|DELETE /users/{id}/follow</code></td></tr>
     <tr><td>Posts</td><td><code>GET /posts?tab=for_you|following|latest&amp;tag=</code>, <code>GET /posts/trending</code>, <code>GET /posts/{id}</code>, <code>POST /posts</code>, <code>PUT /posts/{id}</code>, <code>DELETE /posts/{id}</code></td></tr>
     <tr><td>Interactions</td><td><code>POST|DELETE /posts/{id}/like</code>, <code>POST|DELETE /posts/{id}/bookmark</code>, <code>POST|DELETE /posts/{id}/repost</code></td></tr>
@@ -1575,6 +1685,7 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td>Media</td><td><code>POST /media</code>, <code>DELETE /media/{id}</code></td></tr>
     <tr><td>Ads</td><td><code>GET /ads</code>, <code>POST /ads/{id}/click</code>; for administrators, <code>GET|POST /ads/manage</code> and <code>PUT|DELETE /ads/manage/{id}</code></td></tr>
     <tr><td>Health</td><td><code>GET /health</code></td></tr>
+    <tr><td>Search engines</td><td><code>GET|HEAD /sitemap.xml</code> (at the site root, outside <code>/api</code>)</td></tr>
   </tbody>
 </table>
 </div>
@@ -1593,7 +1704,7 @@ Content-Type: application/json
 }</code></pre>
 <p>The response is the created post, with its sanitized HTML, tags, author, counters and your like, save and repost state.</p>
 <div class="categories">Categories: <a href="#api-reference">Developers</a><a href="#developers-overview">API</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <!-- ================================================================== CONTRIBUTING AND LICENSE -->
@@ -1629,7 +1740,7 @@ Content-Type: application/json
 <h2 id="contributing-and-license-translations">Improving translations</h2>
 <p>Both languages live in two JSON files with identical keys. Arabic plural forms (zero, one, two, few, many, other) are supported and should be filled in for any text that contains a number.</p>
 <div class="categories">Categories: <a href="#contributing-and-license">Developers</a><a href="#main-page">About</a></div>
-<p class="article-footer">Describes ArabDev 1.0.0 · Last updated 19 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
 </article>
 
 <nav class="prev-next" data-prev-next aria-label="Previous and next article">
