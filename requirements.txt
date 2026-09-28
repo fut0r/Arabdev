@@ -1,6 +1,6 @@
 # Python packages for the Vercel function in api/index.py.
 # Keep in step with the dependencies in backend/pyproject.toml.
-fastapi>=0.115
+fastapi>=0.141.1
 pydantic>=2.9
 pydantic-settings>=2.6
 email-validator>=2.2
