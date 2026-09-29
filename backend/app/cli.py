@@ -115,7 +115,7 @@ def seed_demo_data(db: Session) -> None:
                 post.likes_count += 1
 
     db.commit()
-    print(f"Created {len(users)} demo developers (password: {DEMO_PASSWORD}) and {len(posts)} posts.")
+    print(f"Created {len(users)} demo developers and {len(posts)} posts. Their shared password is in the README.")
 
 
 def make_admin(db: Session, username: str) -> None:

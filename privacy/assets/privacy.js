@@ -95,7 +95,7 @@
         if (link.offsetTop < toc.scrollTop || link.offsetTop > toc.scrollTop + toc.clientHeight - 40) toc.scrollTop = top;
       }
     }
-    if (langSwitch) langSwitch.setAttribute('href', langSwitch.getAttribute('data-base') + (id ? '#' + id : ''));
+    if (langSwitch) langSwitch.hash = id ? '#' + id : '';
   }
 
   var ticking = false;

@@ -157,7 +157,7 @@
     if (!article.querySelector('.toc')) buildToc(article);
     updatePrevNext(article);
     document.title = article.getAttribute('data-title') + ' — ' + siteName;
-    if (langSwitch) langSwitch.setAttribute('href', langSwitch.getAttribute('data-base') + (id ? '#' + id : ''));
+    if (langSwitch) langSwitch.hash = id ? '#' + id : '';
     document.body.classList.remove('nav-open');
     var target = id && id !== article.id ? document.getElementById(id) : null;
     if (target) target.scrollIntoView();

@@ -72,11 +72,12 @@
 
   /* ---------- counts: always computed from the list itself, so they can never drift ---------- */
   var totals = { all: changes.length };
+  var originals = new WeakMap();
   changes.forEach(function (item) {
     var type = item.getAttribute('data-type');
     totals[type] = (totals[type] || 0) + 1;
     var body = item.querySelector('.text');
-    if (body) body.setAttribute('data-original', body.innerHTML);
+    if (body) originals.set(body, body.cloneNode(true));
   });
   document.querySelectorAll('[data-count]').forEach(function (el) {
     el.textContent = String(totals[el.getAttribute('data-count')] || 0);
@@ -92,7 +93,8 @@
   }
 
   function highlight(body, term) {
-    body.innerHTML = body.getAttribute('data-original');
+    var fresh = originals.get(body).cloneNode(true);
+    body.replaceChildren.apply(body, Array.prototype.slice.call(fresh.childNodes));
     if (!term) return;
     var walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT);
     var nodes = [];
@@ -114,7 +116,10 @@
     if (query) next.set('q', query);
     var search = next.toString();
     history.replaceState(null, '', location.pathname + (search ? '?' + search : '') + location.hash);
-    if (langSwitch) langSwitch.setAttribute('href', langSwitch.getAttribute('data-base') + (search ? '?' + search : '') + location.hash);
+    if (langSwitch) {
+      langSwitch.search = search ? '?' + search : '';
+      langSwitch.hash = location.hash;
+    }
   }
 
   function apply() {
