@@ -45,6 +45,9 @@ class PostOut(BaseModel):
     reposted: bool = False
     # Set when the post appears in a feed because someone the viewer follows reposted it.
     reposted_by: UserSummary | None = None
+    # Hidden from everyone else while the moderators review reports; only its author and the
+    # moderators can still open it.
+    under_review: bool = False
 
 
 class PostRef(BaseModel):

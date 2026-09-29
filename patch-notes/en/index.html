@@ -46,11 +46,11 @@
       changes for developers. Use the filters to see only one kind of change, or type to search.
     </p>
     <div class="latest">
-      <div class="latest-version">1.1.1</div>
+      <div class="latest-version">1.2.0</div>
       <div>
-        <h2>Latest release: ArabDev 1.1.1, tighter security and a faster start</h2>
-        <p>Released on <time datetime="2026-09-28">28 September 2026</time>.</p>
-        <ul class="stats" aria-label="Changes in 1.1.1">
+        <h2>Latest release: ArabDev 1.2.0, reports, moderation and a smarter feed</h2>
+        <p>Released on <time datetime="2026-09-29">29 September 2026</time>.</p>
+        <ul class="stats" aria-label="Changes in 1.2.0">
           <li><strong data-count="all">—</strong> changes</li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> new</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> improved</li>
@@ -80,7 +80,18 @@
     <h2>Releases</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 September 2026 · Latest</small></a>
+        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 September 2026 · Latest</small></a>
+        <ul>
+          <li><a href="#v120-reports">Reporting posts</a></li>
+          <li><a href="#v120-moderation">Moderation</a></li>
+          <li><a href="#v120-feed">For you and Trending</a></li>
+          <li><a href="#v120-email">Emails</a></li>
+          <li><a href="#v120-privacy">Privacy and safety</a></li>
+          <li><a href="#v120-developer">For developers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 September 2026</small></a>
         <ul>
           <li><a href="#v111-security">Security</a></li>
           <li><a href="#v111-search">Search engines</a></li>
@@ -155,10 +166,77 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>No changes match your filters. Try another word, or show all changes.</div>
 
+<article class="release" id="v1-2-0" aria-labelledby="v1-2-0-title">
+  <header class="release-header">
+    <h2 id="v1-2-0-title">ArabDev 1.2.0</h2>
+    <span class="badge">Latest</span>
+    <time datetime="2026-09-29">29 September 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    A community safety release: report any post, and let moderators keep it, remove it, or restrict or suspend its author, with every step emailed to the people involved. Plus a smarter For you feed, a faster-moving Trending list, and redesigned emails.
+  </p>
+
+  <ul class="highlights" data-hide-when-filtered aria-label="Highlights of 1.2.0">
+    <li><span class="highlight-icon" aria-hidden="true">⚑</span><strong>Report a post</strong><span>A reason, a few words, and the team takes it from there.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🛡</span><strong>Decisions with care</strong><span>Keep, remove, restrict for a set time, or suspend, with emails to everyone involved.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">✦</span><strong>A smarter For you</strong><span>Ranked by who and what you care about, how much discussion a post starts, and how fresh it is.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">✉</span><strong>Emails that look like ArabDev</strong><span>The Anton wordmark, with Alexandria headings and Tajawal text.</span></li>
+  </ul>
+
+  <section class="area" id="v120-reports" aria-labelledby="v120-reports-title">
+    <h3 id="v120-reports-title">Reporting posts<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">Every post now has <strong>Report post</strong> in its ⋯ menu. Pick one of nine reasons (spam, harassment, hate speech, sexual content, violence, misinformation, private information, copyright or something else) and add details if you like.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">The author is emailed that their post was reported and why, but never by whom. The ArabDev team is emailed the details with a button that opens the report.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">When three different people report the same post, it is hidden from everyone but its author and the moderators until the team decides. The author sees a notice on the post.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">Reporting the same post twice counts once, you cannot report your own posts, and each account can send at most 20 reports a day, so the button cannot be used to bury someone.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-moderation" aria-labelledby="v120-moderation-title">
+    <h3 id="v120-moderation-title">Moderation<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">A new <strong>Reports</strong> page for moderators groups every open report on a post into one case, with the post, its author, each reason and the reporters' notes.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A moderator can keep the post, remove it, stop its author publishing for 1 to 365 days, or suspend the account, and add a note for the author. The author and every reporter are emailed the outcome.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Restricted members can still read, like and save, and see until when they cannot post, comment or repost at the top of every page. Suspended accounts are signed out everywhere and their posts disappear from every list.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Moderators see past decisions and every restricted or suspended account, and can lift a restriction early.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-feed" aria-labelledby="v120-feed-title">
+    <h3 id="v120-feed-title">For you and Trending<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text"><strong>For you</strong> now scores each recent post by how close it is to you (people you follow, your interests, authors you like or comment on, and what people you follow liked or reposted), how much discussion it started, and how fresh it is.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">For you mixes authors: the first five posts never hold more than two from the same person, and your own posts and ones you already liked move down a little.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text"><strong>Trending this week</strong> now ranks by how fast a post is gathering reactions rather than by totals alone, so a new post that is taking off can pass an older one.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-email" aria-labelledby="v120-email-title">
+    <h3 id="v120-email-title">Emails<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Every email has a new look: the ArabDev wordmark in Anton at the top, headings in Alexandria and text in Tajawal, in both Arabic and English.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The wordmark is an image, so it looks the same in every mail app. Apps that do not load web fonts, such as Gmail, fall back to a clean system font.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-privacy" aria-labelledby="v120-privacy-title">
+    <h3 id="v120-privacy-title">Privacy and safety<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">Security</span><span class="text">A post hidden for review cannot be opened, liked, commented on or reposted by anyone except its author and the moderators.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text"><em>Download my data</em> now includes the reports you sent. Reports about your posts are left out, because they would reveal who sent them.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Decided reports are deleted automatically after 12 months. The privacy policy (version 1.3) explains what a report stores and who can see it.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-developer" aria-labelledby="v120-developer-title">
+    <h3 id="v120-developer-title">For developers<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New endpoints: <code>POST /posts/{id}/report</code>, and for moderators <code>/admin/summary</code>, <code>/admin/reports</code>, <code>/admin/reports/{id}/decision</code>, <code>/admin/restricted</code> and <code>/admin/users/{id}/lift</code>. Posts carry <code>under_review</code>, and <code>/users/me</code> carries <code>restricted_until</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New settings: <code>ADMIN_USERNAMES</code> (moderators by username), <code>MODERATION_EMAIL</code>, <code>REPORT_AUTO_HIDE_THRESHOLD</code> (3) and <code>REPORT_RETENTION_DAYS</code> (365). A new migration adds the <code>reports</code> table and the restriction columns.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Feed ranking moved to <code>app/services/ranking.py</code>, with every weight named and explained. The backend test suite now has 87 tests.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-1-1" aria-labelledby="v1-1-1-title">
   <header class="release-header">
     <h2 id="v1-1-1-title">ArabDev 1.1.1</h2>
-    <span class="badge">Latest</span>
     <time datetime="2026-09-28">28 September 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

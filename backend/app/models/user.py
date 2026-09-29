@@ -30,6 +30,9 @@ class User(Base):
     last_login_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
     password_changed_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
     email_verified_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    # Set by the moderators: until then the account can read but not post, comment or repost.
+    restricted_until: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    restriction_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     profile: Mapped["Profile"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan", lazy="joined"

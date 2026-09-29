@@ -6,6 +6,7 @@ import { Outlet, useMatches } from 'react-router';
 
 import { LoadingState } from '@/components/LoadingState';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { RestrictionNotice } from '@/features/moderation/RestrictionNotice';
 import { OnboardingDialog } from '@/features/onboarding/OnboardingDialog';
 import type { RouteHandle } from '@/router';
 import { layout } from '@/theme/tokens';
@@ -79,6 +80,7 @@ export function AppLayout() {
             '&:focus': { outline: 'none' },
           }}
         >
+          <RestrictionNotice />
           <Suspense fallback={<LoadingState minHeight={400} />}>
             <Outlet />
           </Suspense>

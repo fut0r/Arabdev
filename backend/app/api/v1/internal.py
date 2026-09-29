@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.deps import DbSession
 from app.core.errors import NotFound, Unauthorized
 from app.services.auth_service import purge_expired_tokens
+from app.services.report_service import purge_resolved
 
 router = APIRouter(prefix="/internal", include_in_schema=False)
 
@@ -24,4 +25,5 @@ def purge_tokens(db: DbSession, authorization: str | None = Header(default=None)
     if not authorization or not hmac.compare_digest(authorization, expected):
         raise Unauthorized("Not allowed", "cron_unauthorized")
     sessions, resets = purge_expired_tokens(db)
-    return {"sessions_deleted": sessions, "reset_links_deleted": resets}
+    reports = purge_resolved(db)
+    return {"sessions_deleted": sessions, "reset_links_deleted": resets, "reports_deleted": reports}

@@ -67,7 +67,7 @@ def test_scheduled_cleanup_requires_the_cron_secret(client, monkeypatch):
     assert client.get(path, headers={"Authorization": "Bearer wrong"}).status_code == 401
     ok = client.get(path, headers={"Authorization": "Bearer s3cret-value"})
     assert ok.status_code == 200
-    assert ok.json() == {"sessions_deleted": 0, "reset_links_deleted": 0}
+    assert ok.json() == {"sessions_deleted": 0, "reset_links_deleted": 0, "reports_deleted": 0}
 
 
 def test_hosted_postgres_urls_use_the_psycopg_driver():

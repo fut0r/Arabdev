@@ -17,6 +17,7 @@ from app.core.deps import DbSession
 from app.core.errors import NotFound, register_error_handlers
 from app.services import media_service
 from app.services.auth_service import purge_expired_tokens
+from app.services.report_service import purge_resolved
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger("arabdev")
@@ -35,6 +36,7 @@ OPENAPI_TAGS = [
     {"name": "Interests", "description": "Topics users follow; tags map onto them for recommendations."},
     {"name": "Notifications", "description": "Likes, comments, follows, reposts and mentions."},
     {"name": "Media", "description": "Validated image uploads."},
+    {"name": "Moderation", "description": "Reporting posts, and the moderators' review of reports."},
     {"name": "Ads", "description": "Clearly labelled ads with predictable placement."},
     {"name": "Health", "description": "Service status."},
 ]
@@ -52,8 +54,11 @@ class CachedStaticFiles(StaticFiles):
 def _purge_tokens_once() -> None:
     with SessionLocal() as db:
         sessions, resets = purge_expired_tokens(db)
-    if sessions or resets:
-        logger.info("Deleted %d ended sessions and %d old password reset links", sessions, resets)
+        reports = purge_resolved(db)
+    if sessions or resets or reports:
+        logger.info(
+            "Deleted %d ended sessions, %d old reset links and %d old decided reports", sessions, resets, reports
+        )
 
 
 async def _purge_tokens_periodically() -> None:

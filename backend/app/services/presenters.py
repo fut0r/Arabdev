@@ -6,6 +6,7 @@ never one query per row.
 
 from sqlalchemy.orm import Session
 
+from app.core.permissions import is_admin, is_restricted
 from app.models import Comment, Draft, Media, Notification, Post, User
 from app.repositories import posts as posts_repo
 from app.repositories import users as users_repo
@@ -82,7 +83,9 @@ def me_out(db: Session, user: User) -> MeOut:
         interests=interests_out(user),
         onboarding_completed=user.onboarding_completed,
         email_verified=user.email_verified_at is not None,
-        is_admin=user.is_admin,
+        is_admin=is_admin(user),
+        restricted_until=user.restricted_until if is_restricted(user) else None,
+        restriction_reason=user.restriction_reason if is_restricted(user) else None,
         created_at=user.created_at,
         followers_count=users_repo.follower_counts(db, [user.id]).get(user.id, 0),
         following_count=users_repo.following_counts(db, [user.id]).get(user.id, 0),
@@ -139,6 +142,7 @@ def post_outs(
                 bookmarked=post.id in bookmarked,
                 reposted=post.id in reposted,
                 reposted_by=user_summary(reposter) if reposter else None,
+                under_review=post.hidden_at is not None,
             )
         )
     return result

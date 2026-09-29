@@ -25,6 +25,7 @@ const EditProfilePage = lazy(() => import('@/pages/EditProfilePage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
+const ModerationPage = lazy(() => import('@/pages/ModerationPage'));
 
 /** Pages marked wide use the right-hand column too (no sidebar). */
 export interface RouteHandle {
@@ -138,6 +139,16 @@ export const router = createBrowserRouter([
             element: (
               <RequireAuth>
                 <SettingsPage />
+              </RequireAuth>
+            ),
+            handle: wide,
+          },
+          { path: 'admin', element: <Navigate to="/admin/reports" replace /> },
+          {
+            path: 'admin/reports',
+            element: (
+              <RequireAuth>
+                <ModerationPage />
               </RequireAuth>
             ),
             handle: wide,

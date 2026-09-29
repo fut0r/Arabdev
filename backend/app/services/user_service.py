@@ -5,8 +5,9 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.errors import BadRequest, Conflict, Forbidden, NotFound, UnprocessableEntity
+from app.core.permissions import is_restricted
 from app.core.security import verify_password
-from app.models import Bookmark, Comment, Draft, Follow, Interest, Like, Post, Repost, User
+from app.models import Bookmark, Comment, Draft, Follow, Interest, Like, Post, Report, Repost, User
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.user import (
@@ -244,6 +245,17 @@ def export_account(db: Session, user: User) -> dict:
                 Follow.follower_id == user.id
             ))
         ),
+        # Reports this person sent. Reports about their posts are left out: those would reveal
+        # who reported them.
+        "reports_sent": [
+            {"post_title": report.post_title, "reason": report.reason, "details": report.details,
+             "created_at": report.created_at.isoformat(), "status": report.status}
+            for report in db.scalars(select(Report).where(Report.reporter_id == user.id).order_by(Report.created_at))
+        ],
+        "restriction": {
+            "restricted_until": user.restricted_until.isoformat(),
+            "reason": user.restriction_reason,
+        } if is_restricted(user) else None,
     }
 
 

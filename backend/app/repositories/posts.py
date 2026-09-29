@@ -1,10 +1,10 @@
 from collections.abc import Iterable
 from datetime import datetime
 
-from sqlalchemy import Select, case, exists, func, or_, select, union_all
+from sqlalchemy import ColumnElement, Select, and_, func, or_, select, union_all
 from sqlalchemy.orm import Session
 
-from app.models import Bookmark, Follow, Like, Post, Repost, Tag, post_tags, user_interests
+from app.models import Bookmark, Like, Post, Repost, Tag, User, post_tags
 from app.utils.pagination import PageParams
 from app.utils.text import escape_like
 
@@ -20,29 +20,19 @@ def get_many(db: Session, ids: Iterable[int]) -> dict[int, Post]:
     return {post.id: post for post in db.scalars(select(Post).where(Post.id.in_(ids))).unique()}
 
 
+def visible() -> ColumnElement[bool]:
+    """Posts anyone may see: not hidden while reports are reviewed, by an account still active."""
+    return and_(Post.hidden_at.is_(None), Post.author.has(User.is_active.is_(True)))
+
+
 def latest_stmt() -> Select:
-    return select(Post).order_by(Post.created_at.desc(), Post.id.desc())
-
-
-def for_you_stmt(viewer_id: int) -> Select:
-    """Newest days first; within a day, posts from people you follow and on your interests rank higher."""
-    followed = select(Follow.followee_id).where(Follow.follower_id == viewer_id)
-    my_interests = select(user_interests.c.interest_id).where(user_interests.c.user_id == viewer_id)
-    on_my_interests = (
-        exists()
-        .where(post_tags.c.post_id == Post.id)
-        .where(post_tags.c.tag_id == Tag.id)
-        .where(Tag.interest_id.in_(my_interests))
-    )
-    relevance = case((Post.author_id.in_(followed), 2), else_=0) + case((on_my_interests, 1), else_=0)
-    return select(Post).order_by(
-        func.date(Post.created_at).desc(), relevance.desc(), Post.created_at.desc(), Post.id.desc()
-    )
+    return select(Post).where(visible()).order_by(Post.created_at.desc(), Post.id.desc())
 
 
 def trending_stmt(since: datetime | None) -> Select:
-    score = Post.likes_count + Post.comments_count * 2 + Post.reposts_count * 2
-    stmt = select(Post).order_by(score.desc(), Post.created_at.desc(), Post.id.desc())
+    """All-time totals: the fallback when nothing gathered attention this week."""
+    score = Post.likes_count + Post.comments_count * 2 + Post.reposts_count * 3
+    stmt = select(Post).where(visible()).order_by(score.desc(), Post.created_at.desc(), Post.id.desc())
     if since is not None:
         stmt = stmt.where(Post.created_at >= since)
     return stmt
@@ -53,7 +43,7 @@ def tag_stmt(slug: str) -> Select:
         select(Post)
         .join(post_tags, post_tags.c.post_id == Post.id)
         .join(Tag, Tag.id == post_tags.c.tag_id)
-        .where(Tag.slug == slug)
+        .where(Tag.slug == slug, visible())
         .order_by(Post.created_at.desc(), Post.id.desc())
     )
 
@@ -62,7 +52,7 @@ def bookmarks_stmt(user_id: int) -> Select:
     return (
         select(Post)
         .join(Bookmark, Bookmark.post_id == Post.id)
-        .where(Bookmark.user_id == user_id)
+        .where(Bookmark.user_id == user_id, visible())
         .order_by(Bookmark.created_at.desc())
     )
 
@@ -71,7 +61,10 @@ def search_stmt(query: str) -> Select:
     pattern = f"%{escape_like(query)}%"
     return (
         select(Post)
-        .where(or_(Post.title.ilike(pattern, escape="\\"), Post.content_text.ilike(pattern, escape="\\")))
+        .where(
+            or_(Post.title.ilike(pattern, escape="\\"), Post.content_text.ilike(pattern, escape="\\")),
+            visible(),
+        )
         .order_by(Post.created_at.desc(), Post.id.desc())
     )
 
@@ -84,9 +77,11 @@ def activity_page(
     A post that was both written and reposted (or reposted by several people) appears once,
     at the time of its most recent activity.
     """
-    written = select(Post.id.label("post_id"), Post.created_at.label("activity_at")).where(actor_filter_posts)
+    written = select(Post.id.label("post_id"), Post.created_at.label("activity_at")).where(
+        actor_filter_posts, visible()
+    )
     reposted = select(Repost.post_id.label("post_id"), Repost.created_at.label("activity_at")).where(
-        actor_filter_reposts
+        actor_filter_reposts, Repost.post_id.in_(select(Post.id).where(visible()))
     )
     activity = union_all(written, reposted).subquery("activity")
     grouped = (

@@ -1,6 +1,7 @@
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MailOutlineIcon from '@mui/icons-material/MailOutlineOutlined';
 import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
@@ -50,6 +51,9 @@ function AccountMenu() {
     { to: '/drafts', label: t('nav.drafts'), icon: <DescriptionOutlinedIcon fontSize="small" /> },
     { to: '/bookmarks', label: t('nav.bookmarks'), icon: <BookmarkBorderIcon fontSize="small" /> },
     { to: '/settings', label: t('nav.settings'), icon: <SettingsOutlinedIcon fontSize="small" /> },
+    ...(user.is_admin
+      ? [{ to: '/admin/reports', label: t('nav.moderation'), icon: <FlagOutlinedIcon fontSize="small" /> }]
+      : []),
   ];
   const urls = docUrls(language);
   const docs = [

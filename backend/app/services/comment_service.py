@@ -2,17 +2,18 @@ from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound, UnprocessableEntity
+from app.core.permissions import ensure_can_publish
 from app.models import Comment, Post, User
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentCreate, CommentOut, ReplyOut
 from app.schemas.common import Page
 from app.services import notification_service, presenters
-from app.services.post_service import get_post_or_404, recount
+from app.services.post_service import get_visible_post_or_404, recount
 from app.utils.pagination import PageParams, paginate_scalars
 
 
 def list_for_post(db: Session, post_id: int, viewer: User | None, params: PageParams) -> Page[CommentOut]:
-    post = get_post_or_404(db, post_id)
+    post = get_visible_post_or_404(db, post_id, viewer)
     stmt = (
         select(Comment)
         .where(Comment.post_id == post.id)
@@ -39,7 +40,8 @@ def list_replies_by_user(db: Session, username: str, viewer: User | None, params
 
 
 def create(db: Session, author: User, post_id: int, data: CommentCreate) -> CommentOut:
-    post = get_post_or_404(db, post_id)
+    ensure_can_publish(author)
+    post = get_visible_post_or_404(db, post_id, author)
     parent: Comment | None = None
     if data.parent_id is not None:
         parent = db.get(Comment, data.parent_id)

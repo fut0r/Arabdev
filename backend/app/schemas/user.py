@@ -100,6 +100,9 @@ class MeOut(BaseModel):
     onboarding_completed: bool
     email_verified: bool = False
     is_admin: bool
+    # While set, the account can read but not post, comment or repost.
+    restricted_until: datetime | None = None
+    restriction_reason: str | None = None
     created_at: datetime
     followers_count: int = 0
     following_count: int = 0

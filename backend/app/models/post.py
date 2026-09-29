@@ -35,6 +35,8 @@ class Post(Base):
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, index=True)
     updated_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow, onupdate=utcnow)
     edited_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    # Set when enough people report the post: it leaves feeds until a moderator decides.
+    hidden_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
 
     author: Mapped["User"] = relationship(lazy="joined", innerjoin=True)
     image: Mapped["Media | None"] = relationship(lazy="joined")

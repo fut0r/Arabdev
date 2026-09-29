@@ -7,6 +7,7 @@ from app.models.interest import Interest, user_interests
 from app.models.media import Media
 from app.models.notification import Notification
 from app.models.post import Draft, Post
+from app.models.report import Report
 from app.models.tag import Tag, post_tags
 from app.models.token import PasswordResetToken, RefreshToken
 from app.models.user import Profile, User, UserSettings
@@ -25,6 +26,7 @@ __all__ = [
     "PasswordResetToken",
     "Post",
     "Profile",
+    "Report",
     "RefreshToken",
     "Repost",
     "Tag",

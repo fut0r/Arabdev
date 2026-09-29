@@ -24,6 +24,10 @@ export const queryKeys = {
   recommended: (limit: number) => ['recommended', limit] as const,
   interests: ['interests'] as const,
   ads: (placement: string, lang: string, offset: number) => ['ads', placement, lang, offset] as const,
+  moderationSummary: ['moderation', 'summary'] as const,
+  moderationCases: (status: 'open' | 'resolved', page: number) => ['moderation', 'cases', status, page] as const,
+  moderationCase: (reportId: number) => ['moderation', 'case', reportId] as const,
+  restricted: ['moderation', 'restricted'] as const,
 };
 
 /** Query roots whose data contains posts (either Page<Post> or Post). */

@@ -1,5 +1,8 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
@@ -120,10 +123,10 @@ export default function PostPage() {
           ))}
         </Box>
       ) : query.isError ? (
-        errorCode(query.error) === 'post_not_found' ? (
+        errorCode(query.error) === 'post_not_found' || errorCode(query.error) === 'post_under_review' ? (
           <EmptyState
             icon={<SearchOffOutlinedIcon />}
-            title={t('post.notFound')}
+            title={errorCode(query.error) === 'post_under_review' ? t('errors.post_under_review') : t('post.notFound')}
             action={{ label: t('common.goHome'), to: HOME_PATH }}
           />
         ) : (
@@ -131,6 +134,12 @@ export default function PostPage() {
         )
       ) : post ? (
         <>
+          {post.under_review && (
+            <Alert severity="warning" icon={<VisibilityOffOutlinedIcon />} sx={{ borderRadius: 0 }}>
+              <AlertTitle sx={{ fontWeight: 700 }}>{t('post.underReviewTitle')}</AlertTitle>
+              {t('post.underReviewBody')}
+            </Alert>
+          )}
           <Box sx={{ px: { xs: 2, sm: 3 }, pt: 2.5, pb: 1.5 }}>
             <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
               <Box component={RouterLink} to={`/u/${post.author.username}`} sx={{ borderRadius: '50%' }}>

@@ -100,6 +100,16 @@ class Settings(BaseSettings):
     # Refuse a token whose Turnstile hostname is not one of these (empty: accept any).
     turnstile_hostnames: Annotated[list[str], NoDecode] = []
 
+    # Moderation. These usernames can review reports, on top of accounts marked admin in the
+    # database (see `python -m app.cli make-admin`). Comma-separated in the environment.
+    admin_usernames: Annotated[list[str], NoDecode] = []
+    # Where new reports are emailed. Defaults to the support address.
+    moderation_email: str | None = None
+    # This many open reports from different people hide a post until a moderator decides.
+    report_auto_hide_threshold: int = 3
+    # Resolved reports are deleted after this many days.
+    report_retention_days: int = 365
+
     # "local" writes files under media_root; "database" keeps them in the media table, for
     # hosts without a persistent disk such as Vercel.
     storage_backend: Literal["local", "database"] = "local"
@@ -114,7 +124,7 @@ class Settings(BaseSettings):
     # each further proxy in front, such as Cloudflare's orange-cloud proxy. 0 ignores the header.
     trusted_proxy_hops: int = 1
 
-    @field_validator("cors_origins", "turnstile_hostnames", mode="before")
+    @field_validator("cors_origins", "turnstile_hostnames", "admin_usernames", mode="before")
     @classmethod
     def _split_origins(cls, value: object) -> object:
         if isinstance(value, str):

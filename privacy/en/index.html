@@ -46,8 +46,8 @@
     </p>
     <ul class="meta">
       <li><strong>Effective:</strong> 19 September 2026</li>
-      <li><strong>Last updated:</strong> 28 September 2026</li>
-      <li><strong>Version:</strong> 1.2</li>
+      <li><strong>Last updated:</strong> 29 September 2026</li>
+      <li><strong>Version:</strong> 1.3</li>
       <li><strong>Applies to:</strong> <a href="https://arabdev.site/dashboard" dir="ltr">arabdev.site</a> and its subdomains</li>
       <li><strong>Reading time:</strong> about 25 minutes</li>
     </ul>
@@ -327,6 +327,19 @@
     We use it only to answer you and to keep a record of the request, for example of a privacy request
     we have fulfilled.
   </p>
+
+  <h3 id="provide-reports">When you report a post</h3>
+  <p>
+    If you report a post, we store the reason you picked, any details you wrote, your account, the time,
+    and a copy of the post's title and its first few lines, so the report still makes sense if the post is
+    later deleted. The ArabDev moderators use this only to review the post and to tell you the outcome.
+  </p>
+  <p>
+    <strong>The author is never told who reported them.</strong> They receive an email saying their post was
+    reported and why; the moderators see who sent each report so they can spot abuse of the report button.
+    If the moderators restrict or suspend an account, we store until when and the note they wrote, and show
+    both to that person.
+  </p>
 </section>
 
 <!-- ============================================================ 5 -->
@@ -498,7 +511,7 @@
   <h3 id="use-secure">To keep ArabDev safe</h3>
   <ul>
     <li>Protect accounts from password guessing and takeover, for example with rate limits and by detecting reuse of stolen session tokens.</li>
-    <li>Prevent spam and abuse, and enforce our community guidelines.</li>
+    <li>Prevent spam and abuse, and enforce our community guidelines, including reviewing the posts people report and restricting or suspending accounts that break the guidelines.</li>
     <li>Investigate and fix security issues and errors.</li>
     <li>Clean uploaded content and remove unsafe code from posts before anyone sees them.</li>
   </ul>
@@ -507,6 +520,7 @@
     <li>Send the confirmation codes and password reset links you ask for.</li>
     <li>Warn you when your password changes, your email address changes, or a new browser signs in. The email change notice always goes to the old address; the others can be switched off in Settings.</li>
     <li>Tell you about important changes to your account, to the service or to this policy.</li>
+    <li>Tell you when one of your posts is reported or hidden for review, and the moderators' decision; and, when you report a post, tell you the outcome.</li>
     <li>Reply when you contact us.</li>
   </ul>
   <p>
@@ -588,6 +602,8 @@
         <tr><td>Bookmarks</td><td><span class="pill private">Private</span></td><td>The author is not told that you saved their post.</td></tr>
         <tr><td>Notifications</td><td><span class="pill private">Private</span></td><td>Only you can see them.</td></tr>
         <tr><td>Settings</td><td><span class="pill private">Private</span></td><td>Only you can see them.</td></tr>
+        <tr><td>Reports you send</td><td><span class="pill private">Private</span></td><td>Only you and the moderators. The author is told their post was reported and why, never by whom.</td></tr>
+        <tr><td>A restriction on your account</td><td><span class="pill private">Private</span></td><td>Shown to you and the moderators, not on your public profile.</td></tr>
         <tr><td>Password</td><td><span class="pill never">Unreadable</span></td><td>Stored only as a one-way hash.</td></tr>
       </tbody>
     </table>
@@ -879,6 +895,8 @@
         <tr><td>Password reset links</td><td>Valid for 30 minutes; deleted automatically one day after they are used or expire.</td></tr>
         <tr><td>Rate-limit counters</td><td>For the length of the limit window, at most one hour, in a shared in-memory store. Email addresses in them are one-way hashes.</td></tr>
         <tr><td>Confirmation codes</td><td>Valid for 10 minutes; the code’s hash, the IP address that asked for it and any details waiting on it are deleted one day after it is used or expires.</td></tr>
+        <tr><td>Reports</td><td>Until the moderators decide, then 12 months, after which the scheduled clean-up deletes them automatically.</td></tr>
+        <tr><td>A restriction or suspension</td><td>Until it ends or is lifted. The record of the decision stays with the report.</td></tr>
         <tr><td>Server logs</td><td>Up to 30 days.</td></tr>
         <tr><td>Aggregate ad totals</td><td>For as long as the ad exists. They contain no personal information.</td></tr>
         <tr><td>Messages you send us</td><td>As long as needed to handle your request, and for privacy requests up to three years as a record that we fulfilled them.</td></tr>
@@ -919,6 +937,10 @@
     The counts on other people's posts, such as the number of likes, are recalculated so they no longer
     include your activity.
   </p>
+  <p>
+    Reports you sent, and reports about your posts, are kept for the moderators' records without any link
+    to your account, and are deleted with other decided reports after 12 months.
+  </p>
   <div class="callout strong">
     <span class="callout-title">There is no undo</span>
     <p>Once deleted, an account cannot be restored, even by us. If you might want your posts later, copy them before deleting your account.</p>
@@ -948,7 +970,7 @@
         <tr><td>Access</td><td>Know what information we hold about you and get a copy.</td><td>Your profile, posts, drafts, bookmarks and settings are visible to you in the app, and <em>Settings → Security → Download my data</em> gives you a copy straight away. For anything it does not cover, contact us.</td></tr>
         <tr><td>Correction</td><td>Fix information that is wrong or incomplete.</td><td>Settings → Account and Settings → Profile let you change your username, email, password and every profile detail.</td></tr>
         <tr><td>Deletion</td><td>Have your information erased.</td><td>Delete individual posts, comments and images at any time, or delete your whole account in Settings.</td></tr>
-        <tr><td>Portability</td><td>Receive your information in a structured, machine-readable format.</td><td><em>Settings → Security → Download my data</em> downloads one JSON file with your account, profile, settings, interests, posts, drafts, comments, likes, bookmarks and the people you follow.</td></tr>
+        <tr><td>Portability</td><td>Receive your information in a structured, machine-readable format.</td><td><em>Settings → Security → Download my data</em> downloads one JSON file with your account, profile, settings, interests, posts, drafts, comments, likes, bookmarks, the people you follow, and the reports you sent.</td></tr>
         <tr><td>Objection</td><td>Object to processing based on our legitimate interests.</td><td>Contact us and explain your situation; we will stop unless we have compelling grounds or need it for a legal claim.</td></tr>
         <tr><td>Restriction</td><td>Ask us to pause the use of your information while a concern is resolved.</td><td>Contact us.</td></tr>
         <tr><td>Withdraw consent</td><td>Take back consent you gave, without affecting earlier processing.</td><td>Remove the optional detail or switch the feature off.</td></tr>
@@ -1210,6 +1232,7 @@
     <table>
       <thead><tr><th scope="col">Version</th><th scope="col">Date</th><th scope="col">Summary</th></tr></thead>
       <tbody>
+        <tr><td>1.3</td><td>29 September 2026</td><td>Describes reporting posts: what a report stores, who sees who reported, the emails to authors and reporters, restrictions and suspensions, and how long reports are kept. Reports you send are now part of the data download.</td></tr>
         <tr><td>1.2</td><td>28 September 2026</td><td>Names every provider and where it runs; describes confirmation codes, the shared rate-limit store and how long each is kept; adds the in-app data download, the devices list and the security alert emails.</td></tr>
         <tr><td>1.1</td><td>21 September 2026</td><td>Describes Google AdSense (non-personalised ads), Cloudflare Turnstile and the emailed confirmation codes introduced in ArabDev 1.1.0.</td></tr>
         <tr><td>1.0</td><td>19 September 2026</td><td>First version of the ArabDev Privacy Policy, published with ArabDev 1.0.0.</td></tr>

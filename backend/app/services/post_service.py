@@ -1,17 +1,17 @@
-from datetime import timedelta
 from typing import Literal
 
 from sqlalchemy import func, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound, UnprocessableEntity
+from app.core.permissions import ensure_can_publish, is_admin
 from app.models import Comment, Draft, Follow, Like, Post, Repost, User
 from app.repositories import posts as posts_repo
 from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.post import DraftOut, DraftWrite, PostCreate, PostOut, PostUpdate
-from app.services import media_service, notification_service, presenters
+from app.services import media_service, notification_service, presenters, ranking
 from app.utils.html import html_to_text, sanitize_post_html
 from app.utils.pagination import PageParams, paginate_scalars
 from app.utils.time import utcnow
@@ -29,8 +29,20 @@ def get_post_or_404(db: Session, post_id: int) -> Post:
     return post
 
 
-def get_post(db: Session, post_id: int, viewer: User | None) -> PostOut:
+def get_visible_post_or_404(db: Session, post_id: int, viewer: User | None) -> Post:
+    """A post as this viewer may see it: one hidden for review stays reachable for its author and
+    the moderators only, and a suspended author's posts for the moderators only."""
     post = get_post_or_404(db, post_id)
+    is_author = viewer is not None and viewer.id == post.author_id
+    if post.hidden_at is not None and not (is_author or is_admin(viewer)):
+        raise NotFound("This post is being reviewed by the moderators", "post_under_review")
+    if not post.author.is_active and not is_admin(viewer):
+        raise NotFound("This post doesn't exist or was deleted", "post_not_found")
+    return post
+
+
+def get_post(db: Session, post_id: int, viewer: User | None) -> PostOut:
+    post = get_visible_post_or_404(db, post_id, viewer)
     return presenters.post_outs(db, [post], viewer.id if viewer else None)[0]
 
 
@@ -38,6 +50,12 @@ def _page_of_posts(db: Session, stmt, params: PageParams, viewer: User | None) -
     items, total = paginate_scalars(db, stmt, params)
     outs = presenters.post_outs(db, items, viewer.id if viewer else None)
     return Page.build(outs, params.page, params.limit, total)
+
+
+def _page_of_ranked(db: Session, ranked: list[Post], params: PageParams, viewer: User | None) -> Page[PostOut]:
+    items = ranked[params.offset : params.offset + params.limit]
+    outs = presenters.post_outs(db, items, viewer.id if viewer else None)
+    return Page.build(outs, params.page, params.limit, len(ranked))
 
 
 def _activity_page(
@@ -75,15 +93,15 @@ def feed(db: Session, viewer: User | None, tab: FeedTab, params: PageParams, tag
             params,
             viewer,
         )
-    return _page_of_posts(db, posts_repo.for_you_stmt(viewer.id), params, viewer)
+    return _page_of_ranked(db, ranking.for_you(db, viewer), params, viewer)
 
 
 def trending(db: Session, viewer: User | None, params: PageParams, days: int = 7) -> Page[PostOut]:
-    page = _page_of_posts(db, posts_repo.trending_stmt(utcnow() - timedelta(days=days)), params, viewer)
-    if page.total == 0:
-        # A quiet week: fall back to the all-time ranking rather than an empty page.
-        page = _page_of_posts(db, posts_repo.trending_stmt(None), params, viewer)
-    return page
+    ranked = ranking.trending(db, days)
+    if ranked:
+        return _page_of_ranked(db, ranked, params, viewer)
+    # A quiet week: fall back to the all-time ranking rather than an empty page.
+    return _page_of_posts(db, posts_repo.trending_stmt(None), params, viewer)
 
 
 def user_activity(db: Session, username: str, viewer: User | None, params: PageParams) -> Page[PostOut]:
@@ -115,6 +133,7 @@ def _attach_image(db: Session, author: User, media_id: int | None) -> int | None
 
 
 def create_post(db: Session, author: User, data: PostCreate) -> PostOut:
+    ensure_can_publish(author)
     content_html, content_text = _prepare_content(data.content_html)
     post = Post(
         author_id=author.id,
@@ -147,6 +166,7 @@ def _ensure_author(post: Post, user: User) -> None:
 def update_post(db: Session, user: User, post_id: int, data: PostUpdate) -> PostOut:
     post = get_post_or_404(db, post_id)
     _ensure_author(post, user)
+    ensure_can_publish(user)
     content_html, content_text = _prepare_content(data.content_html)
     previous_image = post.image_media_id
 
@@ -167,13 +187,18 @@ def update_post(db: Session, user: User, post_id: int, data: PostUpdate) -> Post
 
 def delete_post(db: Session, user: User, post_id: int) -> None:
     post = get_post_or_404(db, post_id)
-    if post.author_id != user.id and not user.is_admin:
+    if post.author_id != user.id and not is_admin(user):
         raise Forbidden("You can only delete your own posts", "not_post_author")
+    remove_post(db, post)
+    db.commit()
+
+
+def remove_post(db: Session, post: Post) -> None:
+    """Delete a post and its image. The caller commits."""
     image_id = post.image_media_id
     db.delete(post)
     db.flush()
     media_service.delete_if_orphaned(db, image_id)
-    db.commit()
 
 
 def recount(db: Session, post_ids: list[int]) -> None:

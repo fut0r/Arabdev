@@ -5,11 +5,12 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.errors import BadRequest
+from app.core.permissions import ensure_can_publish
 from app.models import Bookmark, Like, Post, Repost, User
 from app.repositories import posts as posts_repo
 from app.schemas.post import PostCounters
 from app.services import notification_service
-from app.services.post_service import get_post_or_404
+from app.services.post_service import get_post_or_404, get_visible_post_or_404
 
 
 def _counters(db: Session, user: User, post: Post) -> PostCounters:
@@ -50,7 +51,7 @@ def _remove(db: Session, model, user: User, post: Post, counter: str | None) -> 
 
 
 def like(db: Session, user: User, post_id: int) -> PostCounters:
-    post = get_post_or_404(db, post_id)
+    post = get_visible_post_or_404(db, post_id, user)
     if _add(db, Like, user, post, "likes_count"):
         notification_service.notify(db, recipient_id=post.author_id, actor_id=user.id, kind="like", post_id=post.id)
     db.commit()
@@ -68,7 +69,7 @@ def unlike(db: Session, user: User, post_id: int) -> PostCounters:
 
 
 def bookmark(db: Session, user: User, post_id: int) -> PostCounters:
-    post = get_post_or_404(db, post_id)
+    post = get_visible_post_or_404(db, post_id, user)
     _add(db, Bookmark, user, post, None)
     db.commit()
     return _counters(db, user, post)
@@ -82,7 +83,8 @@ def unbookmark(db: Session, user: User, post_id: int) -> PostCounters:
 
 
 def repost(db: Session, user: User, post_id: int) -> PostCounters:
-    post = get_post_or_404(db, post_id)
+    ensure_can_publish(user)
+    post = get_visible_post_or_404(db, post_id, user)
     if post.author_id == user.id:
         raise BadRequest("You can't repost your own post", "cannot_repost_own")
     if _add(db, Repost, user, post, "reposts_count"):

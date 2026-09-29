@@ -46,11 +46,11 @@
       والتغييرات الخاصة بالمطوّرين. استخدم عوامل التصفية لعرض نوع واحد من التغييرات، أو اكتب للبحث.
     </p>
     <div class="latest">
-      <div class="latest-version">1.1.1</div>
+      <div class="latest-version">1.2.0</div>
       <div>
-        <h2>أحدث إصدار: ArabDev 1.1.1 — أمان أشدّ وبداية أسرع</h2>
-        <p>صدر في <time datetime="2026-09-28">28 سبتمبر 2026</time>.</p>
-        <ul class="stats" aria-label="التغييرات في 1.1.1">
+        <h2>أحدث إصدار: ArabDev 1.2.0 — الإبلاغ والإشراف وترتيب أذكى</h2>
+        <p>صدر في <time datetime="2026-09-29">29 سبتمبر 2026</time>.</p>
+        <ul class="stats" aria-label="التغييرات في 1.2.0">
           <li>إجمالي التغييرات <strong data-count="all">—</strong></li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> جديد</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> تحسين</li>
@@ -80,7 +80,18 @@
     <h2>الإصدارات</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 سبتمبر 2026 · الأحدث</small></a>
+        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 سبتمبر 2026 · الأحدث</small></a>
+        <ul>
+          <li><a href="#v120-reports">الإبلاغ عن المنشورات</a></li>
+          <li><a href="#v120-moderation">الإشراف</a></li>
+          <li><a href="#v120-feed">لك والرائج</a></li>
+          <li><a href="#v120-email">الرسائل</a></li>
+          <li><a href="#v120-privacy">الخصوصية والأمان</a></li>
+          <li><a href="#v120-developer">للمطوّرين</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-1-1">1.1.1 <small>28 سبتمبر 2026</small></a>
         <ul>
           <li><a href="#v111-security">الأمان</a></li>
           <li><a href="#v111-search">محرّكات البحث</a></li>
@@ -155,10 +166,77 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release" id="v1-2-0" aria-labelledby="v1-2-0-title">
+  <header class="release-header">
+    <h2 id="v1-2-0-title">ArabDev 1.2.0</h2>
+    <span class="badge">الأحدث</span>
+    <time datetime="2026-09-29">29 سبتمبر 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    إصدار لسلامة المجتمع: أبلغ عن أي منشور، ودع المشرفين يبقونه أو يحذفونه أو يقيّدون كاتبه أو يوقفونه، مع رسالة بكل خطوة لكل المعنيين. ومعه تبويب «لك» أذكى، وقائمة رائجة أسرع حركة، ورسائل بريد بتصميم جديد.
+  </p>
+
+  <ul class="highlights" data-hide-when-filtered aria-label="أبرز ما في 1.2.0">
+    <li><span class="highlight-icon" aria-hidden="true">⚑</span><strong>أبلغ عن منشور</strong><span>سبب وكلمات قليلة، ويتولى الفريق الباقي.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">🛡</span><strong>قرارات بعناية</strong><span>إبقاء أو حذف أو تقييد لمدة محددة أو إيقاف، مع رسائل لكل المعنيين.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">✦</span><strong>تبويب «لك» أذكى</strong><span>ترتيب حسب من وما يهمك، وحجم النقاش الذي يفتحه المنشور، ومدى حداثته.</span></li>
+    <li><span class="highlight-icon" aria-hidden="true">✉</span><strong>رسائل بهوية ArabDev</strong><span>شعار بخط Anton، وعناوين بخط Alexandria، ونص بخط Tajawal.</span></li>
+  </ul>
+
+  <section class="area" id="v120-reports" aria-labelledby="v120-reports-title">
+    <h3 id="v120-reports-title">الإبلاغ عن المنشورات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صار لكل منشور خيار <strong>الإبلاغ عن المنشور</strong> في قائمة ⋯. اختر أحد تسعة أسباب (رسائل مزعجة، أو تحرّش، أو خطاب كراهية، أو محتوى جنسي، أو عنف، أو معلومات مضللة، أو معلومات شخصية، أو حقوق نشر، أو سبب آخر)، وأضف تفاصيل إن شئت.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يصل إلى الكاتب بريد بأن منشوره أُبلغ عنه وبالسبب، دون ذكر من أبلغ أبدًا. ويصل إلى فريق ArabDev بريد بالتفاصيل مع زر يفتح البلاغ.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">إذا أبلغ ثلاثة أشخاص مختلفين عن المنشور نفسه، يُخفى عن الجميع عدا كاتبه والمشرفين حتى يقرر الفريق، ويرى الكاتب تنبيهًا على المنشور.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">الإبلاغ عن المنشور نفسه مرتين يُحسب مرة واحدة، ولا يمكنك الإبلاغ عن منشوراتك، ولكل حساب 20 بلاغًا في اليوم على الأكثر، فلا يمكن استخدام الزر لإسكات أحد.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-moderation" aria-labelledby="v120-moderation-title">
+    <h3 id="v120-moderation-title">الإشراف<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صفحة <strong>البلاغات</strong> الجديدة للمشرفين تجمع كل البلاغات المفتوحة عن منشور في حالة واحدة، مع المنشور وكاتبه وكل سبب وملاحظات المبلِّغين.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يستطيع المشرف إبقاء المنشور أو حذفه، أو منع كاتبه من النشر من يوم إلى 365 يومًا، أو إيقاف الحساب، مع ملاحظة للكاتب. ويصل بريد بالنتيجة إلى الكاتب وإلى كل من أبلغ.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يستطيع الأعضاء المقيّدون القراءة والإعجاب والحفظ، ويرون أعلى كل صفحة حتى متى لا يستطيعون النشر أو التعليق أو إعادة النشر. أما الحسابات الموقوفة فيُسجَّل خروجها من كل الأجهزة وتختفي منشوراتها من كل القوائم.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يرى المشرفون القرارات السابقة وكل حساب مقيّد أو موقوف، ويستطيعون رفع التقييد قبل موعده.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-feed" aria-labelledby="v120-feed-title">
+    <h3 id="v120-feed-title">لك والرائج<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار تبويب <strong>لك</strong> يمنح كل منشور حديث درجة حسب قربه منك (من تتابعهم، واهتماماتك، والكتّاب الذين تعجب بمنشوراتهم أو تعلّق عليها، وما أعجب به من تتابعهم أو أعادوا نشره)، وحجم النقاش الذي فتحه، ومدى حداثته.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">ينوّع تبويب «لك» الكتّاب: لا تضم المنشورات الخمسة الأولى أكثر من منشورين للشخص نفسه، وتتأخر قليلًا منشوراتك وما أعجبك من قبل.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار <strong>الرائج هذا الأسبوع</strong> يرتّب حسب سرعة تفاعل الناس مع المنشور لا حسب المجموع وحده، فيستطيع منشور جديد ينتشر بسرعة أن يسبق منشورًا أقدم.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-email" aria-labelledby="v120-email-title">
+    <h3 id="v120-email-title">الرسائل<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">لكل رسالة مظهر جديد: شعار ArabDev بخط Anton في الأعلى، وعناوين بخط Alexandria، ونص بخط Tajawal، بالعربية والإنجليزية.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">الشعار صورة، فيظهر كما هو في كل تطبيقات البريد. أما التطبيقات التي لا تحمّل خطوط الويب، مثل Gmail، فتعرض النص بخط النظام.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-privacy" aria-labelledby="v120-privacy-title">
+    <h3 id="v120-privacy-title">الخصوصية والأمان<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">لا يستطيع أحد فتح المنشور المخفي للمراجعة أو الإعجاب به أو التعليق عليه أو إعادة نشره، عدا كاتبه والمشرفين.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار <em>نزّل بياناتي</em> يتضمن البلاغات التي أرسلتها. أما البلاغات عن منشوراتك فلا تُضمَّن لأنها تكشف من أرسلها.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تُحذف البلاغات التي بُتّ فيها تلقائيًا بعد 12 شهرًا. وتشرح سياسة الخصوصية (الإصدار 1.3) ما يحفظه البلاغ ومن يستطيع رؤيته.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v120-developer" aria-labelledby="v120-developer-title">
+    <h3 id="v120-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">نقاط نهاية جديدة: <code dir="ltr">POST /posts/{id}/report</code>، وللمشرفين <code dir="ltr">/admin/summary</code> و<code dir="ltr">/admin/reports</code> و<code dir="ltr">/admin/reports/{id}/decision</code> و<code dir="ltr">/admin/restricted</code> و<code dir="ltr">/admin/users/{id}/lift</code>. وصار المنشور يحمل <code>under_review</code>، و<code dir="ltr">/users/me</code> يحمل <code>restricted_until</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعدادات جديدة: <code>ADMIN_USERNAMES</code> (المشرفون بأسماء المستخدمين)، و<code>MODERATION_EMAIL</code>، و<code>REPORT_AUTO_HIDE_THRESHOLD</code> (‏3)، و<code>REPORT_RETENTION_DAYS</code> (‏365). ويضيف ترحيل جديد جدول <code>reports</code> وأعمدة التقييد.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">انتقل ترتيب القوائم إلى <code dir="ltr">app/services/ranking.py</code>، مع تسمية كل وزن وشرحه. وصار في اختبارات الخادم 87 اختبارًا.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-1-1" aria-labelledby="v1-1-1-title">
   <header class="release-header">
     <h2 id="v1-1-1-title">ArabDev 1.1.1</h2>
-    <span class="badge">الأحدث</span>
     <time datetime="2026-09-28">28 سبتمبر 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

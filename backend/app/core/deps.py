@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.errors import Forbidden, Unauthorized
+from app.core.permissions import is_admin
 from app.core.security import decode_access_token
 from app.models import User
 
@@ -51,7 +52,7 @@ def get_current_user(user: Annotated[User | None, Depends(get_current_user_optio
 
 
 def get_admin_user(user: Annotated[User, Depends(get_current_user)]) -> User:
-    if not user.is_admin:
+    if not is_admin(user):
         raise Forbidden("Administrator access required", "admin_required")
     return user
 

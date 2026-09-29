@@ -116,7 +116,7 @@
     <tr><th scope="row">Audience</th><td>Developers, especially Arabic speakers</td></tr>
     <tr><th scope="row">Languages</th><td>Arabic (right-to-left) and English (left-to-right)</td></tr>
     <tr><th scope="row">First release</th><td>Version 1.0.0, 19 September 2026</td></tr>
-    <tr><th scope="row">Latest release</th><td>Version 1.1.1, 28 September 2026</td></tr>
+    <tr><th scope="row">Latest release</th><td>Version 1.2.0, 29 September 2026</td></tr>
     <tr><th scope="row">License</th><td>GNU General Public License v3.0 or later</td></tr>
     <tr><th scope="row">Frontend</th><td>React, TypeScript, Material UI</td></tr>
     <tr><th scope="row">Backend</th><td>Python, FastAPI, SQLite</td></tr>
@@ -173,10 +173,10 @@
 </div>
 
 <h2 id="main-page-about">About this wiki</h2>
-<p>This wiki documents ArabDev version 1.1.1. When a new version changes how something works, the matching article is updated and the change is listed in the <a href="https://patch.arabdev.site/en/" target="_blank" rel="noopener">patch notes</a>.</p>
+<p>This wiki documents ArabDev version 1.2.0. When a new version changes how something works, the matching article is updated and the change is listed in the <a href="https://patch.arabdev.site/en/" target="_blank" rel="noopener">patch notes</a>.</p>
 <p>The wiki is a set of static pages. It has no accounts, no comments, no analytics and no tracking. The only thing it remembers is your light or dark mode choice, which it shares with ArabDev in your browser's local storage.</p>
 <div class="categories">Categories: <a href="#main-page">Wiki</a><a href="#getting-started">Start here</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== GETTING STARTED -->
@@ -260,7 +260,7 @@
 </div>
 <p>Your picture in the top corner opens the account menu, with links to Edit profile, Drafts, Bookmarks and Settings, quick theme and language switches, links to this wiki, the privacy policy and the patch notes, and Sign out.</p>
 <div class="categories">Categories: <a href="#main-page">Start here</a><a href="#profiles">Accounts</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== PROFILES -->
@@ -326,7 +326,7 @@
 <h2 id="profiles-lists">Followers and following lists</h2>
 <p>Open the lists from the counts on a profile, or go to <code>/u/username/followers</code> and <code>/u/username/following</code>. Each person is shown as a card with their bio, interests and a follow button. If someone has turned off <strong>Show my followers and following lists</strong>, other people see "This account keeps its connections private" instead. The owner can always see their own lists.</p>
 <div class="categories">Categories: <a href="#profiles">Accounts</a><a href="#following-and-discovery">Community</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== HOME FEED -->
@@ -338,13 +338,13 @@
 
 <h2 id="home-feed-tabs">The three tabs</h2>
 <h3 id="home-feed-for-you">For you</h3>
-<p>The default tab, unless you chose another under <a href="#settings-appearance">Settings → Appearance → Feed to open first</a>. It shows every post on ArabDev, arranged like this:</p>
+<p>The default tab, unless you chose another under <a href="#settings-appearance">Settings → Appearance → Feed to open first</a>. It shows every post on ArabDev, recent posts first, ranked by a score that weighs three things:</p>
 <ol>
-  <li>Posts are grouped by the day they were published (in Coordinated Universal Time), newest day first.</li>
-  <li>Within the same day, posts from people you follow come first, then posts tagged with one of your interests, then everything else.</li>
-  <li>Within each of those groups, the newest post comes first.</li>
+  <li><strong>How close the post is to you.</strong> A post scores higher when you follow its author, when its tags match your interests, when you have liked or commented on the author's posts in the last 90 days, and when people you follow liked, reposted or commented on it.</li>
+  <li><strong>How much discussion it started.</strong> Likes count once, comments twice and reposts three times, on a scale that grows slowly, so a handful of reactions matters but a huge number does not bury everything else.</li>
+  <li><strong>How fresh it is.</strong> A post's score fades with every hour since it was published, so the feed keeps moving and yesterday's popular post does not stay on top for a week.</li>
 </ol>
-<p>This keeps the feed fresh while making sure that people and topics you chose are not buried under the day's other posts. No post is hidden; For you only changes the order.</p>
+<p>Two more rules keep the feed varied: the first five posts never hold more than two from the same person, and your own posts and posts you already liked sink a little, since you have seen them. Posts from the last 30 days are ranked this way; older posts follow, and no post is hidden. Posts from accounts that are suspended, and posts hidden while the moderators review a report, are left out of every feed.</p>
 <h3 id="home-feed-following">Following</h3>
 <p>Only posts from you and the people you follow, plus the posts those people reposted. If several people you follow repost the same post, it appears once, at the time of the most recent repost, with a label such as "Omar Khatib reposted".</p>
 <h3 id="home-feed-latest">Latest</h3>
@@ -367,6 +367,7 @@
   <li>The beginning of the post. Long posts are cut at about 300 pixels with a gentle fade and a <strong>Read more</strong> link.</li>
   <li>The attached image and link, if any, and the post's tags.</li>
   <li>The action row: comment, repost, like, save and share, each with its count when it is above zero.</li>
+  <li>The <strong>⋯</strong> menu: copy the link, edit or delete your own post, or <a href="#community-guidelines-reporting">report</a> someone else's.</li>
 </ul>
 <p>Clicking anywhere on a post opens it, except on links, buttons and text you are selecting.</p>
 
@@ -383,7 +384,7 @@
   <li>If the Following tab is empty, you see "Nothing from people you follow" and a button that takes you to Explore to find developers.</li>
 </ul>
 <div class="categories">Categories: <a href="#home-feed">Feed</a><a href="#following-and-discovery">Discovery</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== WRITING POSTS -->
@@ -481,7 +482,7 @@
 <h2 id="writing-posts-safety">What happens to your post when you publish</h2>
 <p>The server checks and cleans every post before saving it. It keeps only the formatting the editor offers and removes anything else, including scripts, unknown tags, styles outside the allowed fonts, sizes and colors, and links that do not use <code>http</code>, <code>https</code> or <code>mailto</code>. Links in posts open in a new tab and are marked so search engines do not treat them as endorsements. The browser checks the post again before showing it. This double check keeps everyone who reads your post safe.</p>
 <div class="categories">Categories: <a href="#writing-posts">Posts</a><a href="#formatting-reference">Editor</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== FORMATTING REFERENCE -->
@@ -596,7 +597,7 @@
 </div>
 <p>Do not rely on color alone to carry meaning: some readers cannot tell colors apart. Pair color with words such as "Warning:".</p>
 <div class="categories">Categories: <a href="#formatting-reference">Editor</a><a href="#writing-posts">Posts</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== TAGS AND INTERESTS -->
@@ -684,7 +685,7 @@
 <h2 id="tags-and-interests-popular">Popular tags</h2>
 <p>The Popular tags list (in the side column and on Explore) ranks tags by how many posts used them in the last 30 days. If no posts were tagged in that time, it falls back to the all-time ranking. The list is refreshed every two minutes. The top three ranks are shown in red.</p>
 <div class="categories">Categories: <a href="#tags-and-interests">Discovery</a><a href="#writing-posts">Posts</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== COMMENTS AND INTERACTIONS -->
@@ -733,7 +734,7 @@
 <h2 id="comments-and-interactions-limits">Limits</h2>
 <p>To prevent abuse, each network can make up to 300 likes, saves and reposts per hour, and up to 60 comments per 10 minutes. Normal use never comes close.</p>
 <div class="categories">Categories: <a href="#comments-and-interactions">Community</a><a href="#notifications">Notifications</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== FOLLOWING AND DISCOVERY -->
@@ -764,11 +765,11 @@
 <p>Explore is open to everyone, signed in or not. It contains:</p>
 <ul>
   <li>A <strong>search</strong> box. See <a href="#search">Search</a>.</li>
-  <li><strong>Trending this week</strong>: posts from the last 7 days ranked by likes plus twice their comments plus twice their reposts, so posts that start conversations rank highest. If nothing was posted that week, the all-time ranking is shown. Trending posts are paginated, 20 per page.</li>
+  <li><strong>Trending this week</strong>: posts from the last 7 days ranked by how fast they are gathering reactions, not only by their totals. A post's reactions (likes, twice its comments and three times its reposts) are divided by its age, so a new post that is taking off can pass an older one with more likes. The week's posts nobody has reacted to yet follow, newest first. If nobody reacted to anything that week, the all-time ranking is shown. Trending posts are paginated, 20 per page.</li>
   <li><strong>Popular tags</strong> and <strong>developers to follow</strong>. On large screens these live in the side column; on smaller screens they appear at the top of Explore.</li>
 </ul>
 <div class="categories">Categories: <a href="#following-and-discovery">Discovery</a><a href="#profiles">Community</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== SEARCH -->
@@ -811,7 +812,7 @@
 <h2 id="search-results-page">The results page</h2>
 <p>Pressing <kbd>Enter</kbd> or choosing "See all results" opens <code>/search?q=…</code>. Its tabs are All, Posts, Developers and Tags. <strong>All</strong> shows a short preview of each group with a "View all" button, and the other tabs show the complete list, 20 per page. If nothing matches, ArabDev suggests checking the spelling, trying a shorter phrase or searching for a tag.</p>
 <div class="categories">Categories: <a href="#search">Discovery</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== NOTIFICATIONS -->
@@ -851,7 +852,7 @@
 <p>Go to <a href="#settings-notifications">Settings → Notifications</a> to turn each kind on or off. Turning a kind off stops new notifications of that kind; ones you already have stay. To control who can notify you with a mention, see <a href="#settings-privacy">Settings → Privacy</a>.</p>
 <div class="callout note"><span class="callout-title">No email notifications</span><p>ArabDev does not send notifications by email. The only emails it sends are password reset links you ask for.</p></div>
 <div class="categories">Categories: <a href="#notifications">Notifications</a><a href="#settings">Settings</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== SETTINGS -->
@@ -932,7 +933,7 @@
 </ul>
 <p>ArabDev never sends marketing email, and your address is never shared or sold.</p>
 <div class="categories">Categories: <a href="#settings">Settings</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== PRIVACY AND SAFETY -->
@@ -999,7 +1000,7 @@
   <li>Links in posts lead to other websites that have their own privacy practices.</li>
 </ul>
 <div class="categories">Categories: <a href="#privacy-and-safety">Privacy</a><a href="#account-security">Security</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== ACCOUNT SECURITY -->
@@ -1085,6 +1086,7 @@
     <tr><td>Follow</td><td>120 per hour</td></tr>
     <tr><td>Upload an image</td><td>30 per 10 minutes</td></tr>
     <tr><td>Search</td><td>120 per minute</td></tr>
+    <tr><td>Report a post</td><td>10 per hour</td></tr>
   </tbody>
 </table>
 </div>
@@ -1096,6 +1098,7 @@
     <tr><td>Sign in</td><td>8 attempts per 15 minutes</td></tr>
     <tr><td>Password reset emails</td><td>5 per hour for each inbox</td></tr>
     <tr><td>Wrong confirmation codes</td><td>5 per code</td></tr>
+    <tr><td>Reports</td><td>20 per day</td></tr>
   </tbody>
 </table>
 </div>
@@ -1117,7 +1120,7 @@
   <li>Check <a href="#settings-security-devices">Where you are signed in</a> now and then. If you think someone else knows your password, change it: that signs every other device out.</li>
 </ul>
 <div class="categories">Categories: <a href="#account-security">Security</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== ADS -->
@@ -1158,7 +1161,7 @@
 <h2 id="ads-blocking">If you use an ad blocker</h2>
 <p>That is your choice. ArabDev works the same with ads blocked and never hides anything behind them. If a blocker also stops Cloudflare's security check, sign-in and posting may ask you to try again; see <a href="#account-security-bots">The security check</a>.</p>
 <div class="categories">Categories: <a href="#ads">Ads</a><a href="#privacy-and-safety">Privacy</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== COMMUNITY GUIDELINES -->
@@ -1193,10 +1196,28 @@
 <h2 id="community-guidelines-security">Security research</h2>
 <p>Discussing vulnerabilities, defensive techniques and how attacks work is welcome, because it is how developers learn to build safer software. Publish details about a specific, unpatched vulnerability in someone else's product only after giving them a reasonable chance to fix it. If you find a security problem in ArabDev itself, report it privately to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> rather than posting it (see <a href="#contact-security">Reporting a security problem</a>).</p>
 
+<h2 id="community-guidelines-reporting">Reporting a post</h2>
+<p>If a post breaks these guidelines, open its <strong>⋯</strong> menu and choose <strong>Report post</strong>. Pick the reason that fits best (spam or advertising, harassment or bullying, hate speech, sexual content, violence or threats, false or misleading information, someone's private information, copyright infringement, or something else) and, if you like, add a few words for the moderators. You need to be signed in, and you cannot report your own posts.</p>
+<ul>
+  <li>The author gets an email saying the post was reported and why. It never says who reported it.</li>
+  <li>The ArabDev team gets an email with the details and a link to review the report.</li>
+  <li>Reporting the same post again changes nothing; each person counts once.</li>
+  <li>When three different people have reported a post, it is hidden from everyone except its author and the moderators until the team decides. The author is told by email and sees a notice on the post.</li>
+  <li>When the team decides, the author and everyone who reported the post receive an email with the outcome.</li>
+</ul>
+<p>Each account can send up to 20 reports a day. Reports are for guideline problems, not disagreements: if you simply disagree with a post, reply to it or scroll past.</p>
+
 <h2 id="community-guidelines-moderation">Moderation</h2>
-<p>Post authors can delete comments on their own posts. ArabDev administrators can delete any post or comment that breaks these guidelines. Accounts that repeatedly or seriously break them may be deactivated. ArabDev has no in-app report button yet; until it does, send the link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> (see <a href="#contact-reports">Reporting content</a>).</p>
+<p>Post authors can delete comments on their own posts. For reported posts, an ArabDev moderator reviews every report about the post together and decides:</p>
+<ul>
+  <li><strong>Keep the post.</strong> Nothing breaks the guidelines. If the post was hidden, everyone can see it again.</li>
+  <li><strong>Remove the post.</strong> It is deleted for everyone, with its comments and likes.</li>
+  <li><strong>Restrict the author</strong> for 1, 3, 7, 30, 90 or 365 days. A restricted account can still sign in, read, like and save posts, but cannot publish, comment or repost until the date shown at the top of every page.</li>
+  <li><strong>Suspend the account.</strong> The person is signed out everywhere, cannot sign in, and their posts are no longer shown.</li>
+</ul>
+<p>A moderator can combine removing the post with a restriction or a suspension, and can add a short note that is emailed to the author with the decision. Moderators cannot restrict or suspend another moderator. If you think a decision was a mistake, write to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> and the team will look at it again; restrictions and suspensions can be lifted early.</p>
 <div class="categories">Categories: <a href="#community-guidelines">Community</a><a href="#privacy-and-safety">Safety</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== ACCESSIBILITY AND LANGUAGES -->
@@ -1240,7 +1261,7 @@
   <li>The layout works from small phones to wide screens, and you can zoom in without losing content.</li>
 </ul>
 <div class="categories">Categories: <a href="#accessibility-and-languages">Accessibility</a><a href="#settings">Settings</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== FAQ -->
@@ -1277,9 +1298,12 @@
 <h3 id="faq-no-infinite">Why doesn't the feed scroll forever?</h3>
 <p>ArabDev uses numbered pages of 20 posts on purpose. See <a href="#home-feed-pagination">Pages instead of infinite scroll</a>.</p>
 <h3 id="faq-why-this-post">Why is this post at the top of my feed?</h3>
-<p>In the For you tab, posts from people you follow and posts about your interests come first within each day. Use the Latest tab for pure time order.</p>
+<p>In the For you tab, recent posts rank higher when they come from people you follow or interact with, match your interests, or were liked or reposted by people you follow, and when they are starting a discussion. See <a href="#home-feed-for-you">For you</a>. Use the Latest tab for pure time order.</p>
 <h3 id="faq-hide">Can I stop appearing in suggestions?</h3>
 <p>Yes: turn off <strong>Show me in search and suggestions</strong> in Settings → Privacy.</p>
+
+<h3 id="faq-report-anonymous">If I report a post, will the author know it was me?</h3>
+<p>No. The author is told that the post was reported and why, never by whom. Only the moderators see who sent a report. See <a href="#community-guidelines-reporting">Reporting a post</a>.</p>
 
 <h2 id="faq-privacy">Privacy and ads</h2>
 <h3 id="faq-sell">Does ArabDev sell my data?</h3>
@@ -1303,7 +1327,7 @@
 <h3 id="faq-contact">How do I contact ArabDev?</h3>
 <p>For help, bugs and reports write to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a>; for sponsorship, contributions and other questions write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>. See <a href="#contact">Contact and support</a>.</p>
 <div class="categories">Categories: <a href="#faq">Help</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== TROUBLESHOOTING -->
@@ -1375,7 +1399,7 @@
   <li><strong>"Can't reach the server."</strong> Check your internet connection and reload the page.</li>
 </ul>
 <div class="categories">Categories: <a href="#troubleshooting">Help</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== CONTACT -->
@@ -1409,7 +1433,7 @@
 <p>Before writing, the <a href="#troubleshooting">Troubleshooting</a> and <a href="#faq">Frequently asked questions</a> articles may already have the answer.</p>
 
 <h3 id="contact-reports">Reporting content</h3>
-<p>ArabDev has no in-app report button yet. To report a post, comment or profile, send its link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with a short explanation. Reports are handled confidentially; the person reported is not told who reported them.</p>
+<p>To report a post, use <strong>Report post</strong> in its <strong>⋯</strong> menu (see <a href="#community-guidelines-reporting">Reporting a post</a>). To report a comment or a profile, or anything urgent, send its link to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with a short explanation. Reports are handled confidentially; the person reported is never told who reported them.</p>
 
 <h3 id="contact-security">Reporting a security problem</h3>
 <p>Send security problems privately to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> with the subject "Security", and do not publish them until they are fixed. Include the steps to reproduce the problem and what an attacker could do with it. Please do not access other people's data or disrupt the service while testing.</p>
@@ -1440,7 +1464,7 @@
 </div>
 <p>ArabDev will only ever email you from an <span dir="ltr">@arabdev.site</span> address, and never asks for your password by email. Treat any other message claiming to be from ArabDev as suspicious.</p>
 <div class="categories">Categories: <a href="#troubleshooting">Help</a> · <a href="#privacy-and-safety">Safety</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== GLOSSARY -->
@@ -1458,17 +1482,20 @@
   <dt><strong>House ad</strong></dt><dd>An ad in which ArabDev promotes its own features, shown where no Google or sponsor ad is set up.</dd>
   <dt><strong>Security check</strong></dt><dd>Cloudflare Turnstile, which checks that a real browser is behind sign-ins, sign-ups, posts and comments. Usually invisible.</dd>
   <dt><strong>Interest</strong></dt><dd>One of 25 topics you can pick to shape your feed and suggestions.</dd>
+  <dt><strong>Moderator</strong></dt><dd>A member of the ArabDev team who reviews reports and decides whether to keep a post, remove it, or restrict or suspend its author.</dd>
   <dt><strong>Mention</strong></dt><dd>Writing <code>@username</code> in a post or comment, which notifies that person.</dd>
   <dt><strong>Onboarding</strong></dt><dd>The four-step setup window shown on your first visit.</dd>
+  <dt><strong>Report</strong></dt><dd>Flagging a post that breaks the community guidelines, with a reason, so the moderators review it.</dd>
   <dt><strong>Repost</strong></dt><dd>Sharing someone else's post with your followers without changing it.</dd>
+  <dt><strong>Restricted account</strong></dt><dd>An account the moderators stopped from posting, commenting and reposting until a set date. It can still read, like and save.</dd>
   <dt><strong>RTL / LTR</strong></dt><dd>Right-to-left (Arabic) and left-to-right (English) text direction.</dd>
   <dt><strong>Sponsored</strong></dt><dd>The label that marks every ad.</dd>
   <dt><strong>Tag</strong></dt><dd>A keyword describing a post, such as <code>#python</code>. Up to 5 per post.</dd>
-  <dt><strong>Trending</strong></dt><dd>Posts from the last 7 days ranked by likes, comments and reposts.</dd>
+  <dt><strong>Trending</strong></dt><dd>Posts from the last 7 days ranked by how quickly they are gathering likes, comments and reposts.</dd>
   <dt><strong>Username</strong></dt><dd>Your unique handle, used in your profile address and in mentions.</dd>
 </dl>
 <div class="categories">Categories: <a href="#glossary">Reference</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== DEVELOPERS OVERVIEW -->
@@ -1553,12 +1580,13 @@
     <tr><td><code>ads</code></td><td>Ads with placement, language, schedule and total counts</td></tr>
     <tr><td><code>refresh_tokens</code>, <code>password_reset_tokens</code></td><td>Hashed session and reset tokens with expiry</td></tr>
     <tr><td><code>verification_codes</code></td><td>Hashed six-digit codes, what each confirms, attempts and expiry</td></tr>
+    <tr><td><code>reports</code></td><td>Reports on posts: reason, details, who reported, a copy of the post's title and opening, and the moderators' decision</td></tr>
   </tbody>
 </table>
 </div>
 <p>Foreign keys, usernames, emails, creation dates, tags and follow relationships are indexed. SQLite runs in WAL mode with foreign keys enforced.</p>
 <div class="categories">Categories: <a href="#developers-overview">Developers</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== SELF-HOSTING -->
@@ -1607,6 +1635,10 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td><code>MAIL_FROM</code></td><td><code>ArabDev &lt;noreply@arabdev.site&gt;</code></td><td>Sender of every email. Replies go to the support address.</td></tr>
     <tr><td><code>EMAIL_CODES_ENABLED</code></td><td>follows the mail setup</td><td>Emailed six-digit codes. Unset: on in development, and in production only once SMTP is configured. <code>false</code> switches them off instantly if mail breaks.</td></tr>
     <tr><td><code>TURNSTILE_SITE_KEY</code>, <code>TURNSTILE_SECRET_KEY</code></td><td>unset</td><td>Cloudflare Turnstile. The check runs only when both are set. Cloudflare’s test keys work on localhost.</td></tr>
+    <tr><td><code>ADMIN_USERNAMES</code></td><td>unset</td><td>Comma-separated usernames that act as moderators, in addition to accounts with the administrator flag (<code>python -m app.cli make-admin</code>).</td></tr>
+    <tr><td><code>MODERATION_EMAIL</code></td><td>the support address</td><td>Where new reports are emailed.</td></tr>
+    <tr><td><code>REPORT_AUTO_HIDE_THRESHOLD</code></td><td>3</td><td>How many different people must report a post before it is hidden until reviewed.</td></tr>
+    <tr><td><code>REPORT_RETENTION_DAYS</code></td><td>365</td><td>How long decided reports are kept before the scheduled clean-up deletes them.</td></tr>
     <tr><td><code>VITE_ADSENSE_FEED_SLOT</code>, <code>VITE_ADSENSE_SIDEBAR_SLOT</code></td><td>unset</td><td>Build-time ad unit ids for Google AdSense. Without them the house ads fill those slots.</td></tr>
   </tbody>
 </table>
@@ -1640,7 +1672,7 @@ npm run dev                   # http://localhost:5173</code></pre>
 <h2 id="self-hosting-email">Email</h2>
 <p>ArabDev sends mail over SMTP (<code>backend/app/services/email_service.py</code>): confirmation codes, security alerts and password reset links, each in the reader’s language with a plain-text copy. Any SMTP service works; arabdev.site sends through Google’s mail service as <code>noreply@arabdev.site</code>. Without <code>SMTP_HOST</code>, messages are written to the server log, which is how you read codes when developing locally. In production, codes stay switched off until SMTP is configured, so a missing mail provider cannot lock anyone out; after connecting one, sign in once to check that codes arrive.</p>
 <div class="categories">Categories: <a href="#self-hosting">Developers</a><a href="#developers-overview">Operations</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== API REFERENCE -->
@@ -1684,6 +1716,7 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td>Notifications</td><td><code>GET /notifications</code>, <code>GET /notifications/unread-count</code>, <code>POST /notifications/read-all</code>, <code>POST /notifications/{id}/read</code></td></tr>
     <tr><td>Media</td><td><code>POST /media</code>, <code>DELETE /media/{id}</code></td></tr>
     <tr><td>Ads</td><td><code>GET /ads</code>, <code>POST /ads/{id}/click</code>; for administrators, <code>GET|POST /ads/manage</code> and <code>PUT|DELETE /ads/manage/{id}</code></td></tr>
+    <tr><td>Moderation</td><td><code>POST /posts/{id}/report</code>; for moderators, <code>GET /admin/summary</code>, <code>GET /admin/reports?status=open|resolved</code>, <code>GET /admin/reports/{id}</code>, <code>POST /admin/reports/{id}/decision</code>, <code>GET /admin/restricted</code>, <code>POST /admin/users/{id}/lift</code></td></tr>
     <tr><td>Health</td><td><code>GET /health</code></td></tr>
     <tr><td>Search engines</td><td><code>GET|HEAD /sitemap.xml</code> (at the site root, outside <code>/api</code>)</td></tr>
   </tbody>
@@ -1704,7 +1737,7 @@ Content-Type: application/json
 }</code></pre>
 <p>The response is the created post, with its sanitized HTML, tags, author, counters and your like, save and repost state.</p>
 <div class="categories">Categories: <a href="#api-reference">Developers</a><a href="#developers-overview">API</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <!-- ================================================================== CONTRIBUTING AND LICENSE -->
@@ -1740,7 +1773,7 @@ Content-Type: application/json
 <h2 id="contributing-and-license-translations">Improving translations</h2>
 <p>Both languages live in two JSON files with identical keys. Arabic plural forms (zero, one, two, few, many, other) are supported and should be filled in for any text that contains a number.</p>
 <div class="categories">Categories: <a href="#contributing-and-license">Developers</a><a href="#main-page">About</a></div>
-<p class="article-footer">Describes ArabDev 1.1.1 · Last updated 28 September 2026</p>
+<p class="article-footer">Describes ArabDev 1.2.0 · Last updated 29 September 2026</p>
 </article>
 
 <nav class="prev-next" data-prev-next aria-label="Previous and next article">

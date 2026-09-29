@@ -74,6 +74,9 @@ export interface Me {
   onboarding_completed: boolean;
   email_verified: boolean;
   is_admin: boolean;
+  /** Set while the moderators have stopped this account from publishing. */
+  restricted_until: string | null;
+  restriction_reason: string | null;
   created_at: string;
   followers_count: number;
   following_count: number;
@@ -174,6 +177,8 @@ export interface Post {
   bookmarked: boolean;
   reposted: boolean;
   reposted_by: UserSummary | null;
+  /** Hidden from everyone but its author and the moderators until a report is decided. */
+  under_review: boolean;
 }
 
 export interface PostCounters {
@@ -274,6 +279,83 @@ export interface FollowState {
   user_id: number;
   following: boolean;
   followers_count: number;
+}
+
+export const REPORT_REASONS = [
+  'spam',
+  'harassment',
+  'hate',
+  'sexual',
+  'violence',
+  'misinformation',
+  'personal_info',
+  'copyright',
+  'other',
+] as const;
+export type ReportReason = (typeof REPORT_REASONS)[number];
+
+export interface ReportAck {
+  detail: string;
+  already_reported: boolean;
+}
+
+export interface ReportItem {
+  id: number;
+  reason: ReportReason;
+  details: string | null;
+  reporter: UserSummary | null;
+  created_at: string;
+  status: 'open' | 'dismissed' | 'actioned';
+  /** Comma-joined: post_removed, author_restricted, author_suspended */
+  action: string | null;
+  resolution_note: string | null;
+  resolved_at: string | null;
+  moderator: UserSummary | null;
+}
+
+export interface ReportedAuthor extends UserSummary {
+  restricted_until: string | null;
+  suspended: boolean;
+  is_admin: boolean;
+}
+
+/** Every open report on one post, decided together. */
+export interface ReportCase {
+  case_id: number;
+  post_id: number | null;
+  post: Post | null;
+  post_title: string | null;
+  post_excerpt: string;
+  author: ReportedAuthor | null;
+  hidden: boolean;
+  reports: ReportItem[];
+  first_reported_at: string;
+}
+
+export type AuthorAction = 'none' | 'restrict' | 'suspend';
+
+export interface Decision {
+  remove_post: boolean;
+  author_action: AuthorAction;
+  restrict_days: number;
+  note: string | null;
+}
+
+export interface DecisionResult {
+  status: 'dismissed' | 'actioned';
+  actions: string[];
+  reports_resolved: number;
+}
+
+export interface ModerationSummary {
+  open_cases: number;
+  open_reports: number;
+}
+
+export interface RestrictedAccount extends UserSummary {
+  restricted_until: string | null;
+  restriction_reason: string | null;
+  suspended: boolean;
 }
 
 export interface ApiErrorBody {

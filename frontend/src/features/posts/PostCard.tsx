@@ -1,5 +1,6 @@
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import LinkIcon from '@mui/icons-material/Link';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -20,6 +21,7 @@ import { RelativeTime, UserAvatar } from '@/components/common';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useNotify } from '@/components/Notifier';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { ReportDialog } from '@/features/moderation/ReportDialog';
 import type { Post } from '@/types/api';
 import { hostnameOf } from '@/utils/format';
 
@@ -34,11 +36,22 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
   const navigate = useNavigate();
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const deletion = useDeletePost(() => {
     setConfirming(false);
     onDeleted?.();
   });
   const isOwner = user?.id === post.author.id;
+  const canDelete = isOwner || Boolean(user?.is_admin);
+
+  const report = () => {
+    setAnchor(null);
+    if (!user) {
+      navigate('/login', { state: { from: `/posts/${post.id}` } });
+      return;
+    }
+    setReporting(true);
+  };
 
   const copyLink = async () => {
     setAnchor(null);
@@ -89,7 +102,15 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
           </ListItemIcon>
           {t('common.copyLink')}
         </MenuItem>
-        {isOwner && (
+        {!isOwner && (
+          <MenuItem onClick={report}>
+            <ListItemIcon>
+              <FlagOutlinedIcon fontSize="small" />
+            </ListItemIcon>
+            {t('report.action')}
+          </MenuItem>
+        )}
+        {canDelete && (
           <MenuItem
             onClick={() => {
               setAnchor(null);
@@ -113,6 +134,7 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
         onClose={() => setConfirming(false)}
         onConfirm={() => deletion.mutate(post.id)}
       />
+      {!isOwner && user && <ReportDialog postId={post.id} open={reporting} onClose={() => setReporting(false)} />}
     </>
   );
 }
