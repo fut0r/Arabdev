@@ -9,7 +9,7 @@ COPY frontend/ ./
 COPY LICENSE /app/LICENSE
 RUN npm run build
 
-FROM nginx:1.27-alpine
+FROM nginx:1.31-alpine
 COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 COPY frontend/nginx-security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY --from=build /app/frontend/dist /usr/share/nginx/html
