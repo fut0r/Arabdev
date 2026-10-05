@@ -129,11 +129,15 @@ function page(shell, path, title, description, body) {
   html = setMeta(html, 'property', 'og:description', description);
   html = setMeta(html, 'name', 'twitter:title', fullTitle);
   html = setMeta(html, 'name', 'twitter:description', description);
-  html = html.replace(
+  return withBody(withAddress(html, url), body);
+}
+
+/** Names the page's own address, which the shared shell deliberately leaves out. */
+function withAddress(html, url) {
+  return html.replace(
     '</head>',
     () => `  <link rel="canonical" href="${url}" />\n    <meta property="og:url" content="${url}" />\n  </head>`,
   );
-  return withBody(html, body);
 }
 
 const shell = readFileSync(resolve(dist, 'index.html'), 'utf8');
@@ -142,7 +146,7 @@ const [arabic] = languages;
 // Every address without a page of its own gets this untouched shell (see vercel.json and
 // nginx.conf), so only the homepage carries the homepage's text.
 writeFileSync(resolve(dist, 'app.html'), shell);
-writeFileSync(resolve(dist, 'index.html'), withBody(shell, everyLanguage(home)));
+writeFileSync(resolve(dist, 'index.html'), withBody(withAddress(shell, `${SITE_URL}/`), everyLanguage(home)));
 
 for (const [name, build] of [
   ['about', about],

@@ -11,9 +11,10 @@
     <meta name="theme-color" content="#D0152B" />
     <meta name="color-scheme" content="light dark" />
     <!--
-      No canonical link or og:url here on purpose: this file is served for every address on
-      the site, so a fixed value would tell Google that every post and profile is a copy of the
-      homepage. Each page writes its own (see src/utils/seo.ts).
+      No canonical link or og:url here on purpose: this file becomes the shell served for every
+      address without a page of its own, so a fixed value would tell Google that every post and
+      profile is a copy of the homepage. Each page writes its own (see src/utils/seo.ts), and the
+      build adds the homepage's to the homepage's copy (scripts/prerender.mjs).
     -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
