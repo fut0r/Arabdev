@@ -1,6 +1,7 @@
 """Vercel entry point: serves the ArabDev API (backend/app) as a Python function.
 
-vercel.json sends /api/*, /media/* and /sitemap.xml here; everything else is the static app in
+vercel.json sends /api/*, /media/*, /sitemap.xml and the public pages a crawler should be able to
+read (/posts/<id>, /u/<name>, /tags/<slug>, /explore) here; everything else is the static app in
 frontend/dist.
 """
 

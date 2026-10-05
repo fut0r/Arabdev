@@ -26,6 +26,8 @@ const SettingsPage = lazy(() => import('@/pages/SettingsPage'));
 const LandingPage = lazy(() => import('@/pages/LandingPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const ModerationPage = lazy(() => import('@/pages/ModerationPage'));
+const AboutPage = lazy(() => import('@/pages/AboutPage'));
+const ContactPage = lazy(() => import('@/pages/ContactPage'));
 
 /** Pages marked wide use the right-hand column too (no sidebar). */
 export interface RouteHandle {
@@ -70,6 +72,8 @@ export const router = createBrowserRouter([
             ),
           },
           { path: 'explore', element: <ExplorePage /> },
+          { path: 'about', element: <AboutPage /> },
+          { path: 'contact', element: <ContactPage /> },
           { path: 'search', element: <SearchPage /> },
           { path: 'tags/:slug', element: <TagPage /> },
           { path: 'posts/:postId', element: <PostPage /> },

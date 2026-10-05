@@ -80,7 +80,26 @@
       }
     </script>
 
+    <!--
+      Text that can be read before (or without) JavaScript. The build writes the homepage's text
+      into #prerender (scripts/prerender.mjs) and the API writes a post's, profile's or tag's
+      (backend/app/services/page_service.py). The app replaces it as soon as it starts, so it
+      is hidden whenever scripts run and nobody sees it flash by.
+    -->
+    <style>
+      #prerender {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 3rem;
+        font-family: Tajawal, 'Segoe UI', Tahoma, system-ui, sans-serif;
+        line-height: 1.8;
+      }
+      .js #prerender {
+        display: none;
+      }
+    </style>
     <script>
+      document.documentElement.classList.add('js');
       // Apply the saved language and color scheme before the first paint (no flash).
       (function () {
         try {
@@ -104,7 +123,9 @@
     ></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="prerender"><!--prerender--><!--/prerender--></div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

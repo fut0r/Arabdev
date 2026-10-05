@@ -23,6 +23,8 @@ services:
       SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
       CORS_ORIGINS: ${PUBLIC_URL:-http://localhost:8080}
       FRONTEND_URL: ${PUBLIC_URL:-http://localhost:8080}
+      # Where the API reads the built app shell that it writes public pages into.
+      SPA_SHELL_URL: http://frontend/app.html
       COOKIE_SECURE: ${COOKIE_SECURE:-false}
       MEDIA_ROOT: /app/media
     volumes:

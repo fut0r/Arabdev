@@ -9,7 +9,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 
-from app.api import seo
+from app.api import pages, seo
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.database import SessionLocal
@@ -131,6 +131,7 @@ def create_app() -> FastAPI:
     app.include_router(api_router, prefix=settings.api_v1_prefix)
     # Served from the root, where crawlers look for them.
     app.include_router(seo.router)
+    app.include_router(pages.router)
 
     media_path = urlparse(settings.media_url).path.rstrip("/") or "/media"
     if settings.storage_backend == "local":

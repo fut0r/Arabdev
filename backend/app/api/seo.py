@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.deps import DbSession
 from app.models import Post, Tag, User, UserSettings, post_tags
+from app.repositories.posts import visible
 from app.utils.time import utcnow
 
 router = APIRouter(include_in_schema=False)
@@ -28,6 +29,8 @@ MAX_TAGS = 500
 STATIC_PAGES: list[tuple[str, str, str]] = [
     ("/", "daily", "1.0"),
     ("/explore", "hourly", "0.9"),
+    ("/about", "monthly", "0.6"),
+    ("/contact", "monthly", "0.5"),
     ("/register", "monthly", "0.5"),
 ]
 
@@ -46,8 +49,9 @@ def build_sitemap(db: Session) -> str:
     today = utcnow().date().isoformat()
     urls = [_url(path, today, changefreq, priority) for path, changefreq, priority in STATIC_PAGES]
 
+    # Only what a visitor can open: not posts hidden for review or by suspended accounts.
     posts = db.execute(
-        select(Post.id, Post.updated_at).order_by(desc(Post.created_at)).limit(MAX_POSTS)
+        select(Post.id, Post.updated_at).where(visible()).order_by(desc(Post.created_at)).limit(MAX_POSTS)
     ).all()
     urls += [
         _url(f"/posts/{post_id}", updated_at.date().isoformat(), "weekly", "0.8") for post_id, updated_at in posts

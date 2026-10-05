@@ -67,7 +67,9 @@
     "license": "License (GPL v3)",
     "docs": "Help and documentation",
     "support": "Support",
-    "moderation": "Reports"
+    "moderation": "Reports",
+    "about": "About",
+    "contact": "Contact"
   },
   "home": {
     "metaTitle": "A home for Arabic developer writing",
@@ -156,7 +158,111 @@
     "footerPlatform": "Platform",
     "footerDocs": "Documentation",
     "footerContact": "Contact",
-    "footerRights": "© 2026 ArabDev · Made for the Arabic developer community"
+    "footerRights": "© 2026 ArabDev · Made for the Arabic developer community",
+    "latestEyebrow": "From the community",
+    "latestTitle": "Latest posts",
+    "latestSub": "What developers on ArabDev are writing right now. Reading needs no account.",
+    "latestAll": "See all posts"
+  },
+  "about": {
+    "metaTitle": "About",
+    "metaDescription": "What ArabDev is, who it is for, who runs it, how it is paid for, and the rules the community keeps.",
+    "title": "About ArabDev",
+    "lead": "ArabDev is a social platform where Arabic-speaking developers publish technical writing, discuss it, and find each other. It is built Arabic-first, works fully in English too, and its source code is public.",
+    "sections": [
+      {
+        "title": "Why it exists",
+        "body": [
+          "A lot of what Arabic-speaking developers write is scattered across platforms that were never designed for the language: layouts that are only mirrored, fonts that fight the script, and editors that break as soon as a right-to-left sentence meets a line of code.",
+          "ArabDev starts from Arabic instead of adding it later. Every paragraph picks its own direction, so an Arabic explanation and an English snippet sit in the same post without breaking. The interface is complete in both Arabic and English, and you can switch at any time."
+        ]
+      },
+      {
+        "title": "What you can do here",
+        "body": [
+          "Write posts with headings, lists, quotes, tables, links, images and code blocks, save drafts, and tag your posts so the right readers find them.",
+          "Follow developers and pick from 25 interests, read a feed in pages of twenty posts rather than an endless scroll, and like, save, repost and comment. Explore shows what is trending and which tags are popular, and search covers posts, people and tags.",
+          "Posts, profiles and tags can be read without an account. You need one only to write, comment and follow."
+        ]
+      },
+      {
+        "title": "Who runs it",
+        "body": [
+          "ArabDev is built and run by a small independent team. It opened in September 2026 and is developed in the open: the whole codebase is published under the GNU General Public License v3, so anyone can read it, run their own copy, or send improvements.",
+          "Every release is described in the patch notes, and the wiki documents how each feature works."
+        ]
+      },
+      {
+        "title": "How it is paid for",
+        "body": [
+          "ArabDev is free to use. Its running costs are covered by a small number of clearly labelled ads in fixed places in the feed and the sidebar. Ads are requested without personalisation: they are not chosen from what you read or write.",
+          "We do not sell your information. The privacy policy explains in plain language what is collected, why, and for how long."
+        ]
+      },
+      {
+        "title": "Keeping it a good place",
+        "body": [
+          "The community guidelines ask for what makes technical discussion worth reading: share what you learned, credit other people's work, and criticise the code, not the person. Harassment, hate, spam and stolen content are not welcome.",
+          "Every post has a report button. Moderators review each report and can remove a post, pause an account's publishing for a time, or suspend it. The author is always told what was decided, and never who reported them."
+        ]
+      }
+    ],
+    "linksTitle": "Read more",
+    "linkWiki": "The wiki: how everything works",
+    "linkGuidelines": "Community guidelines",
+    "linkPrivacy": "Privacy policy",
+    "linkPatchNotes": "Patch notes",
+    "linkSource": "Source code on GitHub",
+    "linkContact": "Contact us",
+    "browse": "Browse posts"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "How to reach the ArabDev team: support, reports, privacy and security requests, sponsorship and contributions.",
+    "title": "Contact us",
+    "lead": "Two addresses, both read by a person. Write in Arabic or English.",
+    "supportTitle": "Support and safety",
+    "supportBody": "Help with your account, something that is not working, a post or account that breaks the guidelines, a privacy request, or a security problem.",
+    "helloTitle": "Sponsorship, contributions and questions",
+    "helloBody": "Sponsoring ArabDev or placing an ad, contributing code or translations, partnerships, press, and anything else.",
+    "sections": [
+      {
+        "title": "Before you write",
+        "body": [
+          "The wiki answers most questions about accounts, posting and settings, and has a troubleshooting article for common problems."
+        ]
+      },
+      {
+        "title": "Reporting a post",
+        "body": [
+          "The fastest way is Report post in the post's ⋯ menu: it reaches the moderators directly. To report a comment or a profile, or anything urgent, email the support address with a link."
+        ]
+      },
+      {
+        "title": "Security problems",
+        "body": [
+          "Please report security problems privately to the support address with the subject “Security”, and give us the chance to fix them before publishing any details."
+        ]
+      },
+      {
+        "title": "Privacy requests",
+        "body": [
+          "To get a copy of your data, correct it, or ask how it is used, write from the email address linked to your account. You can also download your data yourself under Settings → Security."
+        ]
+      },
+      {
+        "title": "When to expect an answer",
+        "body": ["We acknowledge messages within 7 days and answer fully within 30."]
+      }
+    ],
+    "tipsTitle": "What to include",
+    "tips": [
+      "Your username. Never your password: nobody from ArabDev will ask for it.",
+      "A link to the post, comment or profile you are writing about.",
+      "What you expected, what happened instead, and the exact wording of any error.",
+      "Your browser and device, and whether ArabDev was in Arabic or English."
+    ],
+    "wikiLink": "Open the wiki"
   },
   "auth": {
     "signInTitle": "Sign in",

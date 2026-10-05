@@ -46,3 +46,6 @@ export const DOC_SITES = {
   patchNotes:
     (env.VITE_PATCH_NOTES_URL as string | undefined) ?? (env.DEV ? '/patch-notes/' : 'https://patch.arabdev.site/'),
 };
+
+/** Where the source code lives. */
+export const SOURCE_URL = 'https://github.com/fut0r/Arabdev';

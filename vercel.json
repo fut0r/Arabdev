@@ -33,7 +33,13 @@
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/media/(.*)", "destination": "/api/index" },
     { "source": "/sitemap.xml", "destination": "/api/index" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/posts/:id([0-9]+)", "destination": "/api/index" },
+    { "source": "/u/:username", "destination": "/api/index" },
+    { "source": "/tags/:slug", "destination": "/api/index" },
+    { "source": "/explore", "destination": "/api/index" },
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/(.*)", "destination": "/app.html" }
   ],
   "crons": [{ "path": "/api/v1/internal/cron/purge-tokens", "schedule": "0 3 * * *" }]
 }

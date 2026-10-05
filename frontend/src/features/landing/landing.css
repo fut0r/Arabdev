@@ -634,3 +634,26 @@
     transform: none;
   }
 }
+
+/* latest posts on the homepage */
+.lp-post h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.lp-post p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.lp-post-meta {
+  margin-block-start: auto;
+  padding-block-start: 16px;
+  font-size: 13px;
+  color: var(--dim);
+}
+.lp-post-all {
+  margin-block-start: 24px;
+}

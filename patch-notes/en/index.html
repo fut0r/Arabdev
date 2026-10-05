@@ -46,11 +46,11 @@
       changes for developers. Use the filters to see only one kind of change, or type to search.
     </p>
     <div class="latest">
-      <div class="latest-version">1.2.0</div>
+      <div class="latest-version">1.2.1</div>
       <div>
-        <h2>Latest release: ArabDev 1.2.0, reports, moderation and a smarter feed</h2>
-        <p>Released on <time datetime="2026-09-29">29 September 2026</time>.</p>
-        <ul class="stats" aria-label="Changes in 1.2.0">
+        <h2>Latest release: ArabDev 1.2.1, pages everyone can read</h2>
+        <p>Released on <time datetime="2026-10-05">5 October 2026</time>.</p>
+        <ul class="stats" aria-label="Changes in 1.2.1">
           <li><strong data-count="all">—</strong> changes</li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> new</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> improved</li>
@@ -80,7 +80,17 @@
     <h2>Releases</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 September 2026 · Latest</small></a>
+        <a class="release-link" href="#v1-2-1">1.2.1 <small>5 October 2026 · Latest</small></a>
+        <ul>
+          <li><a href="#v121-reading">Readable by everyone</a></li>
+          <li><a href="#v121-homepage">Homepage</a></li>
+          <li><a href="#v121-pages">About and Contact</a></li>
+          <li><a href="#v121-privacy">Privacy</a></li>
+          <li><a href="#v121-developer">For developers</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 September 2026</small></a>
         <ul>
           <li><a href="#v120-reports">Reporting posts</a></li>
           <li><a href="#v120-moderation">Moderation</a></li>
@@ -166,10 +176,60 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>No changes match your filters. Try another word, or show all changes.</div>
 
+<article class="release" id="v1-2-1" aria-labelledby="v1-2-1-title">
+  <header class="release-header">
+    <h2 id="v1-2-1-title">ArabDev 1.2.1</h2>
+    <span class="badge">Latest</span>
+    <time datetime="2026-10-05">5 October 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    A release about being found and understood: every public page can now be read without JavaScript, the homepage shows the community's latest posts, and ArabDev has proper About and Contact pages.
+  </p>
+
+  <section class="area" id="v121-reading" aria-labelledby="v121-reading-title">
+    <h3 id="v121-reading-title">Readable by everyone, and everything<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Posts, profiles, tags and Explore now arrive with their own title, description and text already in the page. Search engines, ad reviewers and link previews that do not run JavaScript used to receive an empty page with the homepage's title.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Sharing a post in a chat app or on a social network now shows that post's title, summary and image instead of the homepage's.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The homepage carries its own text from the first byte as well. Nothing changes for readers: the app starts as before and takes over the page.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">A post that does not exist, is hidden for review or belongs to a suspended account now answers “not found” and asks search engines not to list it, instead of answering as if it were there.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">The sitemap no longer lists posts that are hidden for review or belong to suspended accounts.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-homepage" aria-labelledby="v121-homepage-title">
+    <h3 id="v121-homepage-title">Homepage<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">The homepage now shows the six latest posts from the community, so visitors can see what people are writing, and start reading, before creating an account.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-pages" aria-labelledby="v121-pages-title">
+    <h3 id="v121-pages-title">About and Contact<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">A new <strong>About</strong> page at <span dir="ltr">arabdev.site/about</span>: why ArabDev exists, what you can do on it, who runs it, how it is paid for and how it is moderated.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">A new <strong>Contact</strong> page at <span dir="ltr">arabdev.site/contact</span>: both addresses, what each is for, what to include, and when to expect an answer.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Both pages are linked from every footer and listed in the sitemap.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-privacy" aria-labelledby="v121-privacy-title">
+    <h3 id="v121-privacy-title">Privacy<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Public pages are now kept by our hosting for a few minutes to answer quickly, so an edited or deleted post can remain visible at its address for up to about ten minutes. The privacy policy (version 1.4) says so.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Accounts that switched off <em>Show me in search and suggestions</em> are left out: their profile page is sent without their name or posts written into it.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-developer" aria-labelledby="v121-developer-title">
+    <h3 id="v121-developer-title">For developers<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text"><code>app/services/page_service.py</code> writes a page's head and text into the built app shell, and <code>app/api/pages.py</code> serves <code>/posts/{id}</code>, <code>/u/{username}</code>, <code>/tags/{slug}</code> and <code>/explore</code> from the site root. Text is built from plain text and escaped, never from stored HTML.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">The frontend build now ends with <code>scripts/prerender.mjs</code>, which writes the homepage, <code>/about</code> and <code>/contact</code> from the translation files and emits <code>app.html</code>, the untouched shell every other address falls back to.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New settings <code>SPA_SHELL_URL</code> and <code>SPA_SHELL_PATH</code> tell the API where to read that shell. <code>vercel.json</code>, <code>nginx.conf</code> and <code>docker-compose.yml</code> route the new pages. The backend test suite now has 95 tests.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-2-0" aria-labelledby="v1-2-0-title">
   <header class="release-header">
     <h2 id="v1-2-0-title">ArabDev 1.2.0</h2>
-    <span class="badge">Latest</span>
     <time datetime="2026-09-29">29 September 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>

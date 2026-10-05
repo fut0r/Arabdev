@@ -3,6 +3,7 @@ import Link from '@mui/material/Link';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link as RouterLink } from 'react-router';
 
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import type { Language } from '@/i18n';
@@ -24,12 +25,17 @@ export function docUrls(language: Language) {
 
 export const newTab = { target: '_blank', rel: 'noopener' } as const;
 
-/** A compact row of documentation links for footers. */
+/** A page of the app itself (`to`), or a separate site or address (`href`). */
+type FooterLink = { to: string; label: string } | { href: string; label: string };
+
+/** A compact row of footer links: the About and Contact pages, then the documentation sites. */
 export function DocLinks({ sx }: { sx?: SxProps<Theme> }) {
   const { t } = useTranslation();
   const { language } = usePreferences();
   const urls = docUrls(language);
-  const links = [
+  const links: FooterLink[] = [
+    { to: '/about', label: t('nav.about') },
+    { to: '/contact', label: t('nav.contact') },
     { href: urls.wiki, label: t('nav.wiki') },
     { href: urls.privacy, label: t('nav.privacy') },
     { href: urls.patchNotes, label: t('nav.patchNotes') },
@@ -43,11 +49,18 @@ export function DocLinks({ sx }: { sx?: SxProps<Theme> }) {
       sx={[{ typography: 'caption', color: 'text.secondary' }, ...(Array.isArray(sx) ? sx : [sx])]}
     >
       {links.map((link, index) => (
-        <Fragment key={link.href}>
+        <Fragment key={link.label}>
           {index > 0 && ' · '}
-          <Link href={link.href} color="inherit" {...(link.href.startsWith('mailto:') ? {} : newTab)}>
-            {link.label}
-          </Link>
+          {'to' in link ? (
+            // A page of the app itself: stay in this tab, without a full reload.
+            <Link component={RouterLink} to={link.to} color="inherit">
+              {link.label}
+            </Link>
+          ) : (
+            <Link href={link.href} color="inherit" {...(link.href.startsWith('mailto:') ? {} : newTab)}>
+              {link.label}
+            </Link>
+          )}
         </Fragment>
       ))}
     </Box>

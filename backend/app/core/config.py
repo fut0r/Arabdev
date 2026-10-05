@@ -72,6 +72,12 @@ class Settings(BaseSettings):
     frontend_url: str = "http://localhost:5173"
     support_email: str = "support@arabdev.site"
     hello_email: str = "hi@arabdev.site"
+    # The built app shell (the frontend's app.html) that server-rendered pages are written
+    # into; see services/page_service.py. Unset, it is read from backend/spa_shell.html or
+    # frontend/dist/app.html when one exists, and otherwise fetched from spa_shell_url,
+    # which defaults to FRONTEND_URL/app.html.
+    spa_shell_path: Path | None = None
+    spa_shell_url: str | None = None
     # Sender of outgoing mail. Replies go to support, since nobody reads noreply@.
     mail_from: str = "ArabDev <noreply@arabdev.site>"
 

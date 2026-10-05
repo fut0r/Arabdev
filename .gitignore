@@ -13,6 +13,8 @@ backend/data/
 # Node
 node_modules/
 frontend/dist/
+# Copy of the built app shell, written for the API by the frontend build on Vercel
+backend/spa_shell.html
 
 # Environment
 .env

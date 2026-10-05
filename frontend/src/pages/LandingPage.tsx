@@ -1,13 +1,18 @@
 import { useColorScheme } from '@mui/material/styles';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router';
 
+import { postsApi } from '@/api/posts';
+import { queryKeys } from '@/api/queryKeys';
 import { docUrls, newTab } from '@/components/DocLinks';
 import { useAuth } from '@/features/auth/AuthProvider';
 import '@/features/landing/landing.css';
+import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { useAppearance } from '@/features/preferences/useAppearance';
-import { useSeo } from '@/utils/seo';
+import { formatRelativeTime } from '@/utils/format';
+import { summarise, useSeo } from '@/utils/seo';
 import { HELLO_EMAIL, HOME_PATH, SUPPORT_EMAIL } from '@/site';
 
 function Svg({ children, size = 17 }: { children: ReactNode; size?: number }) {
@@ -78,6 +83,50 @@ function useStickyHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   return header;
+}
+
+const LATEST_COUNT = 6;
+
+/**
+ * The newest posts, so a visitor sees the community is alive before signing up. Shown only once
+ * there is something to show; it is not part of the scroll-reveal because it arrives after the
+ * page has been set up.
+ */
+function LatestPosts() {
+  const { t } = useTranslation();
+  const { language } = usePreferences();
+  const { data } = useQuery({
+    queryKey: queryKeys.feed('latest', 1),
+    queryFn: () => postsApi.feed({ tab: 'latest', page: 1 }),
+    staleTime: 60_000,
+  });
+  const posts = data?.items.slice(0, LATEST_COUNT) ?? [];
+  if (!posts.length) return null;
+
+  return (
+    <section className="lp-shell lp-section" id="latest">
+      <div>
+        <span className="lp-eyebrow">{t('home.latestEyebrow')}</span>
+        <h2 className="lp-h2">{t('home.latestTitle')}</h2>
+        <p className="lp-sub">{t('home.latestSub')}</p>
+      </div>
+      <div className="lp-bento">
+        {posts.map((post) => (
+          <RouterLink className="lp-card lp-post" key={post.id} to={`/posts/${post.id}`}>
+            <h3 dir="auto">{post.title || t('post.by', { name: post.author.display_name })}</h3>
+            <p dir="auto">{summarise(post.content_html.replace(/<[^>]*>/g, ' '), 150)}</p>
+            <span className="lp-post-meta">
+              {post.author.display_name} · {formatRelativeTime(post.created_at, language)}
+            </span>
+          </RouterLink>
+        ))}
+      </div>
+      <RouterLink className="lp-textlink lp-post-all" to="/explore">
+        {t('home.latestAll')}
+        <Arrow />
+      </RouterLink>
+    </section>
+  );
 }
 
 export default function LandingPage() {
@@ -201,6 +250,8 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
+
+        <LatestPosts />
 
         {/* features */}
         <section className="lp-shell lp-section" id="features">
@@ -485,6 +536,12 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <a href="#features">{t('home.navFeatures')}</a>
+                </li>
+                <li>
+                  <RouterLink to="/about">{t('nav.about')}</RouterLink>
+                </li>
+                <li>
+                  <RouterLink to="/contact">{t('nav.contact')}</RouterLink>
                 </li>
               </ul>
             </div>

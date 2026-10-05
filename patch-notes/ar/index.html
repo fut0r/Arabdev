@@ -46,11 +46,11 @@
       والتغييرات الخاصة بالمطوّرين. استخدم عوامل التصفية لعرض نوع واحد من التغييرات، أو اكتب للبحث.
     </p>
     <div class="latest">
-      <div class="latest-version">1.2.0</div>
+      <div class="latest-version">1.2.1</div>
       <div>
-        <h2>أحدث إصدار: ArabDev 1.2.0 — الإبلاغ والإشراف وترتيب أذكى</h2>
-        <p>صدر في <time datetime="2026-09-29">29 سبتمبر 2026</time>.</p>
-        <ul class="stats" aria-label="التغييرات في 1.2.0">
+        <h2>أحدث إصدار: ArabDev 1.2.1 — صفحات مقروءة للجميع</h2>
+        <p>صدر في <time datetime="2026-10-05">5 أكتوبر 2026</time>.</p>
+        <ul class="stats" aria-label="التغييرات في 1.2.1">
           <li>إجمالي التغييرات <strong data-count="all">—</strong></li>
           <li><span class="dot new" aria-hidden="true"></span><strong data-count="new">—</strong> جديد</li>
           <li><span class="dot improved" aria-hidden="true"></span><strong data-count="improved">—</strong> تحسين</li>
@@ -80,7 +80,17 @@
     <h2>الإصدارات</h2>
     <ul class="side-nav">
       <li>
-        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 سبتمبر 2026 · الأحدث</small></a>
+        <a class="release-link" href="#v1-2-1">1.2.1 <small>5 أكتوبر 2026 · الأحدث</small></a>
+        <ul>
+          <li><a href="#v121-reading">مقروء للجميع</a></li>
+          <li><a href="#v121-homepage">الصفحة الرئيسية</a></li>
+          <li><a href="#v121-pages">عن المنصة وتواصل معنا</a></li>
+          <li><a href="#v121-privacy">الخصوصية</a></li>
+          <li><a href="#v121-developer">للمطوّرين</a></li>
+        </ul>
+      </li>
+      <li>
+        <a class="release-link" href="#v1-2-0">1.2.0 <small>29 سبتمبر 2026</small></a>
         <ul>
           <li><a href="#v120-reports">الإبلاغ عن المنشورات</a></li>
           <li><a href="#v120-moderation">الإشراف</a></li>
@@ -166,10 +176,60 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release" id="v1-2-1" aria-labelledby="v1-2-1-title">
+  <header class="release-header">
+    <h2 id="v1-2-1-title">ArabDev 1.2.1</h2>
+    <span class="badge">الأحدث</span>
+    <time datetime="2026-10-05">5 أكتوبر 2026</time>
+  </header>
+  <p class="release-summary" data-hide-when-filtered>
+    إصدار عن سهولة الوصول والفهم: صارت كل صفحة عامة تُقرأ دون JavaScript، وتعرض الصفحة الرئيسية أحدث منشورات المجتمع، وصار لـ ArabDev صفحتان وافيتان: «عن المنصة» و«تواصل معنا».
+  </p>
+
+  <section class="area" id="v121-reading" aria-labelledby="v121-reading-title">
+    <h3 id="v121-reading-title">مقروء للجميع ولكل شيء<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صارت المنشورات والملفات الشخصية والوسوم وصفحة «استكشاف» تصل وفي الصفحة عنوانها ووصفها ونصّها. كانت محركات البحث ومراجِعو الإعلانات ومعاينات الروابط التي لا تشغّل JavaScript تتلقى صفحة فارغة بعنوان الصفحة الرئيسية.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">مشاركة منشور في تطبيق محادثة أو شبكة اجتماعية تعرض الآن عنوان المنشور وملخصه وصورته بدل بيانات الصفحة الرئيسية.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">وتحمل الصفحة الرئيسية نصّها منذ اللحظة الأولى أيضًا. ولا يتغير شيء على القرّاء: يبدأ التطبيق كما كان ويتولى الصفحة.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">المنشور غير الموجود، أو المخفي للمراجعة، أو التابع لحساب موقوف صار يجيب بأنه «غير موجود» ويطلب من محركات البحث ألا تدرجه، بدل أن يجيب كأنه موجود.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">لم تعد خريطة الموقع تدرج المنشورات المخفية للمراجعة أو التابعة لحسابات موقوفة.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-homepage" aria-labelledby="v121-homepage-title">
+    <h3 id="v121-homepage-title">الصفحة الرئيسية<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">تعرض الصفحة الرئيسية الآن أحدث ستة منشورات من المجتمع، فيرى الزائر ما يكتبه الناس ويبدأ القراءة قبل إنشاء حساب.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-pages" aria-labelledby="v121-pages-title">
+    <h3 id="v121-pages-title">عن المنصة وتواصل معنا<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صفحة <strong>عن ArabDev</strong> الجديدة على <span dir="ltr">arabdev.site/about</span>: لماذا وُجد ArabDev، وما الذي يمكنك فعله فيه، ومن يديره، وكيف يُموَّل، وكيف يُشرَف عليه.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">صفحة <strong>تواصل معنا</strong> الجديدة على <span dir="ltr">arabdev.site/contact</span>: العنوانان، ووظيفة كلٍّ منهما، وما تذكره في رسالتك، ومتى تتوقع الرد.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">الصفحتان مرتبطتان من كل تذييل ومدرجتان في خريطة الموقع.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-privacy" aria-labelledby="v121-privacy-title">
+    <h3 id="v121-privacy-title">الخصوصية<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صارت استضافتنا تحتفظ بالصفحات العامة دقائق قليلة لتجيب بسرعة، فقد يبقى المنشور المعدَّل أو المحذوف ظاهرًا على عنوانه مدة تصل إلى نحو عشر دقائق. وتذكر سياسة الخصوصية (الإصدار 1.4) ذلك.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تُستثنى الحسابات التي أوقفت خيار <em>إظهاري في البحث والاقتراحات</em>: تُرسَل صفحة ملفها دون كتابة الاسم أو المنشورات فيها.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v121-developer" aria-labelledby="v121-developer-title">
+    <h3 id="v121-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يكتب <code dir="ltr">app/services/page_service.py</code> ترويسة الصفحة ونصّها داخل هيكل التطبيق المبني، ويقدّم <code dir="ltr">app/api/pages.py</code> المسارات <code dir="ltr">/posts/{id}</code> و<code dir="ltr">/u/{username}</code> و<code dir="ltr">/tags/{slug}</code> و<code dir="ltr">/explore</code> من جذر الموقع. يُبنى النص من نص خام مع تهريبه، لا من HTML المخزَّن.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">ينتهي بناء الواجهة الآن بـ <code dir="ltr">scripts/prerender.mjs</code>، الذي يكتب الصفحة الرئيسية و<code dir="ltr">/about</code> و<code dir="ltr">/contact</code> من ملفات الترجمة ويُخرج <code>app.html</code>، وهو الهيكل الخام الذي ترجع إليه بقية العناوين.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعدادان جديدان <code>SPA_SHELL_URL</code> و<code>SPA_SHELL_PATH</code> يحددان للواجهة البرمجية مكان قراءة ذلك الهيكل. ويوجّه <code>vercel.json</code> و<code>nginx.conf</code> و<code dir="ltr">docker-compose.yml</code> الصفحات الجديدة. وصار في اختبارات الخادم 95 اختبارًا.</span></li>
+    </ul>
+  </section>
+</article>
+
 <article class="release" id="v1-2-0" aria-labelledby="v1-2-0-title">
   <header class="release-header">
     <h2 id="v1-2-0-title">ArabDev 1.2.0</h2>
-    <span class="badge">الأحدث</span>
     <time datetime="2026-09-29">29 سبتمبر 2026</time>
   </header>
   <p class="release-summary" data-hide-when-filtered>
