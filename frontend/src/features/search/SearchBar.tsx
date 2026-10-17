@@ -9,6 +9,7 @@ import InputBase from '@mui/material/InputBase';
 import ListSubheader from '@mui/material/ListSubheader';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
+import type { Modifier } from '@popperjs/core';
 import Typography from '@mui/material/Typography';
 import { useQuery } from '@tanstack/react-query';
 import { useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
@@ -33,6 +34,17 @@ interface Option {
  * Global search with live, debounced suggestions (combobox pattern: arrow keys move
  * through results, Enter opens one or runs a full search).
  */
+/** Keeps the suggestions exactly as wide as the search field. */
+const sameWidth: Modifier<'sameWidth', object> = {
+  name: 'sameWidth',
+  enabled: true,
+  phase: 'beforeWrite',
+  requires: ['computeStyles'],
+  fn: ({ state }) => {
+    state.styles.popper.width = `${state.rects.reference.width}px`;
+  },
+};
+
 export function SearchBar({ autoFocus = false, initialQuery = '' }: { autoFocus?: boolean; initialQuery?: string }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -194,9 +206,10 @@ export function SearchBar({ autoFocus = false, initialQuery = '' }: { autoFocus?
 
         <Popper
           open={showPopup}
-          anchorEl={anchorRef.current}
+          anchorEl={() => anchorRef.current as HTMLDivElement}
           placement="bottom-start"
-          sx={{ zIndex: (theme) => theme.zIndex.modal, width: anchorRef.current?.offsetWidth }}
+          modifiers={[sameWidth]}
+          sx={{ zIndex: (theme) => theme.zIndex.modal }}
         >
           <Paper sx={{ mt: 0.75, maxHeight: 440, overflowY: 'auto', py: 0.5 }}>
             <Box

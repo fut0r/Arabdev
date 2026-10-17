@@ -1,0 +1,58 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "react",
+    "jsx-a11y",
+    "import"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "warn",
+    "react/jsx-key": "error",
+    "react/no-danger": "warn",
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/anchor-is-valid": "warn",
+    "typescript/no-explicit-any": "warn",
+    "no-unused-vars": "error",
+    "eqeqeq": "error",
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "import/no-cycle": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/incompatible-library": "off",
+    "react/memo-dependencies": "off",
+    "react/exhaustive-effect-dependencies": "off",
+    "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "import/no-unassigned-import": "off",
+    "import/no-named-as-default": "off",
+    "import/no-named-as-default-member": "off",
+    "no-underscore-dangle": "off"
+  },
+  "overrides": [
+    {
+      "files": [
+        "scripts/**"
+      ],
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "dist",
+    "node_modules"
+  ]
+}

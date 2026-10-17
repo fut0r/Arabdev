@@ -104,6 +104,8 @@ export function PostContent({ html, clampHeight, onOverflowChange }: PostContent
         ref={ref}
         dir="auto"
         sx={[postContentStyles, clampHeight ? { maxHeight: clampHeight, overflow: 'hidden' } : {}]}
+        // The HTML was cleaned on the server and again by sanitizePostHtml above.
+        // oxlint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: safeHtml }}
       />
       {clampHeight && overflowing && (

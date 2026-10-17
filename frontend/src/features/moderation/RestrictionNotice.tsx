@@ -14,7 +14,8 @@ export function RestrictionNotice() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const { language } = usePreferences();
-  if (!user?.restricted_until || new Date(user.restricted_until).getTime() <= Date.now()) return null;
+  // The API sends restricted_until only while the restriction is in force.
+  if (!user?.restricted_until) return null;
 
   return (
     <Alert severity="warning" sx={{ mb: { xs: 0, sm: 2 }, borderRadius: { xs: 0, sm: 2 } }}>

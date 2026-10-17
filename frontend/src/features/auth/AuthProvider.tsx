@@ -60,7 +60,8 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [status, setStatus] = useState<AuthStatus>('loading');
+  // Without the hint there is no refresh cookie to try, so the visitor is known to be anonymous.
+  const [status, setStatus] = useState<AuthStatus>(() => (sessionHint.get() ? 'loading' : 'anonymous'));
   const [user, setUserState] = useState<Me | null>(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -115,10 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (bootstrapped.current) return;
     bootstrapped.current = true;
-    if (!sessionHint.get()) {
-      setStatus('anonymous');
-      return;
-    }
+    if (!sessionHint.get()) return;
     refreshSession()
       .then((data) => {
         acceptTokens(data);

@@ -100,9 +100,7 @@ function LinkDialog({ editor, open, onClose }: { editor: Editor; open: boolean; 
       return;
     }
     const href = /^(https?:|mailto:)/i.test(value) ? value : `https://${value}`;
-    try {
-      new URL(href);
-    } catch {
+    if (!URL.canParse(href)) {
       setError(t('errors.url_invalid'));
       return;
     }

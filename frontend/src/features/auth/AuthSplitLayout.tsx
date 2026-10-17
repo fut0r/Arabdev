@@ -11,6 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { DocLinks } from '@/components/DocLinks';
 import { Logo } from '@/components/Logo';
 import { LanguageToggle } from '@/features/preferences/AppearanceControls';
+import { CURRENT_YEAR } from '@/site';
 import { headingFont } from '@/theme/typography';
 
 const TOPICS = [
@@ -173,7 +174,7 @@ export function AuthSplitLayout({ children }: { children: ReactNode }) {
           sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}
         >
           <Typography variant="caption" color="text.secondary">
-            © {new Date().getFullYear()} ArabDev
+            © {CURRENT_YEAR} ArabDev
           </Typography>
           <DocLinks />
         </Stack>

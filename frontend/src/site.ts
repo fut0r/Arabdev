@@ -47,5 +47,8 @@ export const DOC_SITES = {
     (env.VITE_PATCH_NOTES_URL as string | undefined) ?? (env.DEV ? '/patch-notes/' : 'https://patch.arabdev.site/'),
 };
 
+/** For copyright lines. */
+export const CURRENT_YEAR = new Date().getFullYear();
+
 /** Where the source code lives. */
 export const SOURCE_URL = 'https://github.com/fut0r/Arabdev';

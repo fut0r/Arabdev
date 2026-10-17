@@ -27,8 +27,8 @@ interface UseTurnstileOptions {
 }
 
 export interface TurnstileHandle {
-  /** Attach to the element the widget should live in. */
-  containerRef: React.RefObject<HTMLDivElement | null>;
+  /** Pass as `ref` to the element the widget should live in. */
+  attach: (element: HTMLDivElement | null) => void;
   /** A fresh single-use token, or null when Turnstile is not configured. */
   getToken: () => Promise<string | null>;
   /** Throw the current token away; call after a request used it. */
@@ -153,7 +153,11 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
     return waiting;
   }, [siteKey]);
 
-  return { containerRef, getToken, reset, enabled: Boolean(siteKey), error };
+  const attach = useCallback((element: HTMLDivElement | null) => {
+    containerRef.current = element;
+  }, []);
+
+  return { attach, getToken, reset, enabled: Boolean(siteKey), error };
 }
 
 /**
@@ -161,11 +165,7 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
  * something, which for most visitors is never.
  */
 export function TurnstileWidget({ handle, sx }: { handle: TurnstileHandle; sx?: object }) {
-  if (!handle.enabled) return null;
-  return (
-    <Box
-      ref={handle.containerRef}
-      sx={{ '&:empty': { display: 'none' }, display: 'flex', justifyContent: 'center', ...sx }}
-    />
-  );
+  const { attach, enabled } = handle;
+  if (!enabled) return null;
+  return <Box ref={attach} sx={{ '&:empty': { display: 'none' }, display: 'flex', justifyContent: 'center', ...sx }} />;
 }

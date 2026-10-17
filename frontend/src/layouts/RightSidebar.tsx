@@ -11,7 +11,7 @@ import { AdSlot } from '@/features/ads/AdCard';
 import { AdSenseUnit, hasAdSense } from '@/features/ads/AdSense';
 import { PopularTags } from '@/features/discovery/PopularTags';
 import { RecommendedDevelopers } from '@/features/users/RecommendedDevelopers';
-import { API_ORIGIN } from '@/site';
+import { API_ORIGIN, CURRENT_YEAR } from '@/site';
 import { layout } from '@/theme/tokens';
 
 /** Desktop-only context column: people to follow, one clearly-labelled ad, popular tags. */
@@ -58,7 +58,7 @@ export function RightSidebar() {
         <Box sx={{ px: 1 }}>
           <DocLinks />
           <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 0.5 }}>
-            © {new Date().getFullYear()} ArabDev ·{' '}
+            © {CURRENT_YEAR} ArabDev ·{' '}
             <Link href={`${API_ORIGIN}/api/docs`} color="inherit" target="_blank" rel="noopener">
               {t('nav.apiDocs')}
             </Link>

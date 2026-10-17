@@ -13,15 +13,19 @@ import type { Challenge } from '@/types/api';
 
 const CODE_LENGTH = 6;
 
-/** Seconds left, counted down once a second. Restarts whenever a new code is sent. */
-function useCountdown(initial: number) {
-  const [left, setLeft] = useState(initial);
+/** Seconds left, counted down once a second. Restarts for every new code (`startedBy`). */
+function useCountdown(seconds: number, startedBy: unknown) {
+  const [left, setLeft] = useState(seconds);
+  const [start, setStart] = useState(startedBy);
+  if (start !== startedBy) {
+    setStart(startedBy);
+    setLeft(seconds);
+  }
   useEffect(() => {
-    setLeft(initial);
-    if (initial <= 0) return;
+    if (seconds <= 0) return;
     const timer = window.setInterval(() => setLeft((value) => (value <= 1 ? 0 : value - 1)), 1000);
     return () => window.clearInterval(timer);
-  }, [initial]);
+  }, [seconds, startedBy]);
   return left;
 }
 
@@ -56,10 +60,15 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
   const [resending, setResending] = useState(false);
   const submitted = useRef(false);
 
-  const resendIn = useCountdown(current.resend_in);
-  const expiresIn = useCountdown(current.expires_in);
+  // A new challenge from the parent replaces the one shown, without an extra render pass.
+  const [given, setGiven] = useState(challenge);
+  if (given !== challenge) {
+    setGiven(challenge);
+    setCurrent(challenge);
+  }
 
-  useEffect(() => setCurrent(challenge), [challenge]);
+  const resendIn = useCountdown(current.resend_in, current);
+  const expiresIn = useCountdown(current.expires_in, current);
 
   const submit = useCallback(
     async (value: string) => {
