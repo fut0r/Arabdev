@@ -15,152 +15,121 @@
     } catch (e) {}
   })();
 </script>
+<link rel="stylesheet" href="../assets/site.css">
 <link rel="stylesheet" href="../assets/wiki.css">
 </head>
 <body data-site-name="ويكي ArabDev">
-<a class="skip" href="#content">انتقل إلى المحتوى</a>
+<a class="skip" href="#content">انتقل إلى المقالة</a>
 
-<header class="site-header">
-  <button class="btn icon-btn menu-btn" type="button" data-menu aria-label="فتح قائمة التنقل" aria-expanded="false">☰</button>
-  <a class="brand" href="#main-page" aria-label="ويكي ArabDev، الصفحة الرئيسية">
-    <span class="brand-word" dir="ltr"><span class="arab">Arab</span>Dev</span>
-    <span class="brand-label">ويكي</span>
-  </a>
-  <div class="search" role="search">
-    <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"/></svg>
-    <input type="search" data-search placeholder="ابحث في الويكي (اضغط /)" aria-label="ابحث في الويكي" autocomplete="off" aria-controls="search-results">
-    <div class="search-results" id="search-results" role="listbox" data-search-results hidden></div>
-  </div>
-  <div class="header-actions">
-    <a class="btn" href="../en/" data-lang-switch data-base="../en/" lang="en" hreflang="en">English</a>
-    <button class="btn icon-btn" type="button" data-theme-toggle aria-label="التبديل بين الوضع الفاتح والداكن">◐</button>
-    <a class="btn btn-primary" href="https://arabdev.site/dashboard"><span aria-hidden="true">↩</span><span class="open-app-label">افتح ArabDev</span></a>
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="appbar-start">
+      <button class="icon-button menu-button" type="button" data-menu aria-label="افتح قائمة المقالات" aria-expanded="false"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"/></svg></button>
+      <a class="logo" href="https://arabdev.site/" aria-label="ArabDev"><span dir="ltr"><span class="logo-arab">Arab</span>Dev</span></a>
+      <a class="site-name" href="#main-page">الويكي</a>
+    </div>
+    <div class="search" role="search">
+      <label class="search-field"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14"/></svg><input type="search" data-search placeholder="ابحث في الويكي" aria-label="ابحث في الويكي" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="search-results" aria-autocomplete="list"></label>
+      <div class="popup" id="search-results" role="listbox" data-search-results hidden></div>
+    </div>
+    <div class="appbar-actions">
+      <a class="button" href="../en/" data-lang-switch lang="en" hreflang="en"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12.87 15.07-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg><span class="lang-label">English</span></a>
+      <button class="icon-button" type="button" data-theme-toggle aria-label="التبديل بين الفاتح والداكن"><svg class="icon theme-icon-light" viewBox="0 0 24 24" aria-hidden="true"><path d="M9.37 5.51c-.18.64-.27 1.31-.27 1.99 0 4.08 3.32 7.4 7.4 7.4.68 0 1.35-.09 1.99-.27C17.45 17.19 14.93 19 12 19c-3.86 0-7-3.14-7-7 0-2.93 1.81-5.45 4.37-6.49M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1"/></svg><svg class="icon theme-icon-dark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3m0-2c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5M2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1m18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1M11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1m0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1M5.99 4.58c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41zm12.37 12.37c-.39-.39-1.03-.39-1.41 0-.39.39-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0 .39-.39.39-1.03 0-1.41zm1.06-10.96c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0zM7.05 18.36c.39-.39.39-1.03 0-1.41-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0z"/></svg></button>
+      <a class="button button-contained open-app" href="https://arabdev.site/dashboard">افتح ArabDev</a>
+    </div>
   </div>
 </header>
 
-<div class="layout">
-<nav class="sidebar" aria-label="التنقل في الويكي">
-  <div class="nav-group">
-    <h2>ابدأ من هنا</h2>
-    <ul>
-      <li><a href="#main-page">الصفحة الرئيسية</a></li>
-      <li><a href="#getting-started">البداية</a></li>
-      <li><a href="#faq">الأسئلة الشائعة</a></li>
-      <li><a href="#glossary">مسرد المصطلحات</a></li>
-    </ul>
-  </div>
-  <div class="nav-group">
-    <h2>استخدام ArabDev</h2>
-    <ul>
-      <li><a href="#profiles">الملفات الشخصية</a></li>
-      <li><a href="#home-feed">الصفحة الرئيسية للمنشورات</a></li>
-      <li><a href="#writing-posts">كتابة المنشورات</a></li>
-      <li><a href="#formatting-reference">مرجع التنسيق</a></li>
-      <li><a href="#tags-and-interests">الوسوم والاهتمامات</a></li>
-      <li><a href="#comments-and-interactions">التعليقات والتفاعلات</a></li>
-      <li><a href="#following-and-discovery">المتابعة والاستكشاف</a></li>
-      <li><a href="#search">البحث</a></li>
-      <li><a href="#notifications">الإشعارات</a></li>
-      <li><a href="#settings">الإعدادات</a></li>
-    </ul>
-  </div>
-  <div class="nav-group">
-    <h2>الثقة والأمان</h2>
-    <ul>
-      <li><a href="#privacy-and-safety">الخصوصية والأمان</a></li>
-      <li><a href="#account-security">أمان الحساب</a></li>
-      <li><a href="#ads">الإعلانات في ArabDev</a></li>
-      <li><a href="#community-guidelines">إرشادات المجتمع</a></li>
-    </ul>
-  </div>
-  <div class="nav-group">
-    <h2>المساعدة</h2>
-    <ul>
-      <li><a href="#accessibility-and-languages">سهولة الوصول واللغات</a></li>
-      <li><a href="#troubleshooting">حل المشكلات</a></li>
-      <li><a href="#contact">التواصل والدعم</a></li>
-    </ul>
-  </div>
-  <div class="nav-group">
-    <h2>للمطورين</h2>
-    <ul>
-      <li><a href="#developers-overview">نظرة على البنية</a></li>
-      <li><a href="#self-hosting">التشغيل والاستضافة الذاتية</a></li>
-      <li><a href="#api-reference">مرجع الـ API</a></li>
-      <li><a href="#contributing-and-license">المساهمة والترخيص</a></li>
-    </ul>
-  </div>
-  <div class="nav-group nav-external">
-    <h2>روابط أخرى</h2>
-    <ul>
-      <li><a href="https://privacy.arabdev.site/ar/" target="_blank" rel="noopener">سياسة الخصوصية</a></li>
-      <li><a href="https://patch.arabdev.site/ar/" target="_blank" rel="noopener">ملاحظات الإصدار</a></li>
-      <li><a href="https://arabdev.site/LICENSE.txt" target="_blank" rel="noopener">رخصة GNU GPL الإصدار 3</a></li>
-    </ul>
-  </div>
+<div class="page">
+<nav class="nav" aria-label="مقالات الويكي">
+  <h2 class="nav-heading">ابدأ من هنا</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link" href="#main-page">الصفحة الرئيسية</a></li>
+    <li><a class="nav-link" href="#getting-started">البداية</a></li>
+    <li><a class="nav-link" href="#faq">الأسئلة الشائعة</a></li>
+    <li><a class="nav-link" href="#glossary">مسرد المصطلحات</a></li>
+  </ul>
+  <h2 class="nav-heading">استخدام ArabDev</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link" href="#profiles">الملفات الشخصية</a></li>
+    <li><a class="nav-link" href="#home-feed">الصفحة الرئيسية للمنشورات</a></li>
+    <li><a class="nav-link" href="#writing-posts">كتابة المنشورات</a></li>
+    <li><a class="nav-link" href="#formatting-reference">مرجع التنسيق</a></li>
+    <li><a class="nav-link" href="#tags-and-interests">الوسوم والاهتمامات</a></li>
+    <li><a class="nav-link" href="#comments-and-interactions">التعليقات والتفاعلات</a></li>
+    <li><a class="nav-link" href="#following-and-discovery">المتابعة والاستكشاف</a></li>
+    <li><a class="nav-link" href="#search">البحث</a></li>
+    <li><a class="nav-link" href="#notifications">الإشعارات</a></li>
+    <li><a class="nav-link" href="#settings">الإعدادات</a></li>
+  </ul>
+  <h2 class="nav-heading">الثقة والأمان</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link" href="#privacy-and-safety">الخصوصية والأمان</a></li>
+    <li><a class="nav-link" href="#account-security">أمان الحساب</a></li>
+    <li><a class="nav-link" href="#ads">الإعلانات في ArabDev</a></li>
+    <li><a class="nav-link" href="#community-guidelines">إرشادات المجتمع</a></li>
+  </ul>
+  <h2 class="nav-heading">المساعدة</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link" href="#accessibility-and-languages">سهولة الوصول واللغات</a></li>
+    <li><a class="nav-link" href="#troubleshooting">حل المشكلات</a></li>
+    <li><a class="nav-link" href="#contact">التواصل والدعم</a></li>
+  </ul>
+  <h2 class="nav-heading">للمطورين</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link" href="#developers-overview">نظرة على البنية</a></li>
+    <li><a class="nav-link" href="#self-hosting">التشغيل والاستضافة الذاتية</a></li>
+    <li><a class="nav-link" href="#api-reference">مرجع الـ API</a></li>
+    <li><a class="nav-link" href="#contributing-and-license">المساهمة والترخيص</a></li>
+  </ul>
+  <h2 class="nav-heading">روابط أخرى</h2>
+  <ul class="nav-list">
+    <li><a class="nav-link nav-external" href="https://privacy.arabdev.site/ar/" target="_blank" rel="noopener">سياسة الخصوصية</a></li>
+    <li><a class="nav-link nav-external" href="https://patch.arabdev.site/ar/" target="_blank" rel="noopener">ملاحظات الإصدار</a></li>
+    <li><a class="nav-link nav-external" href="https://arabdev.site/LICENSE.txt" target="_blank" rel="noopener">رخصة GNU GPL الإصدار 3</a></li>
+  </ul>
 </nav>
 
-<main class="content" id="content" tabindex="-1">
+<main class="main" id="content" tabindex="-1">
 
 <!-- ================================================================== الصفحة الرئيسية -->
-<article class="wiki-article" id="main-page" data-title="الصفحة الرئيسية">
-<h1 class="article-title">أهلًا بك في ويكي ArabDev</h1>
-<p class="article-tagline">دليل المجتمع إلى ArabDev: كيف تستخدمه، وكيف تبقى آمنًا فيه، وكيف تبني عليه.</p>
-<aside class="infobox" aria-label="ArabDev في لمحة">
-  <div class="infobox-title">
-    <span class="brand-word" dir="ltr"><span class="arab">Arab</span>Dev</span>
-    <span class="infobox-caption">منصة اجتماعية للمطورين</span>
-  </div>
-  <table>
-    <tr><th scope="row">النوع</th><td>مجتمع للمطورين ومنصة للنشر التقني</td></tr>
-    <tr><th scope="row">الجمهور</th><td>المطورون، والناطقون بالعربية خاصة</td></tr>
-    <tr><th scope="row">اللغات</th><td>العربية (من اليمين لليسار) والإنجليزية (من اليسار لليمين)</td></tr>
-    <tr><th scope="row">أول إصدار</th><td>الإصدار 1.0.0، في 19 سبتمبر 2026</td></tr>
-    <tr><th scope="row">أحدث إصدار</th><td>الإصدار 1.2.1، في 5 أكتوبر 2026</td></tr>
-    <tr><th scope="row">الترخيص</th><td>رخصة جنو العمومية العامة، الإصدار 3 أو أحدث</td></tr>
-    <tr><th scope="row">الواجهة</th><td>React وTypeScript وMaterial UI</td></tr>
-    <tr><th scope="row">الخادم</th><td>Python وFastAPI وSQLite</td></tr>
-    <tr><th scope="row">الموقع</th><td><a href="https://arabdev.site/dashboard" dir="ltr">arabdev.site</a></td></tr>
-    <tr><th scope="row">الدعم</th><td><a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a></td></tr>
-    <tr><th scope="row">التواصل</th><td><a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a></td></tr>
-    <tr><th scope="row">البيانات</th><td>لا تُباع أبدًا. راجع <a href="https://privacy.arabdev.site/ar/" target="_blank" rel="noopener">سياسة الخصوصية</a>.</td></tr>
-  </table>
-</aside>
-<p><strong>ArabDev</strong> منصة اجتماعية ومهنية ينشر فيها المطورون مقالات تقنية، ويتابعون أعمال بعضهم، ويتناقشون في الكود عبر التعليقات، ويكتشفون المشاريع من خلال الوسوم والمنشورات الرائجة والبحث.</p>
-<p>صُمِّمت المنصة أولًا لمجتمع المطورين الناطقين بالعربية. تعمل الواجهة كلها بالعربية من اليمين إلى اليسار، وبالإنجليزية من اليسار إلى اليمين، ويمكن للمنشور الواحد أن يجمع اللغتين معًا، إذ تختار كل فقرة اتجاهها بنفسها.</p>
-<p>يشرح هذا الويكي طريقة عمل كل جزء من ArabDev، ويخاطب ثلاث فئات من القراء: من يستخدمون المنصة، ومن يريدون أن يفهموا كيف تُحمى بياناتهم وحساباتهم، والمطورين الذين يشغّلون المنصة أو يبنون على واجهتها البرمجية.</p>
-<p>يُفتح الويكي في تبويب مستقل في المتصفح لتبقيه بجانب ArabDev أثناء عملك. استخدم مربع البحث في الأعلى (أو اضغط <kbd>/</kbd>) للانتقال إلى أي موضوع.</p>
+<article class="wiki-article surface" id="main-page" data-title="الصفحة الرئيسية">
+<header class="page-header">
+<h1 class="page-title">ويكي ArabDev</h1>
+<p class="page-lead">كيف يعمل ArabDev، لمن يستخدمه ولمن يبنيه.</p>
+</header>
+<div class="prose">
+<p><strong>ArabDev</strong> موقع اجتماعي ينشر فيه المطوّرون مقالات تقنية، ويتابع بعضهم بعضًا، ويتناقشون في الكود عبر التعليقات. صُنع للناطقين بالعربية أولًا: تعمل الواجهة من اليمين إلى اليسار بالعربية ومن اليسار إلى اليمين بالإنجليزية، ويمكن أن يجمع المنشور الواحد اللغتين، لأن كل فقرة تأخذ اتجاهها بنفسها.</p>
+<p>اختر مقالة من القائمة، أو ابحث من المربع في الأعلى (اضغط <kbd>/</kbd>). يُفتح الويكي في تبويب مستقل لتبقيه بجانب ArabDev.</p>
 
-<h2 id="main-page-start">ابدأ بهذه المقالات</h2>
-<div class="portal-grid">
-  <a class="portal-card" href="#getting-started"><strong>البداية</strong><span>أنشئ حسابًا، وجهّز ملفك الشخصي، وجد من تتابعهم.</span></a>
-  <a class="portal-card" href="#writing-posts"><strong>كتابة المنشورات</strong><span>العناوين والكود والجداول والروابط والصور والوسوم والمسودات والمعاينة.</span></a>
-  <a class="portal-card" href="#home-feed"><strong>الصفحة الرئيسية للمنشورات</strong><span>كيف تحدد تبويبات «لك» و«المتابَعون» و«الأحدث» ما تراه.</span></a>
-  <a class="portal-card" href="#privacy-and-safety"><strong>الخصوصية والأمان</strong><span>ما العام وما الخاص، وما الإعدادات المتاحة لك.</span></a>
-  <a class="portal-card" href="#formatting-reference"><strong>مرجع التنسيق</strong><span>كل زر في شريط الأدوات، وكل اختصار، وكل حيلة بأسلوب Markdown.</span></a>
-  <a class="portal-card" href="#faq"><strong>الأسئلة الشائعة</strong><span>إجابات قصيرة عن أكثر الأسئلة تكرارًا.</span></a>
-  <a class="portal-card" href="#contact"><strong>التواصل والدعم</strong><span><bdi dir="ltr">support@arabdev.site</bdi> للمساعدة، و<bdi dir="ltr">hi@arabdev.site</bdi> لكل ما عدا ذلك.</span></a>
-</div>
-
-<h2 id="main-page-featured">مقالة مختارة: الكتابة بلغتين</h2>
-<p>كثير من منشورات ArabDev تشرح الفكرة بالعربية وتعرض الكود بالإنجليزية، والمحرر يتعامل مع ذلك دون أي خطوات إضافية. فكل فقرة وعنوان وعنصر قائمة وخلية جدول يحمل اتجاهًا تلقائيًا، فتصطف الفقرة العربية على اليمين والفقرة الإنجليزية على اليسار داخل المنشور نفسه.</p>
-<p>تُعرض كتل الكود دائمًا من اليسار إلى اليمين أيًّا كانت اللغة المحيطة بها. وتُعزل الوسوم والإشارات عن النص المحيط، فتبقى <code>@layla_dev</code> مقروءة حتى في منتصف جملة عربية.</p>
-<p class="hatnote">المقالة الرئيسية: <a href="#writing-posts">كتابة المنشورات</a>. انظر أيضًا: <a href="#accessibility-and-languages">سهولة الوصول واللغات</a>.</p>
-
-<h2 id="main-page-did-you-know">هل تعلم…</h2>
-<ul>
-  <li>…أن الصفحة الرئيسية تعرض 20 منشورًا بالضبط في كل صفحة، مع أرقام للصفحات بدل التمرير اللانهائي؟ (<a href="#home-feed">الصفحة الرئيسية للمنشورات</a>)</li>
-  <li>…أن الإعلان لا يظهر إلا بعد كل 8 منشورات، وأنه يُختار حسب الصفحة واللغة فقط، ولا يعتمد أبدًا على بياناتك الشخصية؟ (<a href="#ads">الإعلانات في ArabDev</a>)</li>
-  <li>…أن كل صورة ترفعها يُعاد ترميزها، فتُزال منها البيانات المخفية مثل موقع التصوير الجغرافي؟ (<a href="#privacy-and-safety">الخصوصية والأمان</a>)</li>
-  <li>…أن كتابة <code>##</code> ثم مسافة في المحرر تحوّل السطر إلى عنوان؟ (<a href="#formatting-reference">مرجع التنسيق</a>)</li>
-  <li>…أن <code>#js</code> و<code>#JavaScript</code> و<code>#javascript</code> تنتهي كلها إلى وسم واحد؟ (<a href="#tags-and-interests">الوسوم والاهتمامات</a>)</li>
-  <li>…أنك تستطيع إخفاء نفسك من البحث والاقتراحات مع إبقاء ملفك متاحًا عبر الرابط المباشر؟ (<a href="#settings">الإعدادات</a>)</li>
-  <li>…أن ArabDev برمجية حرة بموجب رخصة GNU GPL، فيستطيع أي شخص أن يقرأ بنفسه كيف تتعامل مع البيانات؟ (<a href="#contributing-and-license">المساهمة والترخيص</a>)</li>
+<h2 id="main-page-start">إن كنت جديدًا</h2>
+<ul class="row-list">
+  <li><a href="#getting-started"><strong>البداية</strong><span>أنشئ حسابًا، وأكمل خطوات الإعداد في زيارتك الأولى، واعثر على من تتابعه.</span></a></li>
+  <li><a href="#writing-posts"><strong>كتابة المنشورات</strong><span>العناوين والكود والجداول والروابط والصور والوسوم والمسوّدات والمعاينة.</span></a></li>
+  <li><a href="#home-feed"><strong>الصفحة الرئيسية للمنشورات</strong><span>ما الذي تعرضه «لك» و«المتابَعون» و«الأحدث»، وبأي ترتيب.</span></a></li>
+  <li><a href="#account-security"><strong>أمان الحساب</strong><span>رموز الدخول، وتطبيق المصادقة، ورموز الاسترداد، والجلسات.</span></a></li>
+  <li><a href="#privacy-and-safety"><strong>الخصوصية والأمان</strong><span>ما هو عام وما هو خاص، وحظر الأشخاص.</span></a></li>
+  <li><a href="#faq"><strong>الأسئلة الشائعة</strong><span>إجابات قصيرة عن أكثر الأسئلة تكرارًا.</span></a></li>
 </ul>
 
-<h2 id="main-page-sections">تصفح حسب القسم</h2>
+<h2 id="main-page-featured">الكتابة بلغتين</h2>
+<p>كثير من منشورات ArabDev تشرح الفكرة بالعربية وتعرض الكود بالإنجليزية، والمحرر يتعامل مع ذلك دون أي خطوات إضافية. فكل فقرة وعنوان وعنصر قائمة وخلية جدول يحمل اتجاهًا تلقائيًا، فتصطف الفقرة العربية على اليمين والفقرة الإنجليزية على اليسار داخل المنشور نفسه.</p>
+<p>تُعرض كتل الكود دائمًا من اليسار إلى اليمين أيًّا كانت اللغة المحيطة بها. وتُعزل الوسوم والإشارات عن النص المحيط، فتبقى <code>@layla_dev</code> مقروءة حتى في منتصف جملة عربية.</p>
+<p class="see-also">المزيد في <a href="#writing-posts">كتابة المنشورات</a> و<a href="#accessibility-and-languages">سهولة الوصول واللغات</a>.</p>
+
+<h2 id="main-page-did-you-know">أشياء يفوتها كثيرون</h2>
+<ul>
+  <li>تعرض الخلاصة 20 منشورًا في الصفحة، مع صفحات مرقّمة بدل التمرير بلا نهاية. (<a href="#home-feed">الصفحة الرئيسية للمنشورات</a>)</li>
+  <li>كتابة <code>##</code> ثم مسافة في أول السطر داخل المحرر تحوّله إلى عنوان. (<a href="#formatting-reference">مرجع التنسيق</a>)</li>
+  <li><code>#js</code> و<code>#JavaScript</code> و<code>#javascript</code> تنتهي كلها في وسم واحد. (<a href="#tags-and-interests">الوسوم والاهتمامات</a>)</li>
+  <li>لكل ملف شخصي ولكل وسم خلاصة RSS، فتستطيع متابعته في قارئ خلاصات دون حساب. (<a href="#tags-and-interests">الوسوم والاهتمامات</a>)</li>
+  <li>تُعاد معالجة الصور المرفوعة، فتُزال منها البيانات المخفية مثل موقع GPS. (<a href="#privacy-and-safety">الخصوصية والأمان</a>)</li>
+  <li>يمكنك إخفاء نفسك من البحث والاقتراحات مع بقاء ملفك متاحًا عبر رابط مباشر. (<a href="#settings">الإعدادات</a>)</li>
+</ul>
+
+<h2 id="main-page-sections">كل المقالات</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">القسم</th><th scope="col">المقالات</th></tr></thead>
   <tbody>
     <tr><td>ابدأ من هنا</td><td><a href="#getting-started">البداية</a> · <a href="#faq">الأسئلة الشائعة</a> · <a href="#glossary">مسرد المصطلحات</a></td></tr>
@@ -173,17 +142,19 @@
 </div>
 
 <h2 id="main-page-about">عن هذا الويكي</h2>
-<p>يوثّق هذا الويكي الإصدار 1.2.1 من ArabDev. عندما يغيّر إصدار جديد طريقة عمل شيء ما، تُحدَّث المقالة المعنية ويُذكر التغيير في <a href="https://patch.arabdev.site/ar/" target="_blank" rel="noopener">ملاحظات الإصدار</a>.</p>
-<p>الويكي مجموعة صفحات ثابتة: لا حسابات فيه، ولا تعليقات، ولا أدوات تحليل أو تتبّع. الشيء الوحيد الذي يتذكره هو اختيارك بين الوضع الفاتح والداكن، ويتشاركه مع ArabDev عبر التخزين المحلي في متصفحك.</p>
-<div class="categories">التصنيفات: <a href="#main-page">الويكي</a><a href="#getting-started">ابدأ من هنا</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+<p>يصف هذا الويكي الإصدار 1.3.0 من ArabDev. عندما يغيّر إصدار طريقة عمل شيء ما، تُحدَّث المقالة ويُذكر التغيير في <a href="https://patch.arabdev.site/ar/" target="_blank" rel="noopener">ملاحظات الإصدار</a>.</p>
+<p>الويكي صفحات HTML بسيطة، بلا حسابات ولا تعليقات ولا أدوات تحليل أو تتبّع. ويحفظ في متصفحك شيئين فقط: الوضع الفاتح أو الداكن، ولغتك.</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== البداية -->
-<article class="wiki-article" id="getting-started" data-title="البداية">
+<article class="wiki-article surface" id="getting-started" data-title="البداية">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › ابدأ من هنا</div>
-<h1 class="article-title">البداية</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">البداية</h1>
+</header>
+<div class="prose">
 <p>ترافقك هذه المقالة في دقائقك العشر الأولى على ArabDev: إنشاء الحساب، وتسجيل الدخول، وخطوات الإعداد الأربع التي تظهر في زيارتك الأولى، وما تفعله بعدها.</p>
 
 <h2 id="getting-started-account">إنشاء حساب</h2>
@@ -205,7 +176,7 @@
   <li>لا يفرّق بين الحروف الكبيرة والصغيرة: يُحفظ <code>Layla_Dev</code> على أنه <code>layla_dev</code>.</li>
   <li>بعض الأسماء محجوزة لأن الموقع نفسه يستخدمها، مثل <code>admin</code> و<code>api</code> و<code>settings</code> و<code>explore</code> و<code>search</code> و<code>notifications</code> و<code>privacy</code> و<code>support</code> و<code>arabdev</code>.</li>
 </ul>
-<p class="hatnote">الاسم الظاهر منفصل عن اسم المستخدم ويمكن كتابته بأي لغة، بما فيها العربية. راجع <a href="#profiles">الملفات الشخصية</a>.</p>
+<p class="see-also">الاسم الظاهر منفصل عن اسم المستخدم ويمكن كتابته بأي لغة، بما فيها العربية. راجع <a href="#profiles">الملفات الشخصية</a>.</p>
 
 <h3 id="getting-started-password-rules">قواعد كلمة المرور</h3>
 <ul>
@@ -225,7 +196,7 @@
   <li>بعد 10 محاولات خلال دقيقة واحدة من الشبكة نفسها، أو 8 محاولات للحساب نفسه خلال 15 دقيقة، يتوقف تسجيل الدخول قليلًا. انتظر لحظة ثم حاول مجددًا.</li>
   <li>يمكنك إيقاف رمز تسجيل الدخول من <a href="#settings-security-signin">الإعدادات ← الأمان</a>، لكن إبقاءه مفعّلًا أكثر أمانًا بكثير.</li>
 </ul>
-<p class="hatnote">نسيت كلمة المرور؟ راجع <a href="#account-security-reset">استعادة كلمة مرور منسية</a>.</p>
+<p class="see-also">نسيت كلمة المرور؟ راجع <a href="#account-security-reset">استعادة كلمة مرور منسية</a>.</p>
 
 <h2 id="getting-started-onboarding">الزيارة الأولى: تجهيز ملفك الشخصي</h2>
 <p>في أول مرة تدخل فيها بعد إنشاء الحساب يفتح ArabDev نافذة إعداد قصيرة من أربع خطوات، فيها شريط تقدّم وعدّاد مثل «الخطوة 2 من 4». في كل خطوة زر <strong>تخطٍّ</strong>، وزر <strong>×</strong> في الزاوية يغلق النافذة نهائيًا. ويمكنك إكمال ما تخطيته لاحقًا من <a href="#settings">الإعدادات</a>.</p>
@@ -249,7 +220,7 @@
 
 <h2 id="getting-started-navigation">التنقل في المنصة</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">حجم الشاشة</th><th scope="col">التنقل</th></tr></thead>
   <tbody>
     <tr><td>الشاشات الكبيرة (1200 بكسل فأكثر)</td><td>عمود تنقل بعناوين نصية (الرئيسية، استكشاف، الإشعارات، المحفوظات، الملف الشخصي، الإعدادات، وزر «منشور جديد»)، ثم العمود الرئيسي، ثم عمود جانبي فيه مطورون مقترحون وإعلان واحد والوسوم الشائعة.</td></tr>
@@ -259,15 +230,17 @@
 </table>
 </div>
 <p>صورتك في الزاوية العلوية تفتح قائمة الحساب، وفيها روابط تعديل الملف والمسودات والمحفوظات والإعدادات، ومفاتيح سريعة للمظهر واللغة، وروابط هذا الويكي وسياسة الخصوصية وملاحظات الإصدار، وتسجيل الخروج.</p>
-<div class="categories">التصنيفات: <a href="#main-page">ابدأ من هنا</a><a href="#profiles">الحسابات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الملفات الشخصية -->
-<article class="wiki-article" id="profiles" data-title="الملفات الشخصية">
+<article class="wiki-article surface" id="profiles" data-title="الملفات الشخصية">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">الملفات الشخصية</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الملفات الشخصية</h1>
+</header>
+<div class="prose">
 <p>لكل عضو ملف شخصي عام على العنوان <code>/u/username</code>، مثل <code>/u/layla_dev</code>. يعرّف الملف بصاحبه، وبما يعمل عليه، وبما كتبه.</p>
 
 <h2 id="profiles-anatomy">ما الذي يعرضه الملف الشخصي</h2>
@@ -284,7 +257,7 @@
 
 <h2 id="profiles-tabs">تبويبات الملف الشخصي</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">التبويب</th><th scope="col">المحتوى</th><th scope="col">من يستطيع رؤيته</th></tr></thead>
   <tbody>
     <tr><td>المنشورات</td><td>المنشورات التي كتبها الشخص والتي أعاد نشرها، الأحدث نشاطًا أولًا، وتحمل إعادات النشر علامة توضّح ذلك.</td><td>الجميع</td></tr>
@@ -298,7 +271,7 @@
 <h2 id="profiles-editing">تعديل ملفك الشخصي</h2>
 <p>افتح <strong>تعديل الملف</strong> من ملفك الشخصي أو من قائمة الحساب. المحرر نفسه موجود أيضًا في <a href="#settings-profile">الإعدادات ← الملف الشخصي</a>.</p>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الحقل</th><th scope="col">الحدود</th><th scope="col">ملاحظات</th></tr></thead>
   <tbody>
     <tr><td>الاسم الظاهر</td><td>من 1 إلى 50 حرفًا</td><td>بأي لغة، وتُحذف المسافات في بدايته ونهايته.</td></tr>
@@ -325,15 +298,17 @@
 
 <h2 id="profiles-lists">قائمتا المتابِعين والمتابَعين</h2>
 <p>افتح القائمتين من الأعداد في الملف الشخصي، أو اذهب إلى <code>/u/username/followers</code> و<code>/u/username/following</code>. يظهر كل شخص في بطاقة فيها نبذته واهتماماته وزر المتابعة. وإذا أوقف أحدهم خيار <strong>إظهار قائمتي المتابِعين والمتابَعين</strong> يرى الآخرون رسالة «هذا الحساب يُبقي قائمة متابعاته خاصة.»، بينما يرى صاحب الحساب قائمتيه دائمًا.</p>
-<div class="categories">التصنيفات: <a href="#profiles">الحسابات</a><a href="#following-and-discovery">المجتمع</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الصفحة الرئيسية للمنشورات -->
-<article class="wiki-article" id="home-feed" data-title="الصفحة الرئيسية للمنشورات">
+<article class="wiki-article surface" id="home-feed" data-title="الصفحة الرئيسية للمنشورات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">الصفحة الرئيسية للمنشورات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الصفحة الرئيسية للمنشورات</h1>
+</header>
+<div class="prose">
 <p>الصفحة الرئيسية هي أول ما تراه بعد تسجيل الدخول. فيها ثلاثة تبويبات، وطريقة سريعة لبدء منشور، وصفحات مرقّمة بدل التمرير اللانهائي.</p>
 
 <h2 id="home-feed-tabs">التبويبات الثلاثة</h2>
@@ -376,24 +351,26 @@
 
 <h2 id="home-feed-ads">الإعلانات في الصفحة الرئيسية</h2>
 <p>يظهر إعلان بعد كل 8 منشورات: بعد المنشور الثامن والسادس عشر في كل صفحة، أي إعلانان على الأكثر في الصفحة. الإعلانات مميزة بوضوح ولا تشبه المنشورات أبدًا.</p>
-<p class="hatnote">المقالة الرئيسية: <a href="#ads">الإعلانات في ArabDev</a>.</p>
+<p class="see-also">المقالة الرئيسية: <a href="#ads">الإعلانات في ArabDev</a>.</p>
 
 <h2 id="home-feed-empty">عندما تكون الصفحة فارغة</h2>
 <ul>
   <li>إن لم ينشر أحد بعد ترى «لا توجد منشورات بعد» مع زر <strong>أنشئ منشورك الأول</strong>.</li>
   <li>إن كان تبويب «المتابَعون» فارغًا ترى «لا جديد ممن تتابعهم» مع زر ينقلك إلى صفحة الاستكشاف لتجد مطورين.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#home-feed">الصفحة الرئيسية</a><a href="#following-and-discovery">الاستكشاف</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== كتابة المنشورات -->
-<article class="wiki-article" id="writing-posts" data-title="كتابة المنشورات">
+<article class="wiki-article surface" id="writing-posts" data-title="كتابة المنشورات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">كتابة المنشورات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">كتابة المنشورات</h1>
+</header>
+<div class="prose">
 <p>المنشورات قلب ArabDev: دروس، وأسئلة، وإعلانات مشاريع، ونصائح، وتجارب. يمنحك المحرر كل ما يحتاجه المنشور التقني، من عناوين وكود وجداول وروابط، دون أن يتحول إلى برنامج معالجة نصوص.</p>
-<p class="hatnote">لكل زر واختصار راجع <a href="#formatting-reference">مرجع التنسيق</a>.</p>
+<p class="see-also">لكل زر واختصار راجع <a href="#formatting-reference">مرجع التنسيق</a>.</p>
 
 <h2 id="writing-posts-open">فتح المحرر</h2>
 <p>اختر <strong>منشور جديد</strong> من قائمة التنقل (زر <strong>+</strong> الأحمر على الهاتف)، أو زر <strong>اكتب منشورًا</strong> في الصفحة الرئيسية، أو افتح إحدى مسوداتك. يتكون المحرر من:</p>
@@ -448,7 +425,7 @@
 
 <h2 id="writing-posts-tags">الوسوم</h2>
 <p>أضف حتى 5 وسوم ليجد الناس منشورك. اكتب الوسم واضغط <kbd>Enter</kbd>، أو اختر اقتراحًا من القائمة، أو الصق عدة وسوم مفصولة بفواصل. يصل طول كل وسم إلى 30 حرفًا.</p>
-<p class="hatnote">المقالة الرئيسية: <a href="#tags-and-interests">الوسوم والاهتمامات</a>.</p>
+<p class="see-also">المقالة الرئيسية: <a href="#tags-and-interests">الوسوم والاهتمامات</a>.</p>
 
 <h2 id="writing-posts-preview">المعاينة</h2>
 <p>تعرض المعاينة منشورك تمامًا كما سيراه القراء: صورتك واسمك، والعنوان، والمتن المنسّق، والصورة، وبطاقة الرابط، والوسوم. على الشاشات التي يبلغ عرضها 1200 بكسل فأكثر تكون بجانب المحرر وتتحدث أثناء الكتابة، وعلى الشاشات الأصغر تنتقل بين تبويبي <strong>كتابة</strong> و<strong>معاينة</strong>.</p>
@@ -481,20 +458,22 @@
 
 <h2 id="writing-posts-safety">ماذا يحدث لمنشورك عند النشر</h2>
 <p>يفحص الخادم كل منشور وينظفه قبل حفظه. يُبقي فقط التنسيق الذي يتيحه المحرر ويزيل ما عداه، بما في ذلك السكربتات والوسوم غير المعروفة والأنماط الخارجة عن الخطوط والأحجام والألوان المسموحة، والروابط التي لا تستخدم <code>http</code> أو <code>https</code> أو <code>mailto</code>. تُفتح روابط المنشورات في تبويب جديد وتُعلَّم كي لا تعدّها محركات البحث تزكية. ثم يفحص المتصفح المنشور مرة أخرى قبل عرضه. هذا الفحص المزدوج يحمي كل من يقرأ منشورك.</p>
-<div class="categories">التصنيفات: <a href="#writing-posts">المنشورات</a><a href="#formatting-reference">المحرر</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== مرجع التنسيق -->
-<article class="wiki-article" id="formatting-reference" data-title="مرجع التنسيق">
+<article class="wiki-article surface" id="formatting-reference" data-title="مرجع التنسيق">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev › <a href="#writing-posts">كتابة المنشورات</a></div>
-<h1 class="article-title">مرجع التنسيق</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">مرجع التنسيق</h1>
+</header>
+<div class="prose">
 <p>قائمة كاملة بأزرار شريط أدوات المحرر واختصارات لوحة المفاتيح واختصارات أسلوب Markdown. على أجهزة Mac استخدم <kbd>⌘</kbd> أينما ذكرت هذه الصفحة <kbd>Ctrl</kbd>.</p>
 
 <h2 id="formatting-reference-toolbar">شريط الأدوات من البداية إلى النهاية</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الأداة</th><th scope="col">وظيفتها</th></tr></thead>
   <tbody>
     <tr><td>تراجع / إعادة</td><td>الرجوع خطوة إلى الخلف أو التقدم خطوة في تعديلاتك، ويظهران باهتين عندما لا يوجد ما يُتراجع عنه أو يُعاد.</td></tr>
@@ -521,7 +500,7 @@
 
 <h2 id="formatting-reference-keyboard">اختصارات لوحة المفاتيح</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الاختصار</th><th scope="col">الوظيفة</th></tr></thead>
   <tbody>
     <tr><td><span dir="ltr"><kbd>Ctrl</kbd> + <kbd>B</kbd></span></td><td>عريض</td></tr>
@@ -547,7 +526,7 @@
 <h2 id="formatting-reference-markdown">اختصارات بأسلوب Markdown</h2>
 <p>اكتبها في بداية سطر فارغ (للكتل) أو حول النص (للأنماط داخل السطر)، فتتحول إلى تنسيق أثناء الكتابة.</p>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">اكتب</th><th scope="col">النتيجة</th></tr></thead>
   <tbody>
     <tr><td><code>##</code> ثم مسافة</td><td>عنوان</td></tr>
@@ -584,7 +563,7 @@
 
 <h2 id="formatting-reference-colors">دلالات الألوان</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">اللون</th><th scope="col">استخدام مقترح</th></tr></thead>
   <tbody>
     <tr><td>أحمر</td><td>أحمر ArabDev: للتحذيرات والمصطلحات المهمة والتأكيد.</td></tr>
@@ -596,15 +575,17 @@
 </table>
 </div>
 <p>لا تعتمد على اللون وحده لنقل المعنى، فبعض القراء لا يميزون بين الألوان. أرفق اللون بكلمات مثل «تحذير:».</p>
-<div class="categories">التصنيفات: <a href="#formatting-reference">المحرر</a><a href="#writing-posts">المنشورات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الوسوم والاهتمامات -->
-<article class="wiki-article" id="tags-and-interests" data-title="الوسوم والاهتمامات">
+<article class="wiki-article surface" id="tags-and-interests" data-title="الوسوم والاهتمامات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">الوسوم والاهتمامات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الوسوم والاهتمامات</h1>
+</header>
+<div class="prose">
 <p><strong>الوسوم</strong> تصف موضوع المنشور، و<strong>الاهتمامات</strong> تصف ما يعمل به الشخص. ويربط ArabDev بين الاثنين: عندما يطابق وسم المنشور أحد الاهتمامات الخمسة والعشرين يُعدّ المنشور متعلقًا بذلك الاهتمام، وهذا يؤثر في ترتيب تبويب <a href="#home-feed-for-you">«لك»</a> وفي اقتراحات المطورين.</p>
 
 <h2 id="tags-and-interests-tag-rules">كيف تُكتب الوسوم</h2>
@@ -621,7 +602,7 @@
 
 <h2 id="tags-and-interests-aliases">الكتابات التي تُدمج</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">ما تكتبه</th><th scope="col">الوسم</th></tr></thead>
   <tbody>
     <tr><td><code>js</code></td><td><code>javascript</code></td></tr>
@@ -646,7 +627,7 @@
 
 <h2 id="tags-and-interests-list">الاهتمامات الخمسة والعشرون</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الاهتمام</th><th scope="col">الوسم</th><th scope="col">الاسم بالإنجليزية</th></tr></thead>
   <tbody>
     <tr><td>JavaScript</td><td><code>javascript</code></td><td>JavaScript</td></tr>
@@ -684,15 +665,17 @@
 
 <h2 id="tags-and-interests-popular">الوسوم الشائعة</h2>
 <p>ترتّب قائمة الوسوم الشائعة (في العمود الجانبي وفي صفحة الاستكشاف) الوسوم حسب عدد المنشورات التي استخدمتها خلال آخر 30 يومًا. وإن لم يُوسم أي منشور خلال هذه المدة تُعرض القائمة بترتيبها على مر الوقت. تُحدَّث القائمة كل دقيقتين، وتظهر المراتب الثلاث الأولى باللون الأحمر.</p>
-<div class="categories">التصنيفات: <a href="#tags-and-interests">الاستكشاف</a><a href="#writing-posts">المنشورات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== التعليقات والتفاعلات -->
-<article class="wiki-article" id="comments-and-interactions" data-title="التعليقات والتفاعلات">
+<article class="wiki-article surface" id="comments-and-interactions" data-title="التعليقات والتفاعلات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">التعليقات والتفاعلات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">التعليقات والتفاعلات</h1>
+</header>
+<div class="prose">
 <p>أسفل كل منشور صف إجراءات من خمسة أزرار: تعليق، وإعادة نشر، وإعجاب، وحفظ، ومشاركة. تشرح هذه المقالة كلًا منها.</p>
 
 <h2 id="comments-and-interactions-likes">الإعجابات</h2>
@@ -733,15 +716,17 @@
 
 <h2 id="comments-and-interactions-limits">الحدود</h2>
 <p>لمنع إساءة الاستخدام يمكن لكل شبكة إجراء حتى 300 إعجاب وحفظ وإعادة نشر في الساعة، وحتى 60 تعليقًا كل 10 دقائق. الاستخدام العادي لا يقترب من هذه الحدود أبدًا.</p>
-<div class="categories">التصنيفات: <a href="#comments-and-interactions">المجتمع</a><a href="#notifications">الإشعارات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== المتابعة والاستكشاف -->
-<article class="wiki-article" id="following-and-discovery" data-title="المتابعة والاستكشاف">
+<article class="wiki-article surface" id="following-and-discovery" data-title="المتابعة والاستكشاف">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">المتابعة والاستكشاف</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">المتابعة والاستكشاف</h1>
+</header>
+<div class="prose">
 <p>متابعة شخص ما تضع منشوراته وإعادات نشره في تبويب «المتابَعون» لديك، وترفع ترتيبها في تبويب «لك». تشرح هذه المقالة المتابعة، وكيف يقترح ArabDev الأشخاص، وصفحة الاستكشاف.</p>
 
 <h2 id="following-and-discovery-following">المتابعة وإلغاؤها</h2>
@@ -768,15 +753,17 @@
   <li><strong>الرائج هذا الأسبوع</strong>: منشورات آخر 7 أيام مرتبة حسب سرعة تفاعل الناس معها، لا حسب مجموع التفاعلات فقط. تُقسم تفاعلات المنشور (الإعجابات، وضعف التعليقات، وثلاثة أضعاف إعادات النشر) على عمره، فيستطيع منشور جديد ينتشر بسرعة أن يسبق منشورًا أقدم نال إعجابات أكثر. وتليها منشورات الأسبوع التي لم يتفاعل معها أحد بعد، الأحدث أولًا. وإن لم يتفاعل أحد مع أي شيء خلال الأسبوع يُعرض الترتيب على مر الوقت. تُقسَّم المنشورات الرائجة إلى صفحات من 20.</li>
   <li><strong>الوسوم الشائعة</strong> و<strong>مطورون قد تهتم بهم</strong>. على الشاشات الكبيرة تكون في العمود الجانبي، وعلى الشاشات الأصغر تظهر في أعلى صفحة الاستكشاف.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#following-and-discovery">الاستكشاف</a><a href="#profiles">المجتمع</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== البحث -->
-<article class="wiki-article" id="search" data-title="البحث">
+<article class="wiki-article surface" id="search" data-title="البحث">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">البحث</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">البحث</h1>
+</header>
+<div class="prose">
 <p>يبحث ArabDev في المنشورات والمطورين والوسوم من مربع واحد: في الشريط العلوي على الشاشات الكبيرة، وخلف العدسة على الهواتف، وفي صفحتي الاستكشاف والبحث.</p>
 
 <h2 id="search-live">الاقتراحات الفورية</h2>
@@ -790,7 +777,7 @@
 
 <h2 id="search-what">ما الذي يُبحث فيه</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">المجموعة</th><th scope="col">يطابق</th><th scope="col">الترتيب</th></tr></thead>
   <tbody>
     <tr><td>المنشورات</td><td>العنوان ونص المتن</td><td>الأحدث أولًا</td></tr>
@@ -811,20 +798,22 @@
 
 <h2 id="search-results-page">صفحة النتائج</h2>
 <p>الضغط على <kbd>Enter</kbd> أو اختيار «عرض كل النتائج» يفتح <code>/search?q=…</code>، وفيها تبويبات: الكل، والمنشورات، والمطورون، والوسوم. يعرض تبويب <strong>الكل</strong> لمحة قصيرة عن كل مجموعة مع زر «عرض الكل»، وتعرض التبويبات الأخرى القائمة كاملة بصفحات من 20. وإن لم يطابق شيء يقترح ArabDev التحقق من الكتابة، أو تجربة عبارة أقصر، أو البحث عن وسم.</p>
-<div class="categories">التصنيفات: <a href="#search">الاستكشاف</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الإشعارات -->
-<article class="wiki-article" id="notifications" data-title="الإشعارات">
+<article class="wiki-article surface" id="notifications" data-title="الإشعارات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">الإشعارات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الإشعارات</h1>
+</header>
+<div class="prose">
 <p>تخبرك الإشعارات عندما يتفاعل معك الآخرون. تظهر في صفحة الإشعارات، وتظهر شارة حمراء بعدد الإشعارات غير المقروءة على عنصر الإشعارات في قائمة التنقل.</p>
 
 <h2 id="notifications-types">أنواع الإشعارات</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">النوع</th><th scope="col">يصلك عندما…</th></tr></thead>
   <tbody>
     <tr><td>إعجاب</td><td>يُعجب أحدهم بمنشورك.</td></tr>
@@ -851,15 +840,17 @@
 <h2 id="notifications-controls">اختيار ما تُبلَّغ به</h2>
 <p>اذهب إلى <a href="#settings-notifications">الإعدادات ← الإشعارات</a> لتفعيل كل نوع أو إيقافه. إيقاف نوع ما يمنع وصول إشعارات جديدة منه، وتبقى الإشعارات السابقة. وللتحكم في من يستطيع إرسال إشعار إشارة إليك راجع <a href="#settings-privacy">الإعدادات ← الخصوصية</a>.</p>
 <div class="callout note"><span class="callout-title">لا إشعارات بالبريد</span><p>لا يرسل ArabDev الإشعارات بالبريد الإلكتروني. الرسائل الوحيدة التي يرسلها هي روابط استعادة كلمة المرور التي تطلبها بنفسك.</p></div>
-<div class="categories">التصنيفات: <a href="#notifications">الإشعارات</a><a href="#settings">الإعدادات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الإعدادات -->
-<article class="wiki-article" id="settings" data-title="الإعدادات">
+<article class="wiki-article surface" id="settings" data-title="الإعدادات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › استخدام ArabDev</div>
-<h1 class="article-title">الإعدادات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الإعدادات</h1>
+</header>
+<div class="prose">
 <p>تنقسم الإعدادات إلى ستة أقسام: الحساب، والملف الشخصي، والأمان، والمظهر، والخصوصية، والإشعارات. على الشاشات الكبيرة تُعرض الأقسام في قائمة جانبية، وعلى الهواتف في تبويبات أعلى الصفحة. تُحفظ المفاتيح فور تغييرها وتظهر رسالة «تم حفظ الإعدادات»، وإن فشل الحفظ يعود المفتاح إلى وضعه السابق مع رسالة توضح السبب.</p>
 
 <h2 id="settings-account">الحساب</h2>
@@ -884,7 +875,7 @@
 <h2 id="settings-security">الأمان</h2>
 <h3 id="settings-security-signin">تسجيل الدخول</h3>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الإعداد</th><th scope="col">عند التفعيل (الافتراضي)</th><th scope="col">عند الإيقاف</th></tr></thead>
   <tbody>
     <tr><td>أرسل لي رمزًا عند تسجيل الدخول</td><td>يُؤكَّد كل تسجيل دخول برمز من ستة أرقام يصل إلى بريدك، فلا تكفي كلمة مرور مسروقة وحدها.</td><td>تكفي كلمة المرور لتسجيل الدخول. ويظل إنشاء الحساب وتغيير البريد أو كلمة المرور بحاجة إلى رمز.</td></tr>
@@ -914,7 +905,7 @@
 
 <h2 id="settings-privacy">الخصوصية</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الإعداد</th><th scope="col">عند التفعيل (الافتراضي)</th><th scope="col">عند الإيقاف</th></tr></thead>
   <tbody>
     <tr><td>إظهاري في البحث والاقتراحات</td><td>يمكن أن تظهر في نتائج البحث عن المطورين وفي «مطورون لتتابعهم» وفي قائمة الملفات التي تُقدَّم لمحرّكات البحث.</td><td>لا تظهر في أيٍّ منها. ويظل الناس قادرين على فتح ملفك عبر رابط مباشر أو من منشوراتك أو بكتابة اسم المستخدم بالضبط.</td></tr>
@@ -932,21 +923,23 @@
   <li><strong>جديد ArabDev</strong>: رسالة بين حين وآخر عند إصدار يستحق المعرفة. متوقف افتراضيًا.</li>
 </ul>
 <p>لا يرسل ArabDev رسائل تسويقية أبدًا، ولا يشارك عنوانك ولا يبيعه.</p>
-<div class="categories">التصنيفات: <a href="#settings">الإعدادات</a><a href="#privacy-and-safety">الخصوصية</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الخصوصية والأمان -->
-<article class="wiki-article" id="privacy-and-safety" data-title="الخصوصية والأمان">
+<article class="wiki-article surface" id="privacy-and-safety" data-title="الخصوصية والأمان">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › الثقة والأمان</div>
-<h1 class="article-title">الخصوصية والأمان</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الخصوصية والأمان</h1>
+</header>
+<div class="prose">
 <p>هذه المقالة ملخص عملي، أما النص الكامل المُلزِم فهو <a href="https://privacy.arabdev.site/ar/" target="_blank" rel="noopener">سياسة الخصوصية في ArabDev</a>.</p>
 <div class="callout important"><span class="callout-title">وعدنا لك</span><p>لا يبيع ArabDev معلوماتك الشخصية ولا يؤجرها ولا يتاجر بها، ولا يستخدمها لاستهداف الإعلانات. ولا يشغّل ArabDev أي سكربتات تحليل أو تتبع خاصة به؛ والشيفرة الخارجية الوحيدة هي شيفرة إعلانات Google، التي تُطلب منها إعلانات غير مخصّصة، وفحص الأمان من Cloudflare. راجع <a href="#ads">الإعلانات في ArabDev</a> و<a href="#account-security-bots">فحص الأمان</a>.</p></div>
 
 <h2 id="privacy-and-safety-public">ما العام وما الخاص</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">المعلومة</th><th scope="col">من يستطيع رؤيتها</th></tr></thead>
   <tbody>
     <tr><td>اسم المستخدم والاسم الظاهر والصورة والنبذة والموقع الجغرافي والموقع الإلكتروني والاهتمامات وتاريخ الانضمام</td><td>الجميع، بمن فيهم من ليس لديهم حساب</td></tr>
@@ -965,7 +958,7 @@
 
 <h2 id="privacy-and-safety-browser">ما يحفظه ArabDev في متصفحك</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الاسم</th><th scope="col">النوع</th><th scope="col">الغرض</th></tr></thead>
   <tbody>
     <tr><td><code>arabdev_refresh</code></td><td>ملف تعريف ارتباط (HttpOnly)</td><td>يبقيك مسجلًا للدخول. لا تستطيع السكربتات قراءته، ولا يُرسل إلا إلى نقاط تسجيل الدخول.</td></tr>
@@ -999,15 +992,17 @@
   <li>لا تنشر مفاتيح API أو رموز الوصول أو كلمات المرور في أمثلة الكود، واستبدلها بقيم وهمية.</li>
   <li>الروابط في المنشورات تقودك إلى مواقع أخرى لها ممارسات خصوصية خاصة بها.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#privacy-and-safety">الخصوصية</a><a href="#account-security">الأمان</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== أمان الحساب -->
-<article class="wiki-article" id="account-security" data-title="أمان الحساب">
+<article class="wiki-article surface" id="account-security" data-title="أمان الحساب">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › الثقة والأمان</div>
-<h1 class="article-title">أمان الحساب</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">أمان الحساب</h1>
+</header>
+<div class="prose">
 <p>كيف يحمي ArabDev حسابك، وما الذي تستطيع فعله للمساعدة.</p>
 
 <h2 id="account-security-passwords">كيف تُخزَّن كلمات المرور</h2>
@@ -1065,7 +1060,7 @@
 <h2 id="account-security-limits">الحماية من التخمين وإساءة الاستخدام</h2>
 <p>يحدّ ArabDev من عدد مرات تكرار الإجراءات الحساسة. وعند بلوغ الحد ترى «محاولات كثيرة. انتظر قليلًا ثم حاول مجددًا.». والحدود مشتركة بين كل خوادم ArabDev، وعنوان الشبكة الذي تحصيه هو الذي سجّلته استضافة ArabDev نفسها، فلا يستطيع الزائر تزويره.</p>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الإجراء</th><th scope="col">الحد لكل شبكة</th></tr></thead>
   <tbody>
     <tr><td>تسجيل الدخول</td><td>10 في الدقيقة</td></tr>
@@ -1092,7 +1087,7 @@
 </div>
 <p>وتنطبق بعض الحدود أيضًا على كل حساب، مهما تعدّدت الشبكات التي تأتي منها المحاولات:</p>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الإجراء</th><th scope="col">الحد لكل حساب</th></tr></thead>
   <tbody>
     <tr><td>تسجيل الدخول</td><td>8 محاولات كل 15 دقيقة</td></tr>
@@ -1119,15 +1114,17 @@
   <li>ألغِ تفعيل «إبقائي مسجلًا للدخول» على الأجهزة المشتركة أو العامة، وسجّل خروجك عند الانتهاء.</li>
   <li>راجع <a href="#settings-security-devices">أين سجّلت الدخول</a> بين حين وآخر. وإن ظننت أن أحدًا يعرف كلمة مرورك فغيّرها، فهذا يسجّل خروج كل الأجهزة الأخرى.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#account-security">الأمان</a><a href="#privacy-and-safety">الخصوصية</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الإعلانات -->
-<article class="wiki-article" id="ads" data-title="الإعلانات في ArabDev">
+<article class="wiki-article surface" id="ads" data-title="الإعلانات في ArabDev">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › الثقة والأمان</div>
-<h1 class="article-title">الإعلانات في ArabDev</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الإعلانات في ArabDev</h1>
+</header>
+<div class="prose">
 <p>يعرض ArabDev عددًا قليلًا من الإعلانات ليبقى مجانيًا. معظمها من Google AdSense، ويملأ الباقي رعاة مباشرون ورسائل ArabDev نفسه. وتخضع كلها لقواعد صارمة كي لا تعيق القراءة أبدًا ولا تضلل أحدًا.</p>
 
 <h2 id="ads-placement">أين تظهر الإعلانات</h2>
@@ -1160,15 +1157,17 @@
 
 <h2 id="ads-blocking">إن كنت تستخدم مانع إعلانات</h2>
 <p>هذا خيارك. يعمل ArabDev كما هو مع حجب الإعلانات ولا يخفي شيئًا خلفها. وإن أوقف المانعُ فحصَ الأمان من Cloudflare أيضًا فقد يطلب منك تسجيل الدخول أو النشر المحاولة مجددًا؛ راجع <a href="#account-security-bots">فحص الأمان</a>.</p>
-<div class="categories">التصنيفات: <a href="#ads">الإعلانات</a><a href="#privacy-and-safety">الخصوصية</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== إرشادات المجتمع -->
-<article class="wiki-article" id="community-guidelines" data-title="إرشادات المجتمع">
+<article class="wiki-article surface" id="community-guidelines" data-title="إرشادات المجتمع">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › الثقة والأمان</div>
-<h1 class="article-title">إرشادات المجتمع</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">إرشادات المجتمع</h1>
+</header>
+<div class="prose">
 <p>يعمل ArabDev بأفضل صورة عندما يبقى تقنيًا وكريمًا ومحترمًا. تشرح هذه الإرشادات ما يعنيه ذلك عمليًا.</p>
 
 <h2 id="community-guidelines-do">افعل</h2>
@@ -1216,15 +1215,17 @@
   <li><strong>إيقاف الحساب.</strong> يُسجَّل خروج صاحبه من كل الأجهزة، ولا يستطيع تسجيل الدخول، ولا تعود منشوراته ظاهرة.</li>
 </ul>
 <p>يمكن للمشرف الجمع بين حذف المنشور والتقييد أو الإيقاف، وإضافة ملاحظة قصيرة تُرسل إلى الكاتب مع القرار. ولا يستطيع المشرفون تقييد مشرف آخر أو إيقافه. إن رأيت أن قرارًا ما خاطئ فراسل <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> وسيراجعه الفريق مجددًا، ويمكن رفع التقييد أو الإيقاف قبل موعده.</p>
-<div class="categories">التصنيفات: <a href="#community-guidelines">المجتمع</a><a href="#privacy-and-safety">الأمان</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== سهولة الوصول واللغات -->
-<article class="wiki-article" id="accessibility-and-languages" data-title="سهولة الوصول واللغات">
+<article class="wiki-article surface" id="accessibility-and-languages" data-title="سهولة الوصول واللغات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › المساعدة</div>
-<h1 class="article-title">سهولة الوصول واللغات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">سهولة الوصول واللغات</h1>
+</header>
+<div class="prose">
 <p>يسعى ArabDev إلى أن يكون قابلًا للاستخدام من الجميع، بأي وسيلة إدخال، وبأي من لغتيه.</p>
 
 <h2 id="accessibility-and-languages-languages">العربية والإنجليزية</h2>
@@ -1260,15 +1261,17 @@
   <li>إذا طلب جهازك تقليل الحركة يوقف ArabDev الرسوم المتحركة. ويمكنك أيضًا تفعيل <strong>تقليل الحركة</strong> من الإعدادات ← المظهر، وهو يعمل على أي جهاز ويتبع حسابك.</li>
   <li>يعمل التخطيط من الهواتف الصغيرة إلى الشاشات العريضة، ويمكنك التكبير دون فقدان أي محتوى.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#accessibility-and-languages">سهولة الوصول</a><a href="#settings">الإعدادات</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الأسئلة الشائعة -->
-<article class="wiki-article" id="faq" data-title="الأسئلة الشائعة">
+<article class="wiki-article surface" id="faq" data-title="الأسئلة الشائعة">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › ابدأ من هنا</div>
-<h1 class="article-title">الأسئلة الشائعة</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">الأسئلة الشائعة</h1>
+</header>
+<div class="prose">
 
 <h2 id="faq-account">الحساب</h2>
 <h3 id="faq-free">هل ArabDev مجاني؟</h3>
@@ -1326,20 +1329,22 @@
 <p>نعم، راجع <a href="#contributing-and-license">المساهمة والترخيص</a>، أو راسل <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
 <h3 id="faq-contact">كيف أتواصل مع ArabDev؟</h3>
 <p>للمساعدة والأعطال والبلاغات راسل <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a>، وللرعاية والمساهمات والأسئلة الأخرى راسل <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>. راجع <a href="#contact">التواصل والدعم</a>.</p>
-<div class="categories">التصنيفات: <a href="#faq">المساعدة</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== حل المشكلات -->
-<article class="wiki-article" id="troubleshooting" data-title="حل المشكلات">
+<article class="wiki-article surface" id="troubleshooting" data-title="حل المشكلات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › المساعدة</div>
-<h1 class="article-title">حل المشكلات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">حل المشكلات</h1>
+</header>
+<div class="prose">
 <p>مشكلات شائعة وطرق حلها. الرسائل مقتبسة كما تظهر في الواجهة العربية.</p>
 
 <h2 id="troubleshooting-signin">تسجيل الدخول</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الرسالة أو العَرَض</th><th scope="col">ما الذي تفعله</th></tr></thead>
   <tbody>
     <tr><td>«البريد الإلكتروني أو كلمة المرور غير صحيحة.»</td><td>تحقق من كتابة البريد وتأكد أن مفتاح الحروف الكبيرة غير مفعّل. وإن لم تكن متأكدًا من كلمة المرور فاستخدم «نسيت كلمة المرور؟».</td></tr>
@@ -1357,7 +1362,7 @@
 
 <h2 id="troubleshooting-signup">إنشاء الحساب</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الرسالة</th><th scope="col">معناها</th></tr></thead>
   <tbody>
     <tr><td>«اسم المستخدم هذا مستخدم بالفعل.»</td><td>الاسم مأخوذ. جرّب إضافة أرقام أو شرطة سفلية.</td></tr>
@@ -1372,7 +1377,7 @@
 
 <h2 id="troubleshooting-uploads">رفع الصور</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الرسالة</th><th scope="col">ما الذي تفعله</th></tr></thead>
   <tbody>
     <tr><td>«يجب ألا يتجاوز حجم الصورة 5 ميغابايت.»</td><td>صدّر الصورة بحجم أصغر أو جودة أقل.</td></tr>
@@ -1398,20 +1403,22 @@
   <li><strong>الوضع الداكن لا يتبع جهازي.</strong> اضبط السمة على «حسب الجهاز».</li>
   <li><strong>«تعذر الاتصال بالخادم.»</strong> تحقق من اتصالك بالإنترنت وأعد تحميل الصفحة.</li>
 </ul>
-<div class="categories">التصنيفات: <a href="#troubleshooting">المساعدة</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== التواصل والدعم -->
-<article class="wiki-article" id="contact" data-title="التواصل والدعم">
+<article class="wiki-article surface" id="contact" data-title="التواصل والدعم">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › المساعدة</div>
-<h1 class="article-title">التواصل والدعم</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">التواصل والدعم</h1>
+</header>
+<div class="prose">
 <p>لـ ArabDev عنوانا بريد: واحد للحصول على المساعدة، وآخر لكل ما عدا ذلك. راسلنا بالعربية أو الإنجليزية، فكل رسالة يقرؤها شخص حقيقي. والمعلومات نفسها في <a href="https://arabdev.site/contact">صفحة «تواصل معنا»</a> داخل التطبيق، وتشرح صفحة <a href="https://arabdev.site/about">«عن ArabDev»</a> من يدير المنصة.</p>
 
 <h2 id="contact-addresses">أي عنوان تستخدم</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">العنوان</th><th scope="col">راسله بخصوص</th></tr></thead>
   <tbody>
     <tr><td><a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a></td><td>مشكلات حسابك أو تسجيل الدخول أو استعادة كلمة المرور؛ والأعطال وكل ما لا يعمل كما يصفه هذا الويكي؛ والإبلاغ عن منشورات أو تعليقات أو حسابات تخالف <a href="#community-guidelines">إرشادات المجتمع</a>؛ والمشكلات الأمنية؛ وطلبات الخصوصية مثل الحصول على نسخة من بياناتك.</td></tr>
@@ -1452,7 +1459,7 @@
 
 <h2 id="contact-sites">عناوين ArabDev</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">العنوان</th><th scope="col">ما هو</th></tr></thead>
   <tbody>
     <tr><td><a href="https://arabdev.site/" dir="ltr">arabdev.site</a></td><td>الصفحة الرئيسية: ما هو ArabDev، وأحدث منشورات المجتمع. متاحة للجميع.</td></tr>
@@ -1466,15 +1473,17 @@
 </table>
 </div>
 <p>لن يراسلك ArabDev إلا من عنوان ينتهي بـ <span dir="ltr">@arabdev.site</span>، ولن يطلب كلمة مرورك عبر البريد أبدًا. تعامل بحذر مع أي رسالة أخرى تدّعي أنها من ArabDev.</p>
-<div class="categories">التصنيفات: <a href="#troubleshooting">المساعدة</a> · <a href="#privacy-and-safety">الأمان</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== مسرد المصطلحات -->
-<article class="wiki-article" id="glossary" data-title="مسرد المصطلحات">
+<article class="wiki-article surface" id="glossary" data-title="مسرد المصطلحات">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › ابدأ من هنا</div>
-<h1 class="article-title">مسرد المصطلحات</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">مسرد المصطلحات</h1>
+</header>
+<div class="prose">
 <dl>
   <dt><strong>المحفوظات</strong></dt><dd>حفظ خاص لمنشور، يظهر في صفحة المحفوظات وفي تبويب المحفوظات في ملفك الشخصي.</dd>
   <dt><strong>الاسم الظاهر</strong></dt><dd>الاسم الذي يظهر في ملفك ومنشوراتك، بأي لغة، حتى 50 حرفًا.</dd>
@@ -1497,20 +1506,22 @@
   <dt><strong>الرائج</strong></dt><dd>منشورات آخر 7 أيام مرتبة حسب سرعة حصولها على الإعجابات والتعليقات وإعادات النشر.</dd>
   <dt><strong>اسم المستخدم</strong></dt><dd>معرّفك الفريد، ويُستخدم في عنوان ملفك وفي الإشارات.</dd>
 </dl>
-<div class="categories">التصنيفات: <a href="#glossary">مراجع</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== البنية -->
-<article class="wiki-article" id="developers-overview" data-title="نظرة على البنية">
+<article class="wiki-article surface" id="developers-overview" data-title="نظرة على البنية">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › للمطورين</div>
-<h1 class="article-title">نظرة على البنية</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">نظرة على البنية</h1>
+</header>
+<div class="prose">
 <p>ArabDev تطبيق ويب أحادي الصفحة تسنده واجهة REST برمجية. تصف هذه المقالة كيف تترابط الأجزاء.</p>
 
 <h2 id="developers-overview-stack">التقنيات</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الطبقة</th><th scope="col">التقنية</th></tr></thead>
   <tbody>
     <tr><td>واجهة المستخدم</td><td>React 19 وTypeScript وMaterial UI 9 وEmotion (مع إضافة لأنماط الاتجاه من اليمين لليسار)</td></tr>
@@ -1569,7 +1580,7 @@
 
 <h2 id="developers-overview-database">جداول قاعدة البيانات</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">الجدول</th><th scope="col">يحتوي على</th></tr></thead>
   <tbody>
     <tr><td><code>users</code></td><td>الحسابات: اسم المستخدم والبريد وبصمة كلمة المرور والحالة ونسخة الرموز</td></tr>
@@ -1590,15 +1601,17 @@
 </table>
 </div>
 <p>المفاتيح الأجنبية وأسماء المستخدمين والبريد وتواريخ الإنشاء والوسوم وعلاقات المتابعة كلها مفهرسة. وتعمل SQLite بوضع WAL مع فرض المفاتيح الأجنبية.</p>
-<div class="categories">التصنيفات: <a href="#developers-overview">المطورون</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== الاستضافة الذاتية -->
-<article class="wiki-article" id="self-hosting" data-title="التشغيل والاستضافة الذاتية">
+<article class="wiki-article surface" id="self-hosting" data-title="التشغيل والاستضافة الذاتية">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › للمطورين</div>
-<h1 class="article-title">التشغيل والاستضافة الذاتية</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">التشغيل والاستضافة الذاتية</h1>
+</header>
+<div class="prose">
 
 <h2 id="self-hosting-local">التشغيل محليًا</h2>
 <pre><code># Backend
@@ -1619,7 +1632,7 @@ npm run dev                   # http://localhost:5173</code></pre>
 
 <h2 id="self-hosting-config">الإعدادات</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">المتغير</th><th scope="col">القيمة الافتراضية</th><th scope="col">الغرض</th></tr></thead>
   <tbody>
     <tr><td><code>SECRET_KEY</code></td><td>قيمة للتطوير</td><td>توقيع رموز الوصول، وهو مطلوب في بيئة الإنتاج.</td></tr>
@@ -1677,15 +1690,17 @@ npm run dev                   # http://localhost:5173</code></pre>
 
 <h2 id="self-hosting-email">البريد الإلكتروني</h2>
 <p>يرسل ArabDev البريد عبر SMTP ‏(<code>backend/app/services/email_service.py</code>): رموز التأكيد والتنبيهات الأمنية وروابط استعادة كلمة المرور، كلٌّ بلغة القارئ ومعه نسخة نصية. وتعمل معه أي خدمة SMTP؛ ويرسل arabdev.site عبر خدمة بريد Google باسم <code>noreply@arabdev.site</code>. ودون <code>SMTP_HOST</code> تُكتب الرسائل في سجل الخادم، وهكذا تقرأ الرموز أثناء التطوير المحلي. وفي الإنتاج تبقى الرموز متوقفة حتى يُضبط SMTP، فلا يحبس غياب مزوّد البريد أحدًا خارج حسابه؛ وبعد ربط مزوّد سجّل الدخول مرة للتأكد من وصول الرموز.</p>
-<div class="categories">التصنيفات: <a href="#self-hosting">المطورون</a><a href="#developers-overview">التشغيل</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== مرجع الـ API -->
-<article class="wiki-article" id="api-reference" data-title="مرجع الـ API">
+<article class="wiki-article surface" id="api-reference" data-title="مرجع الـ API">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › للمطورين</div>
-<h1 class="article-title">مرجع الـ API</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">مرجع الـ API</h1>
+</header>
+<div class="prose">
 <p>كل ما يفعله التطبيق يمر عبر واجهة REST ذات إصدار تحت <code>/api/v1</code>. يُقدَّم التوثيق التفاعلي على <code>/api/docs</code> (Swagger UI) و<code>/api/redoc</code>، والوصف المقروء آليًا على <code>/api/v1/openapi.json</code>.</p>
 
 <h2 id="api-reference-auth">المصادقة</h2>
@@ -1708,7 +1723,7 @@ npm run dev                   # http://localhost:5173</code></pre>
 
 <h2 id="api-reference-endpoints">نقاط النهاية</h2>
 <div class="table-wrap">
-<table class="wikitable">
+<table>
   <thead><tr><th scope="col">المجموعة</th><th scope="col">نقاط النهاية</th></tr></thead>
   <tbody>
     <tr><td>المصادقة</td><td dir="ltr"><code>GET /auth/config</code>, <code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>POST /auth/verify</code>, <code>POST /auth/resend</code>, <code>POST /auth/refresh</code>, <code>POST /auth/logout</code>, <code>GET /auth/availability</code>, <code>POST /auth/forgot-password</code>, <code>POST /auth/reset-password</code></td></tr>
@@ -1743,15 +1758,17 @@ Content-Type: application/json
   "tags": ["fastapi", "databases"]
 }</code></pre>
 <p>الاستجابة هي المنشور الذي أُنشئ، مع HTML المنظَّف والوسوم والكاتب والعدادات وحالة إعجابك وحفظك وإعادة نشرك.</p>
-<div class="categories">التصنيفات: <a href="#api-reference">المطورون</a><a href="#developers-overview">الواجهة البرمجية</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <!-- ================================================================== المساهمة والترخيص -->
-<article class="wiki-article" id="contributing-and-license" data-title="المساهمة والترخيص">
+<article class="wiki-article surface" id="contributing-and-license" data-title="المساهمة والترخيص">
+<header class="page-header">
 <div class="breadcrumbs"><a href="#main-page">الصفحة الرئيسية</a> › للمطورين</div>
-<h1 class="article-title">المساهمة والترخيص</h1>
-<p class="article-tagline">من ويكي ArabDev، دليل المجتمع إلى ArabDev</p>
+<h1 class="page-title">المساهمة والترخيص</h1>
+</header>
+<div class="prose">
 
 <h2 id="contributing-and-license-license">الترخيص</h2>
 <p>ArabDev برمجية حرة صادرة بموجب <a href="https://arabdev.site/LICENSE.txt" target="_blank" rel="noopener">رخصة جنو العمومية العامة، الإصدار 3 أو أحدث</a> (GPL-3.0-or-later). باختصار:</p>
@@ -1779,8 +1796,8 @@ Content-Type: application/json
 
 <h2 id="contributing-and-license-translations">تحسين الترجمات</h2>
 <p>تعيش اللغتان في ملفي JSON بالمفاتيح نفسها. صيغ الجمع العربية (صفر، مفرد، مثنى، جمع قليل، جمع كثير، أخرى) مدعومة، ويجب ملؤها لكل نص يحتوي على رقم.</p>
-<div class="categories">التصنيفات: <a href="#contributing-and-license">المطورون</a><a href="#main-page">عن المشروع</a></div>
-<p class="article-footer">يصف الإصدار 1.2.1 من ArabDev · آخر تحديث في 5 أكتوبر 2026</p>
+</div>
+<p class="article-footer">يصف الإصدار 1.3.0 من ArabDev · آخر تحديث في 17 أكتوبر 2026</p>
 </article>
 
 <nav class="prev-next" data-prev-next aria-label="المقالة السابقة والتالية">
@@ -1788,15 +1805,45 @@ Content-Type: application/json
   <a class="next" href="#getting-started" hidden></a>
 </nav>
 </main>
+
+<aside class="aside" aria-label="عن هذه المقالة">
+  <section class="surface" data-toc-card hidden>
+    <h2 class="surface-heading">في هذه الصفحة</h2>
+    <ol class="link-list" data-toc></ol>
+  </section>
+  <section class="surface">
+    <h2 class="surface-heading">ArabDev</h2>
+    <dl class="facts">
+    <div><dt>أحدث إصدار</dt><dd>1.3.0، 17 أكتوبر 2026</dd></div>
+    <div><dt>أول إصدار</dt><dd>1.0.0، 19 سبتمبر 2026</dd></div>
+    <div><dt>اللغات</dt><dd>العربية والإنجليزية</dd></div>
+    <div><dt>الرخصة</dt><dd>GNU GPL v3</dd></div>
+    </dl>
+  </section>
+  <section class="surface">
+    <h2 class="surface-heading">تحتاج مساعدة؟</h2>
+    <div class="surface-body"><p>راسل <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> بخصوص حسابك أو عطل أو بلاغ، و<a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a> لأي شيء آخر.</p></div>
+  </section>
+</aside>
 </div>
 
-<footer class="site-footer">
-  <span dir="ltr">© 2026 ArabDev</span> ·
-  <a href="https://arabdev.site/dashboard">افتح ArabDev</a>
-  <a href="https://privacy.arabdev.site/ar/" target="_blank" rel="noopener">سياسة الخصوصية</a>
-  <a href="https://patch.arabdev.site/ar/" target="_blank" rel="noopener">ملاحظات الإصدار</a>
-  <a href="https://arabdev.site/LICENSE.txt" target="_blank" rel="noopener">رخصة GNU GPL الإصدار 3</a>
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <a class="logo" href="https://arabdev.site/" aria-label="ArabDev"><span dir="ltr"><span class="logo-arab">Arab</span>Dev</span></a>
+      <p>© 2026 ArabDev · مفتوح المصدر برخصة GNU GPL v3</p>
+    </div>
+    <nav aria-label="صفحات ArabDev الأخرى">
+      <a href="https://arabdev.site/">ArabDev</a>
+      <a href="https://privacy.arabdev.site/ar/">سياسة الخصوصية</a>
+      <a href="https://patch.arabdev.site/ar/">ملاحظات الإصدار</a>
+      <a href="https://github.com/fut0r/Arabdev">الكود المصدري</a>
+      <a href="https://arabdev.site/LICENSE.txt">الرخصة</a>
+    </nav>
+  </div>
 </footer>
+<script src="../assets/site.js"></script>
 <script src="../assets/wiki.js"></script>
 </body>
 </html>
+

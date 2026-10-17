@@ -1,32 +1,10 @@
-/* ArabDev Patch notes: live change counts, type filters, search, and section highlighting.
-   Every change is listed in the HTML, so the notes are complete without JavaScript. */
+/* ArabDev Patch notes: change counts, the type tabs, the filter box, and the side column that
+   follows the release being read. Every change is in the HTML, so the notes are complete
+   without JavaScript. */
 (function () {
   'use strict';
 
   var root = document.documentElement;
-
-  /* ---------- links between the ArabDev sites ----------
-     In production each site has its own address: arabdev.site, wiki.arabdev.site,
-     privacy.arabdev.site and patch.arabdev.site. On a development machine the Vite server serves
-     them all from one origin (/wiki/, /privacy/, /patch-notes/), so links are kept local there. */
-  var isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-  if (isLocal) {
-    var localPaths = [
-      ['https://wiki.arabdev.site/', '/wiki/'],
-      ['https://privacy.arabdev.site/', '/privacy/'],
-      ['https://patch.arabdev.site/', '/patch-notes/'],
-      ['https://arabdev.site/', '/'],
-    ];
-    document.querySelectorAll('a[href^="https://"]').forEach(function (link) {
-      var href = link.getAttribute('href');
-      localPaths.forEach(function (pair) {
-        if (href.indexOf(pair[0]) === 0) link.setAttribute('href', pair[1] + href.slice(pair[0].length));
-      });
-    });
-  } else {
-    // Remember the reader's language, so this site's front page opens in it next time.
-    try { localStorage.setItem('arabdev.lang', root.lang === 'ar' ? 'ar' : 'en'); } catch (e) { /* storage unavailable */ }
-  }
   var lang = root.lang === 'ar' ? 'ar' : 'en';
   var plural = window.Intl && Intl.PluralRules ? new Intl.PluralRules(lang) : { select: function (n) { return n === 1 ? 'one' : 'other'; } };
   // Arabic counted nouns change with the number: تغيير واحد، تغييران، 3 تغييرات، 11 تغييرًا، 100 تغيير.
@@ -35,34 +13,26 @@
     ar: { zero: 'لا تغييرات', one: 'تغيير واحد', two: 'تغييران', few: '# تغييرات', many: '# تغييرًا', other: '# تغيير' },
   }[lang];
   function countChanges(n) {
-    var form = changesWord[plural.select(n)] || changesWord.other;
-    return form.replace('#', String(n));
+    return (changesWord[plural.select(n)] || changesWord.other).replace('#', String(n));
   }
   var text = {
     en: {
       showing: function (shown, total) { return 'Showing ' + shown + ' of ' + countChanges(total); },
-      clear: 'Clear filters',
+      clear: 'Show everything',
       areaCount: function (shown, total) { return shown === total ? countChanges(total) : shown + ' of ' + total; },
+      inRelease: function (version) { return 'In ' + version; },
     },
     ar: {
       showing: function (shown, total) { return 'عرض ' + shown + ' من أصل ' + countChanges(total); },
-      clear: 'مسح عوامل التصفية',
+      clear: 'اعرض الكل',
       areaCount: function (shown, total) { return shown === total ? countChanges(total) : shown + ' من ' + total; },
+      inRelease: function (version) { return 'في ' + version; },
     },
   }[lang];
 
-  /* ---------- theme (remembered in this site's browser storage) ---------- */
-  var themeButton = document.querySelector('[data-theme-toggle]');
-  if (themeButton) {
-    themeButton.addEventListener('click', function () {
-      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-      root.setAttribute('data-theme', next);
-      try { localStorage.setItem('arabdev.mode', next); } catch (e) { /* storage unavailable */ }
-    });
-  }
-
   var changes = Array.prototype.slice.call(document.querySelectorAll('.changes li[data-type]'));
   var areas = Array.prototype.slice.call(document.querySelectorAll('.area'));
+  var releases = Array.prototype.slice.call(document.querySelectorAll('.release[id]'));
   var filterButtons = Array.prototype.slice.call(document.querySelectorAll('[data-filter]'));
   var input = document.querySelector('[data-search]');
   var status = document.querySelector('[data-filter-status]');
@@ -70,7 +40,7 @@
   var extras = Array.prototype.slice.call(document.querySelectorAll('[data-hide-when-filtered]'));
   var langSwitch = document.querySelector('[data-lang-switch]');
 
-  /* ---------- counts: always computed from the list itself, so they can never drift ---------- */
+  /* Counts come from the list itself, so they can't drift from it. */
   var totals = { all: changes.length };
   var originals = new WeakMap();
   changes.forEach(function (item) {
@@ -142,6 +112,10 @@
       var counter = area.querySelector('.area-count');
       if (counter) counter.textContent = text.areaCount(visible, items.length);
     });
+    releases.forEach(function (release) {
+      var any = release.querySelectorAll('.changes li[data-type]:not([hidden])').length > 0;
+      release.hidden = !any && (activeType !== 'all' || Boolean(term));
+    });
     var filtering = activeType !== 'all' || Boolean(term);
     extras.forEach(function (el) { el.hidden = filtering; });
     if (status) {
@@ -165,12 +139,79 @@
       button.setAttribute('aria-pressed', String(button.getAttribute('data-filter') === activeType));
     });
     syncUrl(raw);
+    spy();
+  }
+
+  /* ---------- the release being read ---------- */
+  var navLinks = {};
+  document.querySelectorAll('.nav a[href^="#"]').forEach(function (link) {
+    navLinks[link.getAttribute('href').slice(1)] = link;
+  });
+  var areasCard = document.querySelector('[data-areas-card]');
+  var areasTitle = document.querySelector('[data-areas-title]');
+  var areasList = document.querySelector('[data-areas]');
+  var currentRelease = null;
+  var currentArea = null;
+
+  function fillAreas(release) {
+    if (!areasCard) return;
+    areasList.innerHTML = '';
+    var sections = release.querySelectorAll('.area[id], .info-block[id]');
+    sections.forEach(function (section) {
+      if (section.hidden) return;
+      var heading = section.querySelector('h3');
+      var item = document.createElement('li');
+      var link = document.createElement('a');
+      link.href = '#' + section.id;
+      link.textContent = heading ? heading.firstChild.textContent.trim() : section.id;
+      item.appendChild(link);
+      areasList.appendChild(item);
+    });
+    var version = release.querySelector('h2');
+    areasTitle.textContent = text.inRelease(version ? version.textContent.trim() : '');
+    areasCard.hidden = !areasList.children.length;
+  }
+
+  function spy() {
+    var line = window.innerHeight * 0.25;
+    var release = null;
+    releases.forEach(function (el) {
+      if (!el.hidden && el.getBoundingClientRect().top - line <= 0) release = el;
+    });
+    release = release || releases.filter(function (el) { return !el.hidden; })[0] || null;
+    if (release !== currentRelease) {
+      if (currentRelease && navLinks[currentRelease.id]) navLinks[currentRelease.id].classList.remove('active');
+      currentRelease = release;
+      if (release) {
+        if (navLinks[release.id]) navLinks[release.id].classList.add('active');
+        fillAreas(release);
+      }
+    }
+    var area = null;
+    if (release) {
+      release.querySelectorAll('.area[id], .info-block[id]').forEach(function (el) {
+        if (!el.hidden && el.getBoundingClientRect().top - line <= 0) area = el.id;
+      });
+    }
+    if (area !== currentArea) {
+      currentArea = area;
+      if (areasList) {
+        areasList.querySelectorAll('a').forEach(function (link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + area);
+        });
+      }
+      if (langSwitch) {
+        var base = langSwitch.getAttribute('href').split('#')[0];
+        langSwitch.setAttribute('href', base + (area ? '#' + area : release ? '#' + release.id : ''));
+      }
+    }
   }
 
   filterButtons.forEach(function (button) {
     button.addEventListener('click', function () {
       var type = button.getAttribute('data-filter');
       activeType = activeType === type && type !== 'all' ? 'all' : type;
+      currentRelease = null;
       apply();
     });
   });
@@ -178,52 +219,22 @@
     var timer = null;
     input.addEventListener('input', function () {
       clearTimeout(timer);
-      timer = setTimeout(apply, 150);
+      timer = setTimeout(function () { currentRelease = null; apply(); }, 150);
     });
     input.addEventListener('keydown', function (event) {
       if (event.key === 'Escape') {
         input.value = '';
+        currentRelease = null;
         apply();
       }
     });
-    document.addEventListener('keydown', function (event) {
-      if (event.key === '/' && document.activeElement === document.body) {
-        event.preventDefault();
-        input.focus();
-      }
-    });
   }
-  apply();
 
-  /* ---------- highlight the section being read in the sidebar ---------- */
-  var sideLinks = {};
-  document.querySelectorAll('.side-nav a[href^="#"]').forEach(function (link) {
-    sideLinks[link.getAttribute('href').slice(1)] = link;
-  });
-  var tracked = Array.prototype.slice.call(document.querySelectorAll('.area[id], .info-block[id]'));
-  var current = null;
   var ticking = false;
-  function spy() {
-    ticking = false;
-    var line = window.innerHeight * 0.25;
-    var active = null;
-    tracked.forEach(function (el) {
-      if (!el.hidden && el.getBoundingClientRect().top - line <= 0) active = el.id;
-    });
-    if (active === current) return;
-    if (current && sideLinks[current]) sideLinks[current].classList.remove('active');
-    current = active;
-    if (current && sideLinks[current]) sideLinks[current].classList.add('active');
-    if (langSwitch) {
-      var base = langSwitch.getAttribute('href').split('#')[0];
-      langSwitch.setAttribute('href', base + (current ? '#' + current : ''));
-    }
-  }
   window.addEventListener('scroll', function () {
-    if (!ticking) {
-      ticking = true;
-      window.requestAnimationFrame(spy);
-    }
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () { ticking = false; spy(); });
   }, { passive: true });
-  spy();
+  apply();
 })();
