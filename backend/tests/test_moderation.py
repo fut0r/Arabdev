@@ -329,3 +329,14 @@ def test_the_data_download_lists_reports_sent_but_not_who_reported_you(client, m
     theirs = client.get(f"{API}/users/me/export", headers=author.headers).json()
     assert theirs["reports_sent"] == []
     assert "omar" not in str(theirs)
+
+
+def test_hidden_posts_do_not_make_a_tag_popular(client, make_user, make_post, db):
+    author = make_user("layla")
+    hidden = make_post(author, title="Hidden", tags=["secret-tag"])
+    make_post(author, title="Shown", tags=["open-tag"])
+    db.execute(update(Post).where(Post.id == hidden["id"]).values(hidden_at=utcnow()))
+    db.commit()
+
+    popular = [tag["slug"] for tag in client.get(f"{API}/tags/popular").json()]
+    assert "open-tag" in popular and "secret-tag" not in popular

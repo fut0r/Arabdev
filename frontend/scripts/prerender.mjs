@@ -51,8 +51,9 @@ const everyLanguage = (build) => languages.map((language) => inLanguage(language
 function home(t) {
   const h = t.home;
   return [
-    `<h1>${esc(h.heroLine1)} ${esc(h.heroHighlight)}</h1>`,
-    p(h.heroLead),
+    `<h1>${esc(h.title)}</h1>`,
+    p(h.lead),
+    p(h.note),
     `<p>${[
       link('/explore', h.browse),
       link('/register', t.common.signUp),
@@ -62,21 +63,13 @@ function home(t) {
     h2(h.featuresTitle),
     p(h.featuresSub),
     list([1, 2, 3, 4, 5, 6].map((n) => pair(h[`f${n}Title`], h[`f${n}Body`]))),
-    h2(h.aboutTitle),
-    p(h.aboutBody1),
-    p(h.aboutBody2),
-    list([1, 2, 3, 4].map((n) => pair(h[`about${n}Title`], h[`about${n}Body`]))),
-    h2(h.stepsTitle),
-    list([1, 2, 3].map((n) => pair(h[`step${n}Title`], h[`step${n}Body`]))),
+    h2(h.openTitle),
+    p(h.openBody),
     h2(h.privacyTitle),
     p(h.privacyBody),
-    list([1, 2, 3, 4].map((n) => pair(h[`p${n}Title`], h[`p${n}Body`]))),
-    h2(h.contactTitle),
-    p(h.contactSub),
-    list([
-      `${pair(h.contactSupportTitle, h.contactSupportBody)} ${mail(SUPPORT_EMAIL)}`,
-      `${pair(h.contactHelloTitle, h.contactHelloBody)} ${mail(HELLO_EMAIL)}`,
-    ]),
+    h2(h.finalTitle),
+    p(h.finalBody),
+    `<p>${esc(t.contact.supportTitle)}: ${mail(SUPPORT_EMAIL)} · ${esc(t.contact.helloTitle)}: ${mail(HELLO_EMAIL)}</p>`,
   ].join('');
 }
 

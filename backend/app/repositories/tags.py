@@ -4,6 +4,7 @@ from sqlalchemy import Select, func, or_, select
 from sqlalchemy.orm import Session
 
 from app.models import Interest, Post, Tag, post_tags
+from app.repositories.posts import visible
 from app.utils.text import escape_like, slugify_tag
 
 
@@ -28,12 +29,14 @@ def get_or_create(db: Session, names: list[str]) -> list[Tag]:
 
 
 def stats_stmt(since: datetime | None = None) -> Select:
-    """Tags with how many posts use them, most used first."""
+    """Tags with how many visible posts use them, most used first."""
     count = func.count(post_tags.c.post_id).label("posts_count")
     stmt = (
         select(Tag.id, Tag.slug, Tag.name, count)
         .join(post_tags, post_tags.c.tag_id == Tag.id)
         .join(Post, Post.id == post_tags.c.post_id)
+        # Posts hidden for review, or by suspended accounts, do not make a tag popular.
+        .where(visible())
         .group_by(Tag.id, Tag.slug, Tag.name)
         .order_by(count.desc(), Tag.slug)
     )
