@@ -72,9 +72,7 @@ def update_username(data: UsernameUpdate, db: DbSession, user: CurrentUser) -> M
 )
 def update_email(data: EmailUpdate, db: DbSession, user: CurrentUser, request: Request) -> EmailChangeOut:
     if settings.email_codes_required:
-        challenge = user_service.start_email_change(
-            db, user, data.email, data.current_password, ip=client_ip(request)
-        )
+        challenge = user_service.start_email_change(db, user, data.email, data.current_password, ip=client_ip(request))
         return EmailChangeOut(status="verification_required", challenge=challenge_out(challenge))
     updated = user_service.update_email(db, user, data.email, data.current_password)
     return EmailChangeOut(status="updated", user=presenters.me_out(db, updated))
@@ -224,9 +222,7 @@ def my_bookmarks(db: DbSession, user: CurrentUser, params: Pagination) -> Page[P
 
 
 @router.get("/recommended", response_model=list[UserCard], summary="Developers to follow, based on interests")
-def recommended(
-    db: DbSession, viewer: OptionalUser, limit: Annotated[int, Query(ge=1, le=30)] = 6
-) -> list[UserCard]:
+def recommended(db: DbSession, viewer: OptionalUser, limit: Annotated[int, Query(ge=1, le=30)] = 6) -> list[UserCard]:
     return user_service.recommended(db, viewer, limit)
 
 

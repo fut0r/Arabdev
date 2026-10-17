@@ -108,7 +108,9 @@ def test_notifications_and_preferences(client, make_user, make_post):
     assert client.get(f"{API}/notifications/unread-count", headers=author.headers).json() == {"count": 0}
 
     # Preferences are enforced by the server.
-    client.patch(f"{API}/users/me/settings", json={"notify_likes": False, "mentions_from": "following"}, headers=author.headers)
+    client.patch(
+        f"{API}/users/me/settings", json={"notify_likes": False, "mentions_from": "following"}, headers=author.headers
+    )
     stranger = make_user("stranger")
     client.post(f"{API}/posts/{post['id']}/like", headers=stranger.headers)
     make_post(stranger, content="<p>hey @layla</p>")
@@ -168,8 +170,16 @@ def test_recommendations_use_interests_and_follows(client, make_user):
     hidden = make_user("hidden_rust")
     followed = make_user("already")
 
-    client.put(f"{API}/users/me/interests", json={"interest_ids": [interests["rust"], interests["linux"]]}, headers=viewer.headers)
-    client.put(f"{API}/users/me/interests", json={"interest_ids": [interests["rust"], interests["linux"]]}, headers=rustacean.headers)
+    client.put(
+        f"{API}/users/me/interests",
+        json={"interest_ids": [interests["rust"], interests["linux"]]},
+        headers=viewer.headers,
+    )
+    client.put(
+        f"{API}/users/me/interests",
+        json={"interest_ids": [interests["rust"], interests["linux"]]},
+        headers=rustacean.headers,
+    )
     client.put(f"{API}/users/me/interests", json={"interest_ids": [interests["python"]]}, headers=pythonista.headers)
     client.put(f"{API}/users/me/interests", json={"interest_ids": [interests["rust"]]}, headers=hidden.headers)
     client.patch(f"{API}/users/me/settings", json={"discoverable": False}, headers=hidden.headers)
@@ -183,9 +193,7 @@ def test_recommendations_use_interests_and_follows(client, make_user):
 
 def test_search(client, make_user, make_post):
     author = make_user("layla_dev")
-    client.patch(
-        f"{API}/users/me/profile", json={"display_name": "ليلى حسن", "bio": "React"}, headers=author.headers
-    )
+    client.patch(f"{API}/users/me/profile", json={"display_name": "ليلى حسن", "bio": "React"}, headers=author.headers)
     make_post(author, title="Understanding Rust lifetimes", tags=["rust"])
     make_post(author, title="100% coverage is a trap")
 
@@ -193,7 +201,10 @@ def test_search(client, make_user, make_post):
     assert results["posts"]["total"] == 1
     assert results["tags"]["items"][0] == {"slug": "rust", "name": "rust", "posts_count": 1}
 
-    assert client.get(f"{API}/search", params={"q": "ليلى", "type": "users"}).json()["users"]["items"][0]["username"] == "layla_dev"
+    assert (
+        client.get(f"{API}/search", params={"q": "ليلى", "type": "users"}).json()["users"]["items"][0]["username"]
+        == "layla_dev"
+    )
     assert client.get(f"{API}/search", params={"q": "@layla", "type": "users"}).json()["users"]["total"] == 1
 
     # LIKE wildcards in the query are treated literally.

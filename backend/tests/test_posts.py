@@ -13,7 +13,7 @@ def test_post_html_is_sanitized(client, make_user, make_post):
         author,
         content=(
             '<p style="text-align: center; position: fixed">Hi <strong onclick="steal()">there</strong></p>'
-            '<script>alert(1)</script>'
+            "<script>alert(1)</script>"
             '<p><span style="color: var(--ad-text-red); font-family: Anton; font-size: 24px">styled</span>'
             '<span style="color: #00ff00; font-size: 99px; font-family: Comic Sans">ignored</span>'
             '<a href="javascript:alert(1)">bad</a><a href="https://arabdev.dev">good</a></p>'
@@ -37,7 +37,9 @@ def test_post_html_is_sanitized(client, make_user, make_post):
 
 def test_post_requires_content(client, make_user):
     author = make_user("layla")
-    response = client.post(f"{API}/posts", json={"title": "Only a title", "content_html": "<p> </p>"}, headers=author.headers)
+    response = client.post(
+        f"{API}/posts", json={"title": "Only a title", "content_html": "<p> </p>"}, headers=author.headers
+    )
     assert response.status_code == 422
     assert response.json()["code"] == "post_empty"
 
@@ -119,7 +121,9 @@ def test_tags_are_normalized_and_linked_to_interests(client, make_user, make_pos
 def test_too_many_tags(client, make_user):
     author = make_user("layla")
     response = client.post(
-        f"{API}/posts", json={"content_html": "<p>x</p>", "tags": ["a1", "b1", "c1", "d1", "e1", "f1"]}, headers=author.headers
+        f"{API}/posts",
+        json={"content_html": "<p>x</p>", "tags": ["a1", "b1", "c1", "d1", "e1", "f1"]},
+        headers=author.headers,
     )
     assert response.status_code == 422
 
@@ -131,13 +135,16 @@ def test_drafts_and_publishing_from_a_draft(client, make_user):
     assert empty["total"] == 0
 
     draft = client.post(
-        f"{API}/drafts", json={"title": "WIP", "content_html": "<p>half done</p>", "tags": ["rust"]}, headers=author.headers
+        f"{API}/drafts",
+        json={"title": "WIP", "content_html": "<p>half done</p>", "tags": ["rust"]},
+        headers=author.headers,
     ).json()
     assert draft["tags"] == ["rust"]
     assert client.get(f"{API}/drafts/{draft['id']}", headers=other.headers).status_code == 404
 
     updated = client.put(
-        f"{API}/drafts/{draft['id']}", json={"title": "Done", "content_html": "<p>finished</p>", "tags": ["rust"]},
+        f"{API}/drafts/{draft['id']}",
+        json={"title": "Done", "content_html": "<p>finished</p>", "tags": ["rust"]},
         headers=author.headers,
     ).json()
     assert updated["title"] == "Done"

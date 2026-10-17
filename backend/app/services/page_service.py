@@ -103,8 +103,9 @@ def _fetch_shell() -> str | None:
     if not url.startswith(("http://", "https://")):
         return None
     try:
-        request = urllib.request.Request(url, headers={"User-Agent": "ArabDev-pages/1.0"})
-        with urllib.request.urlopen(request, timeout=4) as response:  # noqa: S310 (our own address)
+        # Our own address from settings, and only http(s) (checked above).
+        request = urllib.request.Request(url, headers={"User-Agent": "ArabDev-pages/1.0"})  # noqa: S310
+        with urllib.request.urlopen(request, timeout=4) as response:  # noqa: S310
             html = response.read(512_000).decode("utf-8", "replace")
     except Exception:
         logger.warning("Could not fetch the app shell from %s", url, exc_info=True)
@@ -162,9 +163,7 @@ def _set_meta(html: str, attribute: str, key: str, content: str) -> str:
 def render(page: Page, shell: str) -> str:
     full_title = f"{page.title} · {SITE_NAME}" if page.title else SITE_NAME
     url = _absolute(page.path)
-    html = re.sub(
-        r"<title>.*?</title>", lambda _: f"<title>{escape(full_title)}</title>", shell, count=1, flags=re.S
-    )
+    html = re.sub(r"<title>.*?</title>", lambda _: f"<title>{escape(full_title)}</title>", shell, count=1, flags=re.S)
     html = _set_meta(html, "name", "description", page.description)
     html = _set_meta(html, "property", "og:title", full_title)
     html = _set_meta(html, "property", "og:description", page.description)

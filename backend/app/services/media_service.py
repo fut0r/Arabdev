@@ -171,4 +171,3 @@ def load_file(db: Session, key: str) -> Media | None:
 
 def storage_keys_for_user(db: Session, user_id: int) -> list[str]:
     return list(db.scalars(select(Media.storage_key).where(Media.owner_id == user_id)))
-

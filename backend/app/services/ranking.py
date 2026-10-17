@@ -91,7 +91,7 @@ def _candidates(db: Session, now: datetime) -> list[Post]:
 
 
 def _counts(db: Session, stmt) -> dict[int, int]:
-    return {key: count for key, count in db.execute(stmt).all()}
+    return dict(db.execute(stmt).tuples().all())
 
 
 def diversify(posts: list[Post]) -> list[Post]:
@@ -101,7 +101,7 @@ def diversify(posts: list[Post]) -> list[Post]:
     pending = deque(posts)
 
     def fits(post: Post) -> bool:
-        recent = result[-(DIVERSITY_WINDOW - 1):]
+        recent = result[-(DIVERSITY_WINDOW - 1) :]
         return sum(1 for other in recent if other.author_id == post.author_id) < MAX_PER_WINDOW
 
     while pending or waiting:

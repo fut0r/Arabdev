@@ -6,6 +6,7 @@ such as Vercel). An S3-compatible backend only needs to implement StorageBackend
 returned from get_storage(); nothing else changes.
 """
 
+import contextlib
 from functools import lru_cache
 from pathlib import Path
 from typing import Protocol
@@ -43,10 +44,8 @@ class LocalStorage:
         path.write_bytes(data)
 
     def delete(self, key: str) -> None:
-        try:
+        with contextlib.suppress(OSError, ValueError):
             self._path(key).unlink(missing_ok=True)
-        except (OSError, ValueError):
-            pass
 
     def url(self, key: str) -> str:
         return f"{self.base_url}/{key}"

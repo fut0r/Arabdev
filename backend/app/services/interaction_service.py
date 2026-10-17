@@ -61,9 +61,7 @@ def like(db: Session, user: User, post_id: int) -> PostCounters:
 def unlike(db: Session, user: User, post_id: int) -> PostCounters:
     post = get_post_or_404(db, post_id)
     if _remove(db, Like, user, post, "likes_count"):
-        notification_service.withdraw(
-            db, recipient_id=post.author_id, actor_id=user.id, kind="like", post_id=post.id
-        )
+        notification_service.withdraw(db, recipient_id=post.author_id, actor_id=user.id, kind="like", post_id=post.id)
     db.commit()
     return _counters(db, user, post)
 
@@ -88,9 +86,7 @@ def repost(db: Session, user: User, post_id: int) -> PostCounters:
     if post.author_id == user.id:
         raise BadRequest("You can't repost your own post", "cannot_repost_own")
     if _add(db, Repost, user, post, "reposts_count"):
-        notification_service.notify(
-            db, recipient_id=post.author_id, actor_id=user.id, kind="repost", post_id=post.id
-        )
+        notification_service.notify(db, recipient_id=post.author_id, actor_id=user.id, kind="repost", post_id=post.id)
     db.commit()
     return _counters(db, user, post)
 
@@ -98,8 +94,6 @@ def repost(db: Session, user: User, post_id: int) -> PostCounters:
 def unrepost(db: Session, user: User, post_id: int) -> PostCounters:
     post = get_post_or_404(db, post_id)
     if _remove(db, Repost, user, post, "reposts_count"):
-        notification_service.withdraw(
-            db, recipient_id=post.author_id, actor_id=user.id, kind="repost", post_id=post.id
-        )
+        notification_service.withdraw(db, recipient_id=post.author_id, actor_id=user.id, kind="repost", post_id=post.id)
     db.commit()
     return _counters(db, user, post)

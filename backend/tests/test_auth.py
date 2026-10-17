@@ -62,7 +62,9 @@ def test_duplicate_username_and_email(client, make_user):
     assert taken_name.status_code == 409
     assert taken_name.json() == {"detail": "Username is already taken", "code": "username_taken", "field": "username"}
 
-    taken_email = client.post(f"{API}/auth/register", json=register_payload(username="someone", email="OMAR@example.com"))
+    taken_email = client.post(
+        f"{API}/auth/register", json=register_payload(username="someone", email="OMAR@example.com")
+    )
     assert taken_email.status_code == 409
     assert taken_email.json()["code"] == "email_taken"
 
@@ -85,7 +87,9 @@ def test_login(client, make_user):
     unknown = client.post(f"{API}/auth/login", json={"email": "ghost@example.com", "password": PASSWORD})
     assert unknown.json()["code"] == "invalid_credentials"  # same answer: no account enumeration
 
-    ok = client.post(f"{API}/auth/login", json={"email": "LAYLA@example.com", "password": PASSWORD, "remember_me": True})
+    ok = client.post(
+        f"{API}/auth/login", json={"email": "LAYLA@example.com", "password": PASSWORD, "remember_me": True}
+    )
     assert ok.status_code == 200
     tokens = ok.json()["tokens"]
     me = client.get(f"{API}/users/me", headers={"Authorization": f"Bearer {tokens['access_token']}"})
@@ -187,7 +191,11 @@ def test_change_password_invalidates_existing_access_tokens(client, make_user):
     account = make_user("layla")
     wrong = client.post(
         f"{API}/users/me/password",
-        json={"current_password": "Wrong1234", "new_password": "Moonlight2027", "new_password_confirm": "Moonlight2027"},
+        json={
+            "current_password": "Wrong1234",
+            "new_password": "Moonlight2027",
+            "new_password_confirm": "Moonlight2027",
+        },
         headers=account.headers,
     )
     assert wrong.json()["code"] == "current_password_invalid"

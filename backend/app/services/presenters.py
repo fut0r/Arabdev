@@ -24,9 +24,7 @@ def avatar_url(user: User) -> str | None:
 
 
 def user_summary(user: User) -> UserSummary:
-    return UserSummary(
-        id=user.id, username=user.username, display_name=user.display_name, avatar_url=avatar_url(user)
-    )
+    return UserSummary(id=user.id, username=user.username, display_name=user.display_name, avatar_url=avatar_url(user))
 
 
 def interests_out(user: User) -> list[InterestOut]:

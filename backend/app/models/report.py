@@ -56,8 +56,6 @@ class Report(Base):
     action: Mapped[str | None] = mapped_column(String(80), nullable=True)
     # Shown to the author in the decision email; internal notes do not belong here.
     resolution_note: Mapped[str | None] = mapped_column(String(500), nullable=True)
-    moderator_id: Mapped[int | None] = mapped_column(
-        ID, ForeignKey("users.id", ondelete="SET NULL"), nullable=True
-    )
+    moderator_id: Mapped[int | None] = mapped_column(ID, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
     resolved_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)

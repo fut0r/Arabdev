@@ -86,9 +86,10 @@ def create(db: Session, reporter: User, post_id: int, data: ReportCreate) -> Rep
 
     rate_limit.limit_identifier("report_account", str(reporter.id), DAILY_REPORTS_PER_ACCOUNT, 86400)
 
-    open_before = db.scalar(
-        select(func.count()).select_from(Report).where(Report.post_id == post.id, Report.status == "open")
-    ) or 0
+    open_before = (
+        db.scalar(select(func.count()).select_from(Report).where(Report.post_id == post.id, Report.status == "open"))
+        or 0
+    )
     report = Report(
         post_id=post.id,
         post_author_id=post.author_id,
@@ -103,34 +104,36 @@ def create(db: Session, reporter: User, post_id: int, data: ReportCreate) -> Rep
 
     author = post.author
     open_now = open_before + 1
-    newly_hidden = (
-        post.hidden_at is None
-        and open_now >= settings.report_auto_hide_threshold
-        and not is_admin(author)
-    )
+    newly_hidden = post.hidden_at is None and open_now >= settings.report_auto_hide_threshold and not is_admin(author)
     if newly_hidden:
         post.hidden_at = utcnow()
     db.commit()
 
     language = _language(db, author)
     if open_before == 0:
-        _safely("report received", lambda: email_service.send_report_received(
-            author.email, language, post.title, data.reason, hidden=newly_hidden
-        ))
+        _safely(
+            "report received",
+            lambda: email_service.send_report_received(
+                author.email, language, post.title, data.reason, hidden=newly_hidden
+            ),
+        )
     elif newly_hidden:
         _safely("post hidden", lambda: email_service.send_post_hidden(author.email, language, post.title))
-    _safely("moderator", lambda: email_service.send_report_to_moderators(
-        report_id=report.id,
-        post_id=post.id,
-        post_title=post.title,
-        post_excerpt=report.post_excerpt,
-        reason=data.reason,
-        details=data.details,
-        reporter=reporter.username,
-        author=author.username,
-        open_reports=open_now,
-        hidden=post.hidden_at is not None,
-    ))
+    _safely(
+        "moderator",
+        lambda: email_service.send_report_to_moderators(
+            report_id=report.id,
+            post_id=post.id,
+            post_title=post.title,
+            post_excerpt=report.post_excerpt,
+            reason=data.reason,
+            details=data.details,
+            reporter=reporter.username,
+            author=author.username,
+            open_reports=open_now,
+            hidden=post.hidden_at is not None,
+        ),
+    )
     return ReportAck(detail="Thanks. The ArabDev team will review this post.")
 
 
@@ -177,7 +180,9 @@ def _cases(db: Session, viewer: User, groups: list[list[Report]]) -> list[Report
         {r.reporter_id for r in reports} | {r.moderator_id for r in reports} | {r.post_author_id for r in reports},
     )
     post_ids = [group[0].post_id for group in groups if group[0].post_id is not None]
-    posts = {post.id: post for post in db.scalars(select(Post).where(Post.id.in_(post_ids))).unique()} if post_ids else {}
+    posts = (
+        {post.id: post for post in db.scalars(select(Post).where(Post.id.in_(post_ids))).unique()} if post_ids else {}
+    )
     outs = presenters.post_outs(db, list(posts.values()), viewer.id)
     post_outs = {out.id: out for out in outs}
     cases = []
@@ -318,30 +323,34 @@ def decide(db: Session, moderator: User, report_id: int, data: DecisionIn) -> De
 
     if author is not None:
         language = _language(db, author)
-        _safely("decision", lambda: email_service.send_decision_to_author(
-            author.email,
-            language,
-            title,
-            removed="post_removed" in actions,
-            restricted_until=format_date(restricted_until, language) if restricted_until else None,
-            suspended="author_suspended" in actions,
-            note=data.note,
-        ))
+        _safely(
+            "decision",
+            lambda: email_service.send_decision_to_author(
+                author.email,
+                language,
+                title,
+                removed="post_removed" in actions,
+                restricted_until=format_date(restricted_until, language) if restricted_until else None,
+                suspended="author_suspended" in actions,
+                note=data.note,
+            ),
+        )
     reporters = _users(db, {item.reporter_id for item in case})
     for reporter in reporters.values():
         language = _language(db, reporter)
-        _safely("reporter outcome", lambda reporter=reporter, language=language: email_service.send_decision_to_reporter(
-            reporter.email, language, title, action_taken=bool(actions)
-        ))
+        _safely(
+            "reporter outcome",
+            lambda reporter=reporter, language=language: email_service.send_decision_to_reporter(
+                reporter.email, language, title, action_taken=bool(actions)
+            ),
+        )
     return DecisionOut(status=status, actions=actions, reports_resolved=len(case))  # type: ignore[arg-type]
 
 
 def restricted_accounts(db: Session) -> list[RestrictedAccount]:
     now = utcnow()
     users = db.scalars(
-        select(User)
-        .where(or_(User.restricted_until > now, User.is_active.is_(False)))
-        .order_by(User.username)
+        select(User).where(or_(User.restricted_until > now, User.is_active.is_(False))).order_by(User.username)
     ).unique()
     return [
         RestrictedAccount(

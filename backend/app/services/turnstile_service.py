@@ -25,7 +25,7 @@ from app.core.rate_limit import client_ip
 
 logger = logging.getLogger("arabdev.turnstile")
 
-TOKEN_HEADER = "X-Turnstile-Token"
+TOKEN_HEADER = "X-Turnstile-Token"  # noqa: S105 - a header name, not a secret
 MAX_TOKEN_LENGTH = 2048
 
 # Cloudflare's own wording, mapped to what the visitor should do about it.
@@ -40,13 +40,14 @@ def _post(token: str, remote_ip: str | None, idempotency_key: str) -> dict:
     form = {"secret": settings.turnstile_secret_key or "", "response": token, "idempotency_key": idempotency_key}
     if remote_ip:
         form["remoteip"] = remote_ip
-    request = urllib.request.Request(
+    # The verify URL is a setting with an https default, never user input.
+    request = urllib.request.Request(  # noqa: S310
         settings.turnstile_verify_url,
         data=urllib.parse.urlencode(form).encode("utf-8"),
         headers={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": "ArabDev/1.0"},
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=settings.turnstile_timeout_seconds) as response:
+    with urllib.request.urlopen(request, timeout=settings.turnstile_timeout_seconds) as response:  # noqa: S310
         return json.loads(response.read().decode("utf-8"))
 
 

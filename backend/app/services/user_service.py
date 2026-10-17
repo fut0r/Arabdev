@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from sqlalchemy import delete, select
@@ -29,6 +30,8 @@ from app.services.storage import get_storage
 from app.services.verification_service import Challenge
 from app.utils.pagination import PageParams, paginate_scalars
 from app.utils.time import utcnow
+
+logger = logging.getLogger("arabdev.users")
 
 
 def get_by_username_or_404(db: Session, username: str) -> User:
@@ -88,7 +91,7 @@ def _apply_new_email(db: Session, user: User, email: str) -> User:
     try:
         email_service.send_security_alert(previous, "email_changed", users_repo.get_settings(db, user).language)
     except Exception:  # pragma: no cover - mail is best effort here
-        pass
+        logger.warning("Could not tell the old address about an email change", exc_info=True)
     return user
 
 
@@ -120,7 +123,9 @@ def update_interests(db: Session, user: User, interest_ids: list[int]) -> User:
     unique_ids = list(dict.fromkeys(interest_ids))
     interests = list(db.scalars(select(Interest).where(Interest.id.in_(unique_ids)))) if unique_ids else []
     if len(interests) != len(unique_ids):
-        raise UnprocessableEntity("Some of the selected interests don't exist", "interest_invalid", field="interest_ids")
+        raise UnprocessableEntity(
+            "Some of the selected interests don't exist", "interest_invalid", field="interest_ids"
+        )
     user.interests = sorted(interests, key=lambda interest: interest.position)
     db.commit()
     return user
@@ -229,33 +234,48 @@ def export_account(db: Session, user: User) -> dict:
             for post in posts
         ],
         "drafts": [
-            {"id": draft.id, "title": draft.title, "content_html": draft.content_html,
-             "updated_at": draft.updated_at.isoformat()}
+            {
+                "id": draft.id,
+                "title": draft.title,
+                "content_html": draft.content_html,
+                "updated_at": draft.updated_at.isoformat(),
+            }
             for draft in drafts
         ],
         "comments": [
-            {"id": comment.id, "post_id": comment.post_id, "content": comment.content,
-             "created_at": comment.created_at.isoformat()}
+            {
+                "id": comment.id,
+                "post_id": comment.post_id,
+                "content": comment.content,
+                "created_at": comment.created_at.isoformat(),
+            }
             for comment in comments
         ],
         "bookmarked_post_ids": list(db.scalars(select(Bookmark.post_id).where(Bookmark.user_id == user.id))),
         "liked_post_ids": list(db.scalars(select(Like.post_id).where(Like.user_id == user.id))),
         "following": list(
-            db.scalars(select(User.username).join(Follow, Follow.followee_id == User.id).where(
-                Follow.follower_id == user.id
-            ))
+            db.scalars(
+                select(User.username).join(Follow, Follow.followee_id == User.id).where(Follow.follower_id == user.id)
+            )
         ),
         # Reports this person sent. Reports about their posts are left out: those would reveal
         # who reported them.
         "reports_sent": [
-            {"post_title": report.post_title, "reason": report.reason, "details": report.details,
-             "created_at": report.created_at.isoformat(), "status": report.status}
+            {
+                "post_title": report.post_title,
+                "reason": report.reason,
+                "details": report.details,
+                "created_at": report.created_at.isoformat(),
+                "status": report.status,
+            }
             for report in db.scalars(select(Report).where(Report.reporter_id == user.id).order_by(Report.created_at))
         ],
         "restriction": {
             "restricted_until": user.restricted_until.isoformat(),
             "reason": user.restriction_reason,
-        } if is_restricted(user) else None,
+        }
+        if is_restricted(user)
+        else None,
     }
 
 

@@ -137,9 +137,7 @@ def resend(db: Session, challenge_id: str, ip: str | None = None) -> Challenge:
     record = _load(db, challenge_id)
     now = utcnow()
     if record.consumed_at is not None or record.expires_at <= now:
-        raise UnprocessableEntity(
-            "This confirmation has expired. Please start again.", "code_expired", field="code"
-        )
+        raise UnprocessableEntity("This confirmation has expired. Please start again.", "code_expired", field="code")
     wait = settings.verification_resend_seconds - int((now - record.sent_at).total_seconds())
     if wait > 0:
         raise TooManyRequests(
@@ -171,17 +169,13 @@ def consume(db: Session, challenge_id: str, code: str, *, purpose: str) -> Verif
             "This confirmation is no longer valid. Please start again.", "code_challenge_invalid", field="code"
         )
     if record.consumed_at is not None:
-        raise UnprocessableEntity(
-            "This code was already used. Please start again.", "code_used", field="code"
-        )
+        raise UnprocessableEntity("This code was already used. Please start again.", "code_used", field="code")
     if record.expires_at <= now:
         raise UnprocessableEntity("This code has expired. Ask for a new one.", "code_expired", field="code")
     if record.attempts >= settings.verification_max_attempts:
         record.consumed_at = now
         db.commit()
-        raise UnprocessableEntity(
-            "Too many wrong codes. Please start again.", "code_attempts_exhausted", field="code"
-        )
+        raise UnprocessableEntity("Too many wrong codes. Please start again.", "code_attempts_exhausted", field="code")
 
     cleaned = "".join(character for character in code if character.isdigit())
     if not hmac.compare_digest(record.code_hash, _hash_code(record.challenge_id, cleaned)):
@@ -192,7 +186,9 @@ def consume(db: Session, challenge_id: str, code: str, *, purpose: str) -> Verif
             raise UnprocessableEntity(
                 "Too many wrong codes. Please start again.", "code_attempts_exhausted", field="code"
             )
-        raise UnprocessableEntity("That code is not right. Check the email and try again.", "code_invalid", field="code")
+        raise UnprocessableEntity(
+            "That code is not right. Check the email and try again.", "code_invalid", field="code"
+        )
 
     record.consumed_at = now
     db.commit()
@@ -213,9 +209,7 @@ def purge_expired(db: Session) -> int:
     """Delete codes that can no longer be used. Called by the scheduled clean-up."""
     cutoff = utcnow() - RETENTION
     deleted = db.execute(
-        delete(VerificationCode).where(
-            or_(VerificationCode.expires_at < cutoff, VerificationCode.consumed_at < cutoff)
-        )
+        delete(VerificationCode).where(or_(VerificationCode.expires_at < cutoff, VerificationCode.consumed_at < cutoff))
     ).rowcount
     db.commit()
     return deleted

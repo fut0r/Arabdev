@@ -53,9 +53,7 @@ def build_sitemap(db: Session) -> str:
     posts = db.execute(
         select(Post.id, Post.updated_at).where(visible()).order_by(desc(Post.created_at)).limit(MAX_POSTS)
     ).all()
-    urls += [
-        _url(f"/posts/{post_id}", updated_at.date().isoformat(), "weekly", "0.8") for post_id, updated_at in posts
-    ]
+    urls += [_url(f"/posts/{post_id}", updated_at.date().isoformat(), "weekly", "0.8") for post_id, updated_at in posts]
 
     # Only accounts that asked to be findable, exactly as the privacy settings promise.
     profiles = db.scalars(

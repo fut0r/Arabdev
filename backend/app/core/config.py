@@ -9,7 +9,7 @@ from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
-_INSECURE_DEFAULT_SECRET = "dev-only-insecure-secret-change-me-0123456789"
+_INSECURE_DEFAULT_SECRET = "dev-only-insecure-secret-change-me-0123456789"  # noqa: S105 - refused in production
 # The built-in secret and the placeholders from the .env.example files. Anyone can read these,
 # so a server using one would let anyone sign valid access tokens.
 _PLACEHOLDER_SECRETS = {_INSECURE_DEFAULT_SECRET, "change-me", "change_me", "changeme", "secret", ""}
@@ -20,7 +20,7 @@ def _normalize_database_url(url: str) -> str:
     point them at the psycopg 3 driver that ArabDev installs."""
     for prefix in ("postgres://", "postgresql://"):
         if url.startswith(prefix):
-            return "postgresql+psycopg://" + url[len(prefix):]
+            return "postgresql+psycopg://" + url[len(prefix) :]
     return url
 
 

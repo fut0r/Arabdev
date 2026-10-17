@@ -19,7 +19,9 @@ def test_onboarding_profile_and_settings(client, make_user):
     assert me["display_name"] == "ليلى" and me["website"] == "https://layla.dev"
 
     me = client.put(
-        f"{API}/users/me/interests", json={"interest_ids": [interests[2]["id"], interests[0]["id"]]}, headers=account.headers
+        f"{API}/users/me/interests",
+        json={"interest_ids": [interests[2]["id"], interests[0]["id"]]},
+        headers=account.headers,
     ).json()
     assert [i["slug"] for i in me["interests"]] == ["javascript", "python"]
     bad = client.put(f"{API}/users/me/interests", json={"interest_ids": [99999]}, headers=account.headers)
@@ -38,15 +40,25 @@ def test_onboarding_profile_and_settings(client, make_user):
 def test_change_username_and_email(client, make_user):
     make_user("taken")
     account = make_user("layla")
-    assert client.patch(f"{API}/users/me/username", json={"username": "taken"}, headers=account.headers).json()["code"] == "username_taken"
-    assert client.patch(f"{API}/users/me/username", json={"username": "Layla_New"}, headers=account.headers).json()["username"] == "layla_new"
+    assert (
+        client.patch(f"{API}/users/me/username", json={"username": "taken"}, headers=account.headers).json()["code"]
+        == "username_taken"
+    )
+    assert (
+        client.patch(f"{API}/users/me/username", json={"username": "Layla_New"}, headers=account.headers).json()[
+            "username"
+        ]
+        == "layla_new"
+    )
 
     wrong = client.post(
         f"{API}/users/me/email", json={"email": "new@example.com", "current_password": "nope"}, headers=account.headers
     )
     assert wrong.json()["code"] == "current_password_invalid"
     ok = client.post(
-        f"{API}/users/me/email", json={"email": "New@Example.com", "current_password": PASSWORD}, headers=account.headers
+        f"{API}/users/me/email",
+        json={"email": "New@Example.com", "current_password": PASSWORD},
+        headers=account.headers,
     )
     assert ok.json()["status"] == "updated"
     assert ok.json()["user"]["email"] == "new@example.com"
@@ -74,7 +86,9 @@ def test_avatar_upload_is_validated_and_reencoded(client, make_user):
     assert image.format == "WEBP" and image.size == (400, 400)
 
     replaced = client.post(
-        f"{API}/users/me/avatar", files={"file": ("b.jpg", image_bytes(fmt="JPEG"), "image/jpeg")}, headers=account.headers
+        f"{API}/users/me/avatar",
+        files={"file": ("b.jpg", image_bytes(fmt="JPEG"), "image/jpeg")},
+        headers=account.headers,
     ).json()["avatar_url"]
     assert replaced != url
     assert client.get(url).status_code == 404  # the old file was cleaned up
@@ -90,7 +104,10 @@ def test_upload_rejects_bad_files(client, make_user):
         return client.post(f"{API}/users/me/avatar", files={"file": (name, content, ctype)}, headers=account.headers)
 
     assert upload(b"#!/bin/sh\nrm -rf /\n").json()["code"] == "file_not_image"
-    assert upload(b"MZ\x90\x00", name="evil.exe", ctype="application/x-msdownload").json()["code"] == "file_type_not_allowed"
+    assert (
+        upload(b"MZ\x90\x00", name="evil.exe", ctype="application/x-msdownload").json()["code"]
+        == "file_type_not_allowed"
+    )
     assert upload(image_bytes((40, 40))).json()["code"] == "image_too_small"
     assert upload(image_bytes(fmt="BMP"), ctype="image/png").json()["code"] == "file_type_not_allowed"
     too_big = b"\x89PNG" + b"0" * (settings.max_upload_bytes + 10)
@@ -129,7 +146,10 @@ def test_delete_account_cleans_up_counters(client, make_user, make_post):
 
     wrong = client.request("DELETE", f"{API}/users/me", json={"password": "nope"}, headers=leaving.headers)
     assert wrong.status_code == 422
-    assert client.request("DELETE", f"{API}/users/me", json={"password": PASSWORD}, headers=leaving.headers).status_code == 204
+    assert (
+        client.request("DELETE", f"{API}/users/me", json={"password": PASSWORD}, headers=leaving.headers).status_code
+        == 204
+    )
 
     refreshed = client.get(f"{API}/posts/{post['id']}").json()
     assert refreshed["likes_count"] == 0 and refreshed["comments_count"] == 0
@@ -165,8 +185,18 @@ def test_health_and_docs(client):
     assert client.get(f"{API}/health").json()["database"] == "ok"
     spec = client.get(f"{API}/openapi.json").json()
     tags = {tag["name"] for tag in spec["tags"]}
-    assert {"Authentication", "Users", "Posts", "Comments", "Interactions", "Search", "Notifications",
-            "Interests", "Media", "Ads"} <= tags
+    assert {
+        "Authentication",
+        "Users",
+        "Posts",
+        "Comments",
+        "Interactions",
+        "Search",
+        "Notifications",
+        "Interests",
+        "Media",
+        "Ads",
+    } <= tags
 
 
 def test_errors_never_leak_internals(client):

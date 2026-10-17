@@ -27,7 +27,12 @@ def database_storage_client(monkeypatch):
 def register(client, username="layla"):
     response = client.post(
         f"{API}/auth/register",
-        json={"username": username, "email": f"{username}@example.com", "password": PASSWORD, "password_confirm": PASSWORD},
+        json={
+            "username": username,
+            "email": f"{username}@example.com",
+            "password": PASSWORD,
+            "password_confirm": PASSWORD,
+        },
     )
     assert response.status_code == 200, response.text
     return {"Authorization": f"Bearer {response.json()['tokens']['access_token']}"}
@@ -72,7 +77,10 @@ def test_scheduled_cleanup_requires_the_cron_secret(client, monkeypatch):
 
 def test_hosted_postgres_urls_use_the_psycopg_driver():
     for url in ("postgres://u:p@host/db?sslmode=require", "postgresql://u:p@host/db?sslmode=require"):
-        assert Settings(_env_file=None, database_url=url).database_url == "postgresql+psycopg://u:p@host/db?sslmode=require"
+        assert (
+            Settings(_env_file=None, database_url=url).database_url
+            == "postgresql+psycopg://u:p@host/db?sslmode=require"
+        )
     assert Settings(_env_file=None, database_url="sqlite:///x.db").database_url == "sqlite:///x.db"
 
 

@@ -61,9 +61,7 @@ def notify(
         if duplicate is not None:
             return
     db.add(
-        Notification(
-            recipient_id=recipient_id, actor_id=actor_id, type=kind, post_id=post_id, comment_id=comment_id
-        )
+        Notification(recipient_id=recipient_id, actor_id=actor_id, type=kind, post_id=post_id, comment_id=comment_id)
     )
 
 

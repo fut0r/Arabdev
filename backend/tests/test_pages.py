@@ -127,7 +127,11 @@ def test_missing_hidden_and_suspended_posts_are_not_found(client, make_user, mak
 
 def test_explore_profile_and_tag_pages_list_posts(client, make_user, make_post):
     author = make_user("layla")
-    client.patch(f"{API}/users/me/profile", json={"display_name": "Layla Hassan", "bio": "I write about databases."}, headers=author.headers)
+    client.patch(
+        f"{API}/users/me/profile",
+        json={"display_name": "Layla Hassan", "bio": "I write about databases."},
+        headers=author.headers,
+    )
     first = make_post(author, title="Indexes explained", content="<p>B-trees first.</p>", tags=["databases"])
     make_post(author, title="Second post", content="<p>More words.</p>")
 

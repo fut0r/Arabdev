@@ -85,9 +85,7 @@ def send(message: OutgoingEmail, *, required: bool = False) -> bool:
         outbox.append(message)
         del outbox[:-50]
     if not settings.smtp_configured:
-        logger.warning(
-            "EMAIL (not sent: no SMTP host) to=%s subject=%r\n%s", message.to, message.subject, message.body
-        )
+        logger.warning("EMAIL (not sent: no SMTP host) to=%s subject=%r\n%s", message.to, message.subject, message.body)
         if required and settings.environment == "production":
             raise MailNotSent("We can't send email right now. Please try again later.", "mail_unavailable")
         return False
@@ -149,14 +147,13 @@ def _layout(
     direction = "rtl" if rtl else "ltr"
     align = "right" if rtl else "left"
     paragraphs = "".join(
-        f'<p style="margin:0 0 14px;font-family:{_TEXT_FONT};font-size:15px;line-height:1.8;color:#3f3f46">'
-        f"{line}</p>"
+        f'<p style="margin:0 0 14px;font-family:{_TEXT_FONT};font-size:15px;line-height:1.8;color:#3f3f46">{line}</p>'
         for line in lines
     )
     code_block = (
         f'<p style="margin:24px 0;text-align:center">'
         f'<span style="display:inline-block;padding:14px 28px;border-radius:12px;background:#f5f4f2;'
-        f'border:1px solid #e7e5e1;font-family:Consolas,Menlo,monospace;font-size:30px;letter-spacing:10px;'
+        f"border:1px solid #e7e5e1;font-family:Consolas,Menlo,monospace;font-size:30px;letter-spacing:10px;"
         f'font-weight:700;color:#141414;direction:ltr">{code}</span></p>'
         if code
         else ""
@@ -339,13 +336,15 @@ def send_password_reset(email: str, token: str, language: Language = "ar") -> No
         title = "Reset your password"
         lines = [
             "Someone asked to reset the password for your ArabDev account.",
-            f'Open this link within {minutes} minutes to choose a new one:<br>'
+            f"Open this link within {minutes} minutes to choose a new one:<br>"
             f'<a href="{link}" style="color:{_BRAND}">{link}</a>',
             "If this wasn't you, ignore this email; your password has not changed.",
         ]
         subject = "Reset your ArabDev password"
     footer = _footer(language)
-    plain_lines = [line.replace(f'<br><a href="{link}" style="color:{_BRAND}">{link}</a>', f"\n{link}") for line in lines]
+    plain_lines = [
+        line.replace(f'<br><a href="{link}" style="color:{_BRAND}">{link}</a>', f"\n{link}") for line in lines
+    ]
     send(
         OutgoingEmail(
             to=email,
@@ -468,9 +467,7 @@ def _send_notice(
     )
 
 
-def send_report_received(
-    to: str, language: Language, post_title: str | None, reason: str, *, hidden: bool
-) -> None:
+def send_report_received(to: str, language: Language, post_title: str | None, reason: str, *, hidden: bool) -> None:
     """Tells an author their post was reported. Never says who reported it."""
     ar = language == "ar"
     name = _quoted(post_title, "منشورك" if ar else "your post")
@@ -483,7 +480,9 @@ def send_report_received(
             "لا نخبر أحدًا أبدًا بهوية من أبلغ، ولا يعرف المبلِّغ عن حسابك شيئًا سوى النتيجة.",
         ]
         if hidden:
-            lines.insert(1, "وصلت بلاغات كافية لإخفاء المنشور مؤقتًا عن الآخرين حتى تنتهي المراجعة، وما زلت تستطيع رؤيته.")
+            lines.insert(
+                1, "وصلت بلاغات كافية لإخفاء المنشور مؤقتًا عن الآخرين حتى تنتهي المراجعة، وما زلت تستطيع رؤيته."
+            )
         subject = "أُبلغ عن أحد منشوراتك في ArabDev"
         button = ("اقرأ إرشادات المجتمع", _guidelines_url(language))
     else:
@@ -494,7 +493,10 @@ def send_report_received(
             "We never tell anyone who made a report, and the person who reported only hears the outcome.",
         ]
         if hidden:
-            lines.insert(1, "Enough reports have come in that the post is hidden from others until the review is done. You can still see it.")
+            lines.insert(
+                1,
+                "Enough reports have come in that the post is hidden from others until the review is done. You can still see it.",
+            )
         subject = "One of your ArabDev posts was reported"
         button = ("Read the community guidelines", _guidelines_url(language))
     _send_notice(to, language, subject, title, lines, button)
@@ -576,13 +578,17 @@ def send_decision_to_author(
     if ar:
         if not acted:
             title = "راجعنا البلاغ عن منشورك"
-            lines.append(f"راجع فريق ArabDev {name} ولم يجد فيه ما يخالف إرشادات المجتمع، فلن يتغيّر شيء. وإن كان مخفيًا فقد عاد ظاهرًا للجميع.")
+            lines.append(
+                f"راجع فريق ArabDev {name} ولم يجد فيه ما يخالف إرشادات المجتمع، فلن يتغيّر شيء. وإن كان مخفيًا فقد عاد ظاهرًا للجميع."
+            )
         else:
             title = "قرار الفريق بشأن منشورك"
             if removed:
                 lines.append(f"بعد المراجعة حذف فريق ArabDev {name} لأنه يخالف إرشادات المجتمع.")
             if restricted_until:
-                lines.append(f"لن يتمكن حسابك من النشر أو التعليق أو إعادة النشر حتى <strong>{restricted_until}</strong>. وما زلت تستطيع القراءة وتسجيل الدخول.")
+                lines.append(
+                    f"لن يتمكن حسابك من النشر أو التعليق أو إعادة النشر حتى <strong>{restricted_until}</strong>. وما زلت تستطيع القراءة وتسجيل الدخول."
+                )
             if suspended:
                 lines.append("أُوقف حسابك، فلم يعد بإمكانك تسجيل الدخول، ولم تعد منشوراتك ظاهرة.")
         if note:
@@ -593,15 +599,23 @@ def send_decision_to_author(
     else:
         if not acted:
             title = "We reviewed the report about your post"
-            lines.append(f"The ArabDev team reviewed {name} and found nothing against the community guidelines, so nothing changes. If it was hidden, everyone can see it again.")
+            lines.append(
+                f"The ArabDev team reviewed {name} and found nothing against the community guidelines, so nothing changes. If it was hidden, everyone can see it again."
+            )
         else:
             title = "The team's decision about your post"
             if removed:
-                lines.append(f"After review, the ArabDev team removed {name} because it breaks the community guidelines.")
+                lines.append(
+                    f"After review, the ArabDev team removed {name} because it breaks the community guidelines."
+                )
             if restricted_until:
-                lines.append(f"Your account can't post, comment or repost until <strong>{restricted_until}</strong>. You can still read and sign in.")
+                lines.append(
+                    f"Your account can't post, comment or repost until <strong>{restricted_until}</strong>. You can still read and sign in."
+                )
             if suspended:
-                lines.append("Your account has been suspended: you can no longer sign in, and your posts are no longer shown.")
+                lines.append(
+                    "Your account has been suspended: you can no longer sign in, and your posts are no longer shown."
+                )
         if note:
             lines.append(f"<strong>Note from the team:</strong> {html.escape(note)}")
         lines.append(f"If you think this is a mistake, write to {settings.support_email} and we will look at it again.")
@@ -629,6 +643,9 @@ def send_decision_to_reporter(to: str, language: Language, post_title: str | Non
             if action_taken
             else "and found nothing against the community guidelines, so it stays up."
         )
-        lines = [f"The ArabDev team reviewed {name} {outcome}", "The author was not told who you are. Reports like yours keep the community safe."]
+        lines = [
+            f"The ArabDev team reviewed {name} {outcome}",
+            "The author was not told who you are. Reports like yours keep the community safe.",
+        ]
         subject = "We reviewed your report on ArabDev"
     _send_notice(to, language, subject, title, lines)

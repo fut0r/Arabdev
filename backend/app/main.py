@@ -4,9 +4,9 @@ from contextlib import asynccontextmanager, suppress
 from urllib.parse import urlparse
 
 from fastapi import FastAPI, Request, Response
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.concurrency import run_in_threadpool
 from fastapi.staticfiles import StaticFiles
 
 from app.api import pages, seo
@@ -91,7 +91,11 @@ def create_app() -> FastAPI:
         version="1.0.0",
         description="REST API for ArabDev, a community for Arabic-speaking developers.",
         openapi_tags=OPENAPI_TAGS,
-        contact={"name": "ArabDev support", "url": "https://wiki.arabdev.site/en/#contact", "email": settings.support_email},
+        contact={
+            "name": "ArabDev support",
+            "url": "https://wiki.arabdev.site/en/#contact",
+            "email": settings.support_email,
+        },
         license_info={"name": "GPL-3.0-or-later", "url": "https://www.gnu.org/licenses/gpl-3.0.html"},
         openapi_url=f"{settings.api_v1_prefix}/openapi.json",
         docs_url="/api/docs",
@@ -138,7 +142,6 @@ def create_app() -> FastAPI:
         settings.media_root.mkdir(parents=True, exist_ok=True)
         app.mount(media_path, CachedStaticFiles(directory=settings.media_root), name="media")
     else:
-
         # HEAD as well as GET, so caches and link checkers can ask for headers only.
         @app.api_route(f"{media_path}/{{key:path}}", methods=["GET", "HEAD"], include_in_schema=False)
         def media_file(key: str, db: DbSession) -> Response:

@@ -6,7 +6,7 @@ is_admin set in the database, or whose username is listed in ADMIN_USERNAMES.
 
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends
 
 from app.core.deps import AdminUser, CurrentUser, DbSession
 from app.core.rate_limit import rate_limit

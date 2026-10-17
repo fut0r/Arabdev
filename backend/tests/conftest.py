@@ -19,17 +19,17 @@ os.environ["EMAIL_CODES_ENABLED"] = "false"
 os.environ["TURNSTILE_SITE_KEY"] = ""
 os.environ["TURNSTILE_SECRET_KEY"] = ""
 
-from dataclasses import dataclass  # noqa: E402
+from dataclasses import dataclass
 
-import pytest  # noqa: E402
-from fastapi.testclient import TestClient  # noqa: E402
-from PIL import Image  # noqa: E402
+import pytest
+from fastapi.testclient import TestClient
+from PIL import Image
 
-from app.cli import seed_reference_data  # noqa: E402
-from app.core import cache  # noqa: E402
-from app.core.database import Base, SessionLocal, engine  # noqa: E402
-from app.core.rate_limit import _memory_limiter  # noqa: E402
-from app.main import app  # noqa: E402
+from app.cli import seed_reference_data
+from app.core import cache
+from app.core.database import Base, SessionLocal, engine
+from app.core.rate_limit import _memory_limiter
+from app.main import app
 
 API = "/api/v1"
 PASSWORD = "Sunrise2026"

@@ -7,12 +7,12 @@ that start together wait for each other instead of racing.
 
 import logging
 
-from alembic import command
 from alembic.config import Config
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import NullPool
 
+from alembic import command
 from app.core.config import BASE_DIR, settings
 
 logger = logging.getLogger("arabdev.bootstrap")

@@ -123,9 +123,9 @@ def test_a_code_is_skipped_when_the_account_asks_to_skip_it(client, make_user, c
 def test_resending_has_a_cooldown(client, make_user, codes_on, monkeypatch):
     make_user("layla", "layla@example.com")
     codes_on()
-    challenge = client.post(
-        f"{API}/auth/login", json={"email": "layla@example.com", "password": PASSWORD}
-    ).json()["challenge"]
+    challenge = client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": PASSWORD}).json()[
+        "challenge"
+    ]
     too_soon = client.post(f"{API}/auth/resend", json={"challenge_id": challenge["challenge_id"]})
     assert too_soon.status_code == 429
     assert too_soon.json()["code"] == "code_resend_too_soon"
@@ -153,7 +153,10 @@ def test_changing_the_password_needs_a_code(client, make_user, codes_on):
     )
     assert started.json()["status"] == "verification_required"
     # The old password still works until the code is entered.
-    assert client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": new_password}).status_code == 401
+    assert (
+        client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": new_password}).status_code
+        == 401
+    )
 
     challenge = started.json()["challenge"]
     confirmed = client.post(
@@ -221,7 +224,10 @@ def test_turnstile_blocks_requests_without_a_token(client, make_user, monkeypatc
 
     def fake_siteverify(token, *, remote_ip=None):
         calls.append({"token": token, "ip": remote_ip})
-        return {"success": token == "good-token", "error-codes": [] if token == "good-token" else ["invalid-input-response"]}
+        return {
+            "success": token == "good-token",
+            "error-codes": [] if token == "good-token" else ["invalid-input-response"],
+        }
 
     monkeypatch.setattr(turnstile_service, "siteverify", fake_siteverify)
 

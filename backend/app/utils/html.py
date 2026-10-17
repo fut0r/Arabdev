@@ -14,9 +14,34 @@ import re
 import nh3
 
 ALLOWED_TAGS = {
-    "p", "br", "hr", "strong", "b", "em", "i", "u", "s", "code", "pre", "blockquote",
-    "h2", "h3", "h4", "ul", "ol", "li", "a", "span",
-    "table", "colgroup", "col", "thead", "tbody", "tr", "th", "td",
+    "p",
+    "br",
+    "hr",
+    "strong",
+    "b",
+    "em",
+    "i",
+    "u",
+    "s",
+    "code",
+    "pre",
+    "blockquote",
+    "h2",
+    "h3",
+    "h4",
+    "ul",
+    "ol",
+    "li",
+    "a",
+    "span",
+    "table",
+    "colgroup",
+    "col",
+    "thead",
+    "tbody",
+    "tr",
+    "th",
+    "td",
 }
 
 # "dir" lets every block pick its own direction, so Arabic and English paragraphs

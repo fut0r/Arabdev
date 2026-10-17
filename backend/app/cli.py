@@ -1,8 +1,8 @@
 """Management commands.
 
-    python -m app.cli seed            # interests + house ads (safe to run repeatedly)
-    python -m app.cli seed --demo     # ...plus fictional developers and posts for local development
-    python -m app.cli make-admin USERNAME
+python -m app.cli seed            # interests + house ads (safe to run repeatedly)
+python -m app.cli seed --demo     # ...plus fictional developers and posts for local development
+python -m app.cli make-admin USERNAME
 """
 
 import argparse
@@ -106,7 +106,7 @@ def seed_demo_data(db: Session) -> None:
         db.add(Repost(user_id=users[username].id, post_id=post.id, created_at=post.created_at + timedelta(hours=3)))
         post.reposts_count += 1
 
-    rng = random.Random(7)
+    rng = random.Random(7)  # noqa: S311 - repeatable demo data, not security
     usernames = list(users)
     for post in posts:
         for username in rng.sample(usernames, rng.randint(0, 6)):

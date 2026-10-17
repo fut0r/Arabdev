@@ -89,7 +89,7 @@ def _error_body(detail: str, code: str, **extra) -> dict:
 def _clean_message(message: str) -> str:
     for prefix in ("Value error, ", "Assertion failed, "):
         if message.startswith(prefix):
-            return message[len(prefix):]
+            return message[len(prefix) :]
     return message
 
 

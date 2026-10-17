@@ -1,11 +1,14 @@
 """Small JSON cache over Redis with an in-process fallback. Used for hot, cheap-to-stale reads."""
 
 import json
+import logging
 import threading
 import time
 from typing import Any
 
 from app.core.redis_client import get_redis
+
+logger = logging.getLogger("arabdev.cache")
 
 _memory: dict[str, tuple[float, str]] = {}
 _lock = threading.Lock()
@@ -38,7 +41,8 @@ def cache_set(key: str, value: Any, ttl_seconds: int) -> None:
             client.setex(f"cache:{key}", ttl_seconds, raw)
             return
         except Exception:
-            pass
+            # Redis being down must not break a request: fall back to this process's memory.
+            logger.debug("Redis cache write failed; using memory", exc_info=True)
     with _lock:
         _memory[key] = (time.monotonic() + ttl_seconds, raw)
 
@@ -50,7 +54,7 @@ def cache_delete_prefix(prefix: str) -> None:
             for key in client.scan_iter(f"cache:{prefix}*"):
                 client.delete(key)
         except Exception:
-            pass
+            logger.debug("Redis cache delete failed", exc_info=True)
     with _lock:
         for key in [k for k in _memory if k.startswith(prefix)]:
             _memory.pop(key, None)

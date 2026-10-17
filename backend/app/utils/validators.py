@@ -9,10 +9,42 @@ USERNAME_RE = re.compile(r"^[a-z][a-z0-9_]{2,19}$")
 
 RESERVED_USERNAMES = frozenset(
     {
-        "about", "admin", "administrator", "api", "arabdev", "auth", "bookmarks", "create", "drafts",
-        "explore", "help", "home", "login", "logout", "me", "media", "moderator", "notifications",
-        "null", "official", "onboarding", "posts", "privacy", "profile", "register", "root", "search",
-        "settings", "signin", "signup", "static", "support", "system", "tags", "terms", "undefined",
+        "about",
+        "admin",
+        "administrator",
+        "api",
+        "arabdev",
+        "auth",
+        "bookmarks",
+        "create",
+        "drafts",
+        "explore",
+        "help",
+        "home",
+        "login",
+        "logout",
+        "me",
+        "media",
+        "moderator",
+        "notifications",
+        "null",
+        "official",
+        "onboarding",
+        "posts",
+        "privacy",
+        "profile",
+        "register",
+        "root",
+        "search",
+        "settings",
+        "signin",
+        "signup",
+        "static",
+        "support",
+        "system",
+        "tags",
+        "terms",
+        "undefined",
     }
 )
 
@@ -40,9 +72,7 @@ def validate_password_strength(value: str) -> str:
     has_letter = any(ch.isalpha() for ch in value)
     has_digit = any(ch.isdigit() for ch in value)
     if not (has_letter and has_digit) or len(set(value)) < 4:
-        raise PydanticCustomError(
-            "password_too_weak", "Use a mix of letters and numbers that is hard to guess"
-        )
+        raise PydanticCustomError("password_too_weak", "Use a mix of letters and numbers that is hard to guess")
     return value
 
 

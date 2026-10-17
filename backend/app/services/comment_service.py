@@ -14,11 +14,7 @@ from app.utils.pagination import PageParams, paginate_scalars
 
 def list_for_post(db: Session, post_id: int, viewer: User | None, params: PageParams) -> Page[CommentOut]:
     post = get_visible_post_or_404(db, post_id, viewer)
-    stmt = (
-        select(Comment)
-        .where(Comment.post_id == post.id)
-        .order_by(Comment.created_at.asc(), Comment.id.asc())
-    )
+    stmt = select(Comment).where(Comment.post_id == post.id).order_by(Comment.created_at.asc(), Comment.id.asc())
     items, total = paginate_scalars(db, stmt, params)
     viewer_id = viewer.id if viewer else None
     outs = [presenters.comment_out(c, viewer_id, post.author_id) for c in items]
@@ -29,11 +25,7 @@ def list_replies_by_user(db: Session, username: str, viewer: User | None, params
     user = users_repo.get_by_username(db, username)
     if user is None or not user.is_active:
         raise NotFound("This account doesn't exist", "user_not_found")
-    stmt = (
-        select(Comment)
-        .where(Comment.author_id == user.id)
-        .order_by(Comment.created_at.desc(), Comment.id.desc())
-    )
+    stmt = select(Comment).where(Comment.author_id == user.id).order_by(Comment.created_at.desc(), Comment.id.desc())
     items, total = paginate_scalars(db, stmt, params)
     viewer_id = viewer.id if viewer else None
     return Page.build([presenters.reply_out(c, viewer_id) for c in items], params.page, params.limit, total)
@@ -48,7 +40,9 @@ def create(db: Session, author: User, post_id: int, data: CommentCreate) -> Comm
         if parent is None or parent.post_id != post.id:
             raise UnprocessableEntity("The comment you're replying to no longer exists", "parent_invalid")
 
-    comment = Comment(post_id=post.id, author_id=author.id, parent_id=parent.id if parent else None, content=data.content)
+    comment = Comment(
+        post_id=post.id, author_id=author.id, parent_id=parent.id if parent else None, content=data.content
+    )
     db.add(comment)
     db.flush()
     db.execute(update(Post).where(Post.id == post.id).values(comments_count=Post.comments_count + 1))
@@ -60,7 +54,12 @@ def create(db: Session, author: User, post_id: int, data: CommentCreate) -> Comm
     notified.add(post.author_id)
     if parent is not None and parent.author_id not in notified:
         notification_service.notify(
-            db, recipient_id=parent.author_id, actor_id=author.id, kind="comment", post_id=post.id, comment_id=comment.id
+            db,
+            recipient_id=parent.author_id,
+            actor_id=author.id,
+            kind="comment",
+            post_id=post.id,
+            comment_id=comment.id,
         )
         notified.add(parent.author_id)
     notification_service.notify_mentions(

@@ -401,9 +401,7 @@ def list_sessions(db: Session, user: User, family_id: str | None) -> list[Sessio
 
 def revoke_session(db: Session, user: User, session_id: int) -> None:
     """End one signed-in browser. The whole family goes, so its next refresh fails."""
-    stored = db.scalar(
-        select(RefreshToken).where(RefreshToken.id == session_id, RefreshToken.user_id == user.id)
-    )
+    stored = db.scalar(select(RefreshToken).where(RefreshToken.id == session_id, RefreshToken.user_id == user.id))
     if stored is None:
         raise NotFound("That session no longer exists", "session_not_found")
     db.execute(

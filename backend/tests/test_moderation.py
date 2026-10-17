@@ -6,8 +6,7 @@ import pytest
 from sqlalchemy import update
 
 from app.core.config import settings
-from app.models import Post, Report
-from app.models import User
+from app.models import Post, Report, User
 from app.services import email_service, report_service
 from app.utils.time import utcnow
 from tests.conftest import API, PASSWORD
@@ -20,7 +19,9 @@ def moderator(make_user, monkeypatch):
 
 
 def report(client, account, post_id, reason="spam", details=None):
-    return client.post(f"{API}/posts/{post_id}/report", json={"reason": reason, "details": details}, headers=account.headers)
+    return client.post(
+        f"{API}/posts/{post_id}/report", json={"reason": reason, "details": details}, headers=account.headers
+    )
 
 
 def sent_to(address: str) -> list[email_service.OutgoingEmail]:
@@ -167,7 +168,11 @@ def test_removing_a_post_and_restricting_its_author(client, make_user, make_post
 
     decision = {"remove_post": True, "author_action": "restrict", "restrict_days": 7, "note": "Please be kind."}
     decided = client.post(f"{API}/admin/reports/{case_id}/decision", json=decision, headers=moderator.headers)
-    assert decided.json() == {"status": "actioned", "actions": ["post_removed", "author_restricted"], "reports_resolved": 1}
+    assert decided.json() == {
+        "status": "actioned",
+        "actions": ["post_removed", "author_restricted"],
+        "reports_resolved": 1,
+    }
     assert client.get(f"{API}/posts/{post['id']}").status_code == 404
 
     to_author = sent_to(author.email)[0]
@@ -224,7 +229,9 @@ def test_suspending_signs_the_author_out_and_hides_their_posts(client, make_user
     suspended = client.get(f"{API}/admin/restricted", headers=moderator.headers).json()
     assert suspended[0]["suspended"] is True
     client.post(f"{API}/admin/users/{author.id}/lift", headers=moderator.headers)
-    assert client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": PASSWORD}).status_code == 200
+    assert (
+        client.post(f"{API}/auth/login", json={"email": "layla@example.com", "password": PASSWORD}).status_code == 200
+    )
 
 
 def test_moderators_cannot_be_restricted(client, make_user, make_post, moderator, monkeypatch):
@@ -303,7 +310,10 @@ def test_for_you_learns_from_what_you_like(client, make_user, make_post, db):
     make_post(liked_author, title="New by liked")
     make_post(stranger, title="New by stranger")
 
-    titles = [item["title"] for item in client.get(f"{API}/posts", params={"tab": "for_you"}, headers=viewer.headers).json()["items"]]
+    titles = [
+        item["title"]
+        for item in client.get(f"{API}/posts", params={"tab": "for_you"}, headers=viewer.headers).json()["items"]
+    ]
     assert titles.index("New by liked") < titles.index("New by stranger")
 
 

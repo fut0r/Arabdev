@@ -58,9 +58,7 @@ def _page_of_ranked(db: Session, ranked: list[Post], params: PageParams, viewer:
     return Page.build(outs, params.page, params.limit, len(ranked))
 
 
-def _activity_page(
-    db: Session, posts_filter, reposts_filter, params: PageParams, viewer: User | None
-) -> Page[PostOut]:
+def _activity_page(db: Session, posts_filter, reposts_filter, params: PageParams, viewer: User | None) -> Page[PostOut]:
     rows, total = posts_repo.activity_page(db, posts_filter, reposts_filter, params)
     posts_by_id = posts_repo.get_many(db, [post_id for post_id, _ in rows])
     ordered = [posts_by_id[post_id] for post_id, _ in rows if post_id in posts_by_id]
