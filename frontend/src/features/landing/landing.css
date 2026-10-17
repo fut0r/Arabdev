@@ -657,3 +657,11 @@
 .lp-post-all {
   margin-block-start: 24px;
 }
+
+/* Google ads on the homepage: kept to the page width, with room around them */
+.lp-ad {
+  margin-block: 8px;
+}
+.lp-ad:empty {
+  display: none;
+}

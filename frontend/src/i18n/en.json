@@ -782,6 +782,7 @@
     "emptyAction": "Start writing"
   },
   "ads": {
+    "googleLabel": "Advertisement",
     "label": "Sponsored",
     "promotedBy": "Promoted by {{sponsor}}",
     "whyAd": "Ads help keep ArabDev free. They are always labelled."

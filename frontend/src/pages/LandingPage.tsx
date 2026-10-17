@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Link as RouterLink } from 'react-router';
 
 import { postsApi } from '@/api/posts';
+import { HomepageAd } from '@/features/ads/placements';
 import { queryKeys } from '@/api/queryKeys';
 import { docUrls, newTab } from '@/components/DocLinks';
 import { useAuth } from '@/features/auth/AuthProvider';
@@ -253,6 +254,10 @@ export default function LandingPage() {
 
         <LatestPosts />
 
+        <section className="lp-shell lp-ad" aria-label={t('ads.googleLabel')}>
+          <HomepageAd kind="display" />
+        </section>
+
         {/* features */}
         <section className="lp-shell lp-section" id="features">
           <div className="lp-reveal">
@@ -499,6 +504,10 @@ export default function LandingPage() {
               </a>
             </article>
           </div>
+        </section>
+
+        <section className="lp-shell lp-ad" aria-label={t('ads.googleLabel')}>
+          <HomepageAd kind="banner" />
         </section>
 
         {/* closing call */}

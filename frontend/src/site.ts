@@ -23,18 +23,24 @@ export const HELLO_EMAIL = 'hi@arabdev.site';
 const env = import.meta.env;
 
 /**
- * Google AdSense. The publisher id is public (it also appears in /ads.txt); each ad unit
- * created in the AdSense account gets its slot id set here through a build-time variable,
- * and a placement with no slot simply shows nothing.
+ * Google AdSense. The publisher id and the ad unit ids are public: they appear in every page
+ * that shows an ad, and the publisher id is also in /ads.txt. Where each unit is used is
+ * decided in src/features/ads/placements.tsx.
  */
 export const ADSENSE = {
   client: 'ca-pub-9780622975838808',
-  slots: {
-    feed: (env.VITE_ADSENSE_FEED_SLOT as string | undefined) ?? '',
-    sidebar: (env.VITE_ADSENSE_SIDEBAR_SLOT as string | undefined) ?? '',
-    article: (env.VITE_ADSENSE_ARTICLE_SLOT as string | undefined) ?? '',
+  units: {
+    /** "Advertisement": responsive display ad. */
+    display: { slot: '7751924472', format: 'auto', minHeight: 250 },
+    /** "Advertisement 2": a fixed 728×90 banner, only where the page is wide enough. */
+    banner: { slot: '4443234858', width: 728, height: 90 },
+    /** "Advertisement feed 1" and "Advertisement feed 2": in-feed ads shaped like the list. */
+    feed: { slot: '8744160685', format: 'fluid', layoutKey: '-6t+ed+2i-1n-4w', minHeight: 140 },
+    feedAlt: { slot: '3571725055', format: 'fluid', layoutKey: '-fb+5w+4e-db+86', minHeight: 140 },
   },
 } as const;
+
+export type AdUnitName = keyof typeof ADSENSE.units;
 
 /**
  * During development the Vite server serves the documentation sites at /wiki/, /privacy/ and

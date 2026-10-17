@@ -20,6 +20,7 @@ import { queryKeys } from '@/api/queryKeys';
 import { usersApi } from '@/api/users';
 import { ErrorState, Surface, UserAvatar } from '@/components/common';
 import { EmptyState } from '@/components/EmptyState';
+import { ArticleAd } from '@/features/ads/placements';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { CommentsSection } from '@/features/comments/Comments';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
@@ -179,6 +180,7 @@ export default function PostPage() {
               />
             </Box>
           </Box>
+          <ArticleAd />
           <Divider />
           <CommentsSection postId={post.id} commentsCount={post.comments_count} />
         </>

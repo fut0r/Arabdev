@@ -7,8 +7,7 @@ import { Link as RouterLink } from 'react-router';
 
 import { SectionHeading, Surface } from '@/components/common';
 import { DocLinks } from '@/components/DocLinks';
-import { AdSlot } from '@/features/ads/AdCard';
-import { AdSenseUnit, hasAdSense } from '@/features/ads/AdSense';
+import { SidebarAd } from '@/features/ads/placements';
 import { PopularTags } from '@/features/discovery/PopularTags';
 import { RecommendedDevelopers } from '@/features/users/RecommendedDevelopers';
 import { API_ORIGIN, CURRENT_YEAR } from '@/site';
@@ -48,7 +47,7 @@ export function RightSidebar() {
           <RecommendedDevelopers limit={4} dense />
         </Surface>
 
-        {hasAdSense('sidebar') ? <AdSenseUnit placement="sidebar" /> : <AdSlot placement="sidebar" />}
+        <SidebarAd />
 
         <Surface>
           <SectionHeading>{t('sidebar.popularTags')}</SectionHeading>
