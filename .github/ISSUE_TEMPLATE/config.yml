@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security problem
+    url: mailto:support@arabdev.site
+    about: Please report vulnerabilities privately, never in a public issue.
+  - name: Help using ArabDev
+    url: https://wiki.arabdev.site/en/
+    about: How-tos, settings and troubleshooting, in Arabic and English.

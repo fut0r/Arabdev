@@ -1,0 +1,39 @@
+name: Bug report
+description: Something on ArabDev isn't working as it should
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time. Security problems go to support@arabdev.site, not here.
+        إن كانت المشكلة أمنية فراسلنا على support@arabdev.site بدل فتح مشكلة عامة.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See ...
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: The page address, and your browser and device.
+      placeholder: arabdev.site/settings/security, Chrome on Android
+  - type: dropdown
+    id: language
+    attributes:
+      label: Interface language
+      options: [Arabic, English, Both]
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or error messages

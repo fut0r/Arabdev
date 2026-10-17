@@ -103,3 +103,10 @@ def test_vercel_defaults(monkeypatch):
 
     with pytest.raises(ValueError, match="PostgreSQL"):
         Settings(_env_file=None, database_url="sqlite:///x.db", secret_key="k" * 48)
+
+
+def test_redis_logs_never_include_the_password():
+    from app.core.redis_client import _host_of
+
+    assert _host_of("rediss://default:s3cret@eu1-cache.upstash.io:6379") == "eu1-cache.upstash.io:6379"
+    assert "s3cret" not in _host_of("redis://user:s3cret@localhost")
