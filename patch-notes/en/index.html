@@ -44,6 +44,7 @@
 <nav class="nav" aria-label="Releases">
   <h2 class="nav-heading">Releases</h2>
   <ul class="nav-list">
+    <li><a class="nav-link" href="#v1-3-0"><span>1.3.0</span><span class="count">17 October 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-1"><span>1.2.1</span><span class="count">5 October 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-0"><span>1.2.0</span><span class="count">29 September 2026</span></a></li>
     <li><a class="nav-link" href="#v1-1-1"><span>1.1.1</span><span class="count">28 September 2026</span></a></li>
@@ -71,15 +72,104 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>No changes match your filters. Try another word, or show all changes.</div>
 
+<article class="release surface" id="v1-3-0" aria-labelledby="v1-3-0-title">
+  <header class="release-header">
+    <h2 id="v1-3-0-title">ArabDev 1.3.0</h2>
+    <span class="chip primary">Latest</span>
+    <time datetime="2026-10-17">17 October 2026</time>
+  </header>
+<div class="prose">
+  <p class="release-summary" data-hide-when-filtered>
+    You can now sign in with an authenticator app and block people, passwords that have leaked in other sites' breaches are refused, and every profile and tag has an RSS feed. The homepage and the three documentation sites were rebuilt to look like the rest of the app, and the code got the checks contributors expect.
+  </p>
+
+  <section class="area" id="v130-two-factor" aria-labelledby="v130-two-factor-title">
+    <h3 id="v130-two-factor-title">Authenticator app<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">You can add an authenticator app to your account under <strong>Settings → Security</strong>. Enter your password, scan the QR code with Google Authenticator, Microsoft Authenticator, 1Password or any app that makes six-digit codes (or type the key by hand), and confirm with the first code it shows.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">With the app turned on, signing in asks for a code from the app after your password, instead of the code we would otherwise email you. You get five tries, as with emailed codes.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Turning it on gives you ten recovery codes, shown once. Each one signs you in once if you lose your phone. Settings shows how many are left and can make a new set, which cancels the old one.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">The app's secret key is stored encrypted, and recovery codes only as hashes. Each code from the app works once: a code that has already signed you in is refused, even inside its 30 seconds.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">With account alerts on (the default), you get an email when the app is turned on or off, when a recovery code is used (with how many are left), and when a new set of recovery codes is made. Turning the app off needs your password and a code.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-passwords" aria-labelledby="v130-passwords-title">
+    <h3 id="v130-passwords-title">Leaked passwords<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">Security</span><span class="text">A new password is checked against Have I Been Pwned's list of passwords from public data breaches when you sign up, reset your password or change it, and refused if it is on the list. Only the first five characters of the password's SHA-1 hash are sent, never the password. If the list can't be reached, the password is accepted, so an outage doesn't lock anyone out.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-blocking" aria-labelledby="v130-blocking-title">
+    <h3 id="v130-blocking-title">Blocking<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">You can block an account from the ⋯ menu on its profile or on any of its posts.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Once you block someone, neither of you can follow, comment on, reply to or repost the other, and nothing sends a notification across the block. You stop seeing their posts, comments and suggestions. They aren't told.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">Blocking removes the follows between you in both directions, and the notifications they had sent you.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text"><strong>Settings → Privacy</strong> lists the accounts you blocked, each with an Unblock button, and the data download includes them.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-rss" aria-labelledby="v130-rss-title">
+    <h3 id="v130-rss-title">RSS feeds<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">New</span><span class="text">RSS feeds for the latest posts (<span dir="ltr">arabdev.site/rss.xml</span>), for each profile (<span dir="ltr">/u/username/rss.xml</span>) and for each tag (<span dir="ltr">/tags/name/rss.xml</span>). A profile's ⋯ menu links to its feed, and pages announce their feed so a reader can find it on its own.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Accounts that switched off <em>Show me in search and suggestions</em> have no feed.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-homepage" aria-labelledby="v130-homepage-title">
+    <h3 id="v130-homepage-title">Homepage<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The homepage is rebuilt from the app's own parts: the same top bar, post cards and popular tags as the dashboard, and the dark panel from the sign-in page. It used to have a separate design of its own.</span></li>
+      <li data-type="new"><span class="tag new">New</span><span class="text">The drawing of a laptop is replaced by a picture of the real dashboard on a MacBook, in your language and in light or dark to match your settings.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The three latest posts are shown as full post cards, and the text was rewritten to say plainly what the site is.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-ads" aria-labelledby="v130-ads-title">
+    <h3 id="v130-ads-title">Ads<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Google ads have fixed places: one or two on the homepage (the 728×90 banner only on wide screens), in the feed after the 3rd, 9th and 15th post of a page, one in the sidebar, and one between a post and its comments.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Google ads are labelled <strong>Advertisement</strong>. When Google has no ad for a place, the space goes to one of ArabDev's own sponsor cards or closes up, instead of staying empty.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-docs" aria-labelledby="v130-docs-title">
+    <h3 id="v130-docs-title">The wiki, privacy policy and patch notes<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">All three now look like the app: the same top bar, navigation column, cards and side column, in light and dark.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The wiki's main page is rewritten, and the articles describe 1.3.0: the authenticator app, blocking, RSS and where ads appear.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">The privacy policy (version 1.5) covers the authenticator app, recovery codes, blocks and the leaked-password check.</span></li>
+      <li data-type="improved"><span class="tag improved">Improved</span><span class="text">Text across the app is rewritten in plainer words: the panel beside the sign-in form, empty pages, some settings, and the About page.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-fixes" aria-labelledby="v130-fixes-title">
+    <h3 id="v130-fixes-title">Fixes<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">Popular tags counted posts that were hidden, so a tag could look popular because of posts nobody can see.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">After <em>Send another code</em>, the countdown before the next resend didn't restart.</span></li>
+      <li data-type="fixed"><span class="tag fixed">Fixed</span><span class="text">Signed-out visitors no longer see a brief loading screen first.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">When it couldn't reach Redis, the server wrote Redis's full address, password included, to its logs. It writes the host name only now. It also waits 2 seconds to connect instead of 0.5, which cold starts on Vercel needed.</span></li>
+      <li data-type="security"><span class="tag security">Security</span><span class="text">PyJWT is now 2.15 or newer and DOMPurify 3.4.17, both past published security advisories.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-developer" aria-labelledby="v130-developer-title">
+    <h3 id="v130-developer-title">For developers<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">The backend is checked and formatted by Ruff (style, imports, likely bugs and bandit's security rules), and <code>pip-audit</code> checks its dependencies. The frontend is checked by oxlint and Prettier, and <code>npm audit</code> checks its runtime dependencies. CI runs all of them.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New tables <code>blocks</code> and <code>recovery_codes</code>, and three columns on <code>users</code> (<code>totp_secret</code>, <code>totp_enabled_at</code>, <code>totp_last_step</code>), in migration <code>7a44454d249f</code>. Run <code>alembic upgrade head</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New endpoints: <code>POST /api/v1/users/me/two-factor/setup</code>, <code>/enable</code>, <code>/disable</code> and <code>/recovery-codes</code>; <code>GET /api/v1/users/me/blocked</code>; <code>POST</code> and <code>DELETE /api/v1/users/{id}/block</code>. Signing in can now answer with a <code>login_2fa</code> challenge.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">New setting <code>PWNED_PASSWORDS_ENABLED</code> (on by default; the tests turn it off) and new dependencies <code>cryptography</code> and <code>segno</code>. The <code>VITE_ADSENSE_*</code> build settings are gone: the ad units live in <code>frontend/src/site.ts</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">Developer</span><span class="text">Settings and the moderation page are split into one file per part under <code>frontend/src/features/</code>. The repository has a new README, CONTRIBUTING.md, a code of conduct, issue and pull request templates, and an <code>.editorconfig</code>. The backend has 111 tests.</span></li>
+    </ul>
+  </section>
+</div>
+</article>
+
 <article class="release surface" id="v1-2-1" aria-labelledby="v1-2-1-title">
   <header class="release-header">
     <h2 id="v1-2-1-title">ArabDev 1.2.1</h2>
-    <span class="chip primary">Latest</span>
     <time datetime="2026-10-05">5 October 2026</time>
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    A release about being found and understood: every public page can now be read without JavaScript, the homepage shows the community's latest posts, and ArabDev has proper About and Contact pages.
+    Public pages can now be read without JavaScript, the homepage shows the latest posts, and there are new About and Contact pages.
   </p>
 
   <section class="area" id="v121-reading" aria-labelledby="v121-reading-title">
@@ -131,14 +221,14 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    A community safety release: report any post, and let moderators keep it, remove it, or restrict or suspend its author, with every step emailed to the people involved. Plus a smarter For you feed, a faster-moving Trending list, and redesigned emails.
+    Anyone can now report a post, and moderators can keep it, remove it, or restrict or suspend its author, with each step emailed to the people involved. The For you feed and the Trending list are ranked differently, and the emails were redesigned.
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="Highlights of 1.2.0">
-    <li><strong>Report a post</strong><span>A reason, a few words, and the team takes it from there.</span></li>
-    <li><strong>Decisions with care</strong><span>Keep, remove, restrict for a set time, or suspend, with emails to everyone involved.</span></li>
-    <li><strong>A smarter For you</strong><span>Ranked by who and what you care about, how much discussion a post starts, and how fresh it is.</span></li>
-    <li><strong>Emails that look like ArabDev</strong><span>The Anton wordmark, with Alexandria headings and Tajawal text.</span></li>
+    <li><strong>Reporting</strong>Pick a reason, add a few words if you like, and the moderators get it.</li>
+    <li><strong>Decisions</strong>Keep the post, remove it, stop the author publishing for a set time, or suspend the account. Everyone involved gets an email.</li>
+    <li><strong>For you</strong>Ranked by who you follow, the topics you picked, how much discussion a post starts and how new it is.</li>
+    <li><strong>Emails</strong>They use the ArabDev wordmark and the site's fonts.</li>
   </ul>
 
   <section class="area" id="v120-reports" aria-labelledby="v120-reports-title">
@@ -200,7 +290,7 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    A security and speed release: rate limits that cannot be dodged and hold across every server, security headers on every page, safer image uploads, pages that search engines can finally index, and an editor that no longer slows down every other page.
+    Rate limits now hold across every server and can't be dodged, every page sends security headers, image uploads are checked more strictly, search engines can index the pages, and the editor's code no longer loads on pages that don't use it.
   </p>
 
   <section class="area" id="v111-security" aria-labelledby="v111-security-title">
@@ -255,15 +345,15 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    A security and growth release: emailed six-digit codes for signing in and for changing an email or password, a Cloudflare check on every public form, Google ads, a proper presence in search results, and a new Security section under Settings.
+    Signing in, and changing your email or password, are now confirmed with a six-digit code sent by email. Public forms have a Cloudflare bot check, Google ads appear, pages show up properly in search results, and Settings has a new Security section.
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="Changes in 1.1.0">
-    <li><strong>A code in your inbox</strong><span>Signing in, signing up, and changing an email or password are confirmed by a six-digit code.</span></li>
-    <li><strong>A quiet bot check</strong><span>Cloudflare Turnstile guards every public form, invisibly for almost everyone.</span></li>
-    <li><strong>Ads that pay the bills</strong><span>Google ads, requested in non-personalised mode, still clearly labelled.</span></li>
-    <li><strong>Findable</strong><span>Per-page titles, descriptions, link previews, a sitemap and structured data.</span></li>
-    <li><strong>More to decide for yourself</strong><span>Devices, data export, default feed, reduced motion and email preferences.</span></li>
+    <li><strong>Emailed codes</strong>Signing in, signing up, and changing an email or password are confirmed by a six-digit code.</li>
+    <li><strong>Bot check</strong>Cloudflare Turnstile checks every public form. Almost nobody has to click anything.</li>
+    <li><strong>Google ads</strong>Requested in non-personalised mode, and labelled.</li>
+    <li><strong>Search results</strong>Each page has its own title, description and link preview, plus a sitemap and structured data.</li>
+    <li><strong>Settings</strong>Your devices, a copy of your data, the feed to open first, reduced motion and email preferences.</li>
   </ul>
 
   <section class="area" id="v110-signin" aria-labelledby="v110-signin-title">
@@ -359,12 +449,12 @@
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="Highlights">
-    <li><strong>A real editor for technical writing</strong><span>Headings, code blocks, tables, links, three fonts, six sizes and five theme-aware colors, with live preview and drafts.</span></li>
-    <li><strong>Arabic first, English too</strong><span>The whole interface flips between right-to-left and left-to-right, and every paragraph finds its own direction.</span></li>
-    <li><strong>A feed with an end</strong><span>Three tabs, 20 posts per page and numbered pages instead of infinite scrolling.</span></li>
-    <li><strong>Honest, predictable ads</strong><span>Clearly labelled, after every 8 posts, and never chosen using your personal information.</span></li>
-    <li><strong>Secure by design</strong><span>Argon2id passwords, rotating sessions with theft detection, sanitised content and cleaned uploads.</span></li>
-    <li><strong>We never sell your data</strong><span>No trackers, no third-party analytics and a plain-language privacy policy.</span></li>
+    <li><strong>Editor</strong>Headings, code blocks, tables, links, three fonts, six sizes and five colours that work in dark mode, with a preview and drafts.</li>
+    <li><strong>Arabic and English</strong>The interface switches between right-to-left and left-to-right, and each paragraph takes its own direction.</li>
+    <li><strong>Feed</strong>Three tabs, 20 posts a page, and numbered pages instead of endless scrolling.</li>
+    <li><strong>Ads</strong>Labelled, one after every 8 posts, and never chosen from your personal information.</li>
+    <li><strong>Security</strong>Argon2id passwords, rotating sessions that notice stolen tokens, and cleaned post content and uploads.</li>
+    <li><strong>Privacy</strong>No trackers, no third-party analytics, and a privacy policy in plain language.</li>
   </ul>
 
   <!-- ====================================================== accounts -->

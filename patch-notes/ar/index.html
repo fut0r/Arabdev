@@ -44,6 +44,7 @@
 <nav class="nav" aria-label="الإصدارات">
   <h2 class="nav-heading">الإصدارات</h2>
   <ul class="nav-list">
+    <li><a class="nav-link" href="#v1-3-0"><span>1.3.0</span><span class="count">17 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-1"><span>1.2.1</span><span class="count">5 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-0"><span>1.2.0</span><span class="count">29 سبتمبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-1-1"><span>1.1.1</span><span class="count">28 سبتمبر 2026</span></a></li>
@@ -71,15 +72,104 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release surface" id="v1-3-0" aria-labelledby="v1-3-0-title">
+  <header class="release-header">
+    <h2 id="v1-3-0-title">ArabDev 1.3.0</h2>
+    <span class="chip primary">الأحدث</span>
+    <time datetime="2026-10-17">17 أكتوبر 2026</time>
+  </header>
+<div class="prose">
+  <p class="release-summary" data-hide-when-filtered>
+    صار بإمكانك تسجيل الدخول بتطبيق مصادقة وحظر الأشخاص، وصارت كلمات المرور المسرّبة في اختراقات مواقع أخرى مرفوضة، ولكل ملف شخصي ولكل وسم خلاصة RSS. وأُعيد بناء الصفحة الرئيسية ومواقع التوثيق الثلاثة لتشبه بقية التطبيق، وصار للكود الفحوصات التي يتوقعها المساهمون.
+  </p>
+
+  <section class="area" id="v130-two-factor" aria-labelledby="v130-two-factor-title">
+    <h3 id="v130-two-factor-title">تطبيق المصادقة<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يمكنك إضافة تطبيق مصادقة إلى حسابك من <strong>الإعدادات ← الأمان</strong>. أدخل كلمة مرورك، وامسح رمز QR بتطبيق Google Authenticator أو Microsoft Authenticator أو 1Password أو أي تطبيق يولّد رموزًا من ستة أرقام (أو اكتب المفتاح يدويًا)، ثم أكّد بأول رمز يظهر فيه.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">عند تشغيل التطبيق، يطلب تسجيل الدخول رمزًا من التطبيق بعد كلمة المرور، بدل الرمز الذي كنا سنرسله إلى بريدك. ولك خمس محاولات، كما في الرموز المرسلة بالبريد.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">عند تشغيله تحصل على عشرة رموز استرداد تظهر مرة واحدة. كل رمز منها يُدخلك مرة واحدة إن فقدت هاتفك. وتعرض الإعدادات عدد ما تبقّى، ويمكنها إنشاء مجموعة جديدة تُلغي القديمة.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">يُحفظ المفتاح السري للتطبيق مشفّرًا، ورموز الاسترداد مجزّأة (hash) فقط. وكل رمز من التطبيق يعمل مرة واحدة: الرمز الذي أدخلك من قبل يُرفض حتى خلال ثوانيه الثلاثين.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">ما دامت تنبيهات الحساب مفعّلة (وهي كذلك افتراضيًا)، تصلك رسالة عند تشغيل التطبيق أو إيقافه، وعند استخدام رمز استرداد (مع عدد ما تبقّى)، وعند إنشاء مجموعة رموز جديدة. وإيقاف التطبيق يحتاج إلى كلمة مرورك ورمز.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-passwords" aria-labelledby="v130-passwords-title">
+    <h3 id="v130-passwords-title">كلمات المرور المسرّبة<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">تُفحص كلمة المرور الجديدة عند التسجيل أو الاستعادة أو التغيير مقابل قائمة Have I Been Pwned لكلمات المرور المسرّبة في الاختراقات العلنية، وتُرفض إن كانت فيها. لا يُرسل إلا أول خمسة أحرف من بصمة SHA-1 لكلمة المرور، ولا تُرسل كلمة المرور نفسها أبدًا. وإن تعذّر الوصول إلى القائمة تُقبل كلمة المرور، فلا يُمنع أحد من الدخول بسبب عطل.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-blocking" aria-labelledby="v130-blocking-title">
+    <h3 id="v130-blocking-title">الحظر<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يمكنك حظر أي حساب من قائمة ⋯ في ملفه الشخصي أو في أي منشور له.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">بعد الحظر لا يستطيع أيٌّ منكما متابعة الآخر أو التعليق على منشوراته أو الرد عليه أو إعادة نشر منشوراته، ولا يصل أي إشعار بينكما. وتتوقف عن رؤية منشوراته وتعليقاته واقتراحه لك. ولا يُبلَّغ بذلك.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يزيل الحظر المتابعة بينكما في الاتجاهين، والإشعارات التي وصلتك منه.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">تعرض <strong>الإعدادات ← الخصوصية</strong> الحسابات التي حظرتها، ولكل منها زر لإلغاء الحظر، وتتضمّنها نسخة البيانات التي تنزّلها.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-rss" aria-labelledby="v130-rss-title">
+    <h3 id="v130-rss-title">خلاصات RSS<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">خلاصات RSS لأحدث المنشورات (<span dir="ltr">arabdev.site/rss.xml</span>)، ولكل ملف شخصي (<span dir="ltr">/u/username/rss.xml</span>)، ولكل وسم (<span dir="ltr">/tags/name/rss.xml</span>). تضم قائمة ⋯ في الملف الشخصي رابطًا لخلاصته، وتعلن الصفحات عن خلاصتها ليجدها قارئ الخلاصات وحده.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">الحسابات التي أوقفت <em>إظهاري في البحث والاقتراحات</em> ليست لها خلاصة.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-homepage" aria-labelledby="v130-homepage-title">
+    <h3 id="v130-homepage-title">الصفحة الرئيسية<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">أُعيد بناء الصفحة الرئيسية من مكوّنات التطبيق نفسها: الشريط العلوي وبطاقات المنشورات والوسوم الشائعة كما في لوحة التحكم، واللوحة الداكنة من صفحة تسجيل الدخول. وكان لها تصميم منفصل خاص بها.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">حلّت محلّ رسمة الحاسوب صورة للوحة التحكم الحقيقية على جهاز MacBook، بلغتك وبالوضع الفاتح أو الداكن حسب إعداداتك.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تظهر أحدث ثلاثة منشورات ببطاقاتها الكاملة، وأُعيدت كتابة النص ليقول ببساطة ما هو الموقع.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-ads" aria-labelledby="v130-ads-title">
+    <h3 id="v130-ads-title">الإعلانات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">لإعلانات Google أماكن ثابتة: إعلان أو اثنان في الصفحة الرئيسية (الشريط بمقاس 728×90 على الشاشات العريضة فقط)، وفي الخلاصة بعد المنشور الثالث والتاسع والخامس عشر من كل صفحة، وإعلان في الشريط الجانبي، وآخر بين المنشور وتعليقاته.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تحمل إعلانات Google عبارة <strong>إعلان</strong>. وإن لم يكن لدى Google إعلان لمكان ما، يذهب المكان إلى بطاقة راعٍ من ArabDev أو يُغلق، بدل أن يبقى فارغًا.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-docs" aria-labelledby="v130-docs-title">
+    <h3 id="v130-docs-title">الويكي وسياسة الخصوصية وملاحظات الإصدار<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صارت المواقع الثلاثة تشبه التطبيق: الشريط العلوي نفسه، وعمود التنقل، والبطاقات، والعمود الجانبي، بالوضعين الفاتح والداكن.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">أُعيدت كتابة الصفحة الرئيسية للويكي، وصارت المقالات تصف الإصدار 1.3.0: تطبيق المصادقة والحظر وخلاصات RSS وأماكن الإعلانات.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تشمل سياسة الخصوصية (الإصدار 1.5) تطبيق المصادقة ورموز الاسترداد والحظر وفحص كلمات المرور المسرّبة.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">أُعيدت كتابة نصوص في أنحاء التطبيق بكلمات أبسط: اللوحة بجانب نموذج تسجيل الدخول، والصفحات الفارغة، وبعض الإعدادات، وصفحة «عن المنصة».</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-fixes" aria-labelledby="v130-fixes-title">
+    <h3 id="v130-fixes-title">الإصلاحات<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">كانت الوسوم الشائعة تحسب المنشورات المخفية، فقد يبدو وسم شائعًا بسبب منشورات لا يراها أحد.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">بعد <em>أرسل رمزًا جديدًا</em> لم يكن العدّ التنازلي قبل الإرسال التالي يبدأ من جديد.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">لم يعد الزائر غير المسجّل يرى شاشة تحميل قصيرة في البداية.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">عندما كان الخادم يعجز عن الوصول إلى Redis كان يكتب عنوانه الكامل، بكلمة المرور، في السجلات. وصار يكتب اسم المضيف فقط. وصار ينتظر ثانيتين للاتصال بدل نصف ثانية، وهذا ما تحتاجه بدايات التشغيل الباردة على Vercel.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صار PyJWT بالإصدار 2.15 أو أحدث وDOMPurify بالإصدار 3.4.17، وكلاهما بعد ثغرات أمنية منشورة.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v130-developer" aria-labelledby="v130-developer-title">
+    <h3 id="v130-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يُفحص الخادم ويُنسّق بأداة Ruff (الأسلوب والاستيرادات والأخطاء المحتملة وقواعد bandit الأمنية)، ويفحص <code>pip-audit</code> اعتمادياته. وتُفحص الواجهة بأداتي oxlint وPrettier، ويفحص <code>npm audit</code> اعتمادياتها. ويشغّلها CI كلها.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">جدولان جديدان <code>blocks</code> و<code>recovery_codes</code>، وثلاثة أعمدة في <code>users</code> (<code>totp_secret</code> و<code>totp_enabled_at</code> و<code>totp_last_step</code>)، في الترحيل <code>7a44454d249f</code>. شغّل <code>alembic upgrade head</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">نقاط نهاية جديدة: <code>POST /api/v1/users/me/two-factor/setup</code> و<code>/enable</code> و<code>/disable</code> و<code>/recovery-codes</code>، و<code>GET /api/v1/users/me/blocked</code>، و<code>POST</code> و<code>DELETE /api/v1/users/{id}/block</code>. وقد يردّ تسجيل الدخول الآن بتحدٍّ من نوع <code>login_2fa</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعداد جديد <code>PWNED_PASSWORDS_ENABLED</code> (مفعّل افتراضيًا وتوقفه الاختبارات)، واعتماديتان جديدتان <code>cryptography</code> و<code>segno</code>. وأُزيلت إعدادات البناء <code>VITE_ADSENSE_*</code>: وحدات الإعلانات صارت في <code>frontend/src/site.ts</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">قُسّمت صفحتا الإعدادات والإشراف إلى ملف لكل جزء داخل <code>frontend/src/features/</code>. وفي المستودع الآن README جديد وCONTRIBUTING.md ومدوّنة سلوك وقوالب للمشكلات وطلبات الدمج وملف <code>.editorconfig</code>. وللخادم 111 اختبارًا.</span></li>
+    </ul>
+  </section>
+</div>
+</article>
+
 <article class="release surface" id="v1-2-1" aria-labelledby="v1-2-1-title">
   <header class="release-header">
     <h2 id="v1-2-1-title">ArabDev 1.2.1</h2>
-    <span class="chip primary">الأحدث</span>
     <time datetime="2026-10-05">5 أكتوبر 2026</time>
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    إصدار عن سهولة الوصول والفهم: صارت كل صفحة عامة تُقرأ دون JavaScript، وتعرض الصفحة الرئيسية أحدث منشورات المجتمع، وصار لـ ArabDev صفحتان وافيتان: «عن المنصة» و«تواصل معنا».
+    صارت الصفحات العامة تُقرأ دون JavaScript، وتعرض الصفحة الرئيسية أحدث المنشورات، وأُضيفت صفحتا «عن المنصة» و«تواصل معنا».
   </p>
 
   <section class="area" id="v121-reading" aria-labelledby="v121-reading-title">
@@ -131,14 +221,14 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    إصدار لسلامة المجتمع: أبلغ عن أي منشور، ودع المشرفين يبقونه أو يحذفونه أو يقيّدون كاتبه أو يوقفونه، مع رسالة بكل خطوة لكل المعنيين. ومعه تبويب «لك» أذكى، وقائمة رائجة أسرع حركة، ورسائل بريد بتصميم جديد.
+    صار بإمكان أي شخص الإبلاغ عن منشور، وبإمكان المشرفين إبقاؤه أو حذفه أو تقييد كاتبه أو إيقافه، مع رسالة بكل خطوة لكل المعنيين. وتغيّر ترتيب تبويب «لك» وقائمة الرائج، وتغيّر تصميم الرسائل.
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="أبرز ما في 1.2.0">
-    <li><strong>أبلغ عن منشور</strong><span>سبب وكلمات قليلة، ويتولى الفريق الباقي.</span></li>
-    <li><strong>قرارات بعناية</strong><span>إبقاء أو حذف أو تقييد لمدة محددة أو إيقاف، مع رسائل لكل المعنيين.</span></li>
-    <li><strong>تبويب «لك» أذكى</strong><span>ترتيب حسب من وما يهمك، وحجم النقاش الذي يفتحه المنشور، ومدى حداثته.</span></li>
-    <li><strong>رسائل بهوية ArabDev</strong><span>شعار بخط Anton، وعناوين بخط Alexandria، ونص بخط Tajawal.</span></li>
+    <li><strong>الإبلاغ</strong>اختر سببًا، وأضف كلمات إن شئت، فيصل البلاغ إلى المشرفين.</li>
+    <li><strong>القرارات</strong>إبقاء المنشور أو حذفه، أو منع كاتبه من النشر مدة محددة، أو إيقاف حسابه. وتصل رسالة لكل المعنيين.</li>
+    <li><strong>تبويب «لك»</strong>يُرتَّب حسب من تتابعهم، والمواضيع التي اخترتها، وحجم النقاش حول المنشور، ومدى حداثته.</li>
+    <li><strong>الرسائل</strong>تستخدم شعار ArabDev وخطوط الموقع.</li>
   </ul>
 
   <section class="area" id="v120-reports" aria-labelledby="v120-reports-title">
@@ -200,7 +290,7 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    إصدار للأمان والسرعة: حدود لمعدّل الطلبات لا يمكن الالتفاف عليها وتصمد على كل الخوادم، وترويسات أمان على كل صفحة، ورفع صور أكثر أمانًا، وصفحات صار بإمكان محرّكات البحث فهرستها أخيرًا، ومحرّر لم يعد يبطئ كل صفحة أخرى.
+    صارت حدود معدّل الطلبات تصمد على كل الخوادم ولا يمكن الالتفاف عليها، وترسل كل صفحة ترويسات أمان، ويُفحص رفع الصور بصرامة أكبر، وصار بإمكان محرّكات البحث فهرسة الصفحات، ولم يعد كود المحرّر يُحمَّل في صفحات لا تستخدمه.
   </p>
 
   <section class="area" id="v111-security" aria-labelledby="v111-security-title">
@@ -255,15 +345,15 @@
   </header>
 <div class="prose">
   <p class="release-summary" data-hide-when-filtered>
-    إصدار للأمان والانتشار: رموز من ستة أرقام تصل بالبريد لتسجيل الدخول وتغيير البريد أو كلمة المرور، وفحص من Cloudflare على كل نموذج عام، وإعلانات Google، وحضور حقيقي في نتائج البحث، وقسم أمان جديد في الإعدادات.
+    صار تسجيل الدخول وتغيير البريد أو كلمة المرور يُؤكَّد برمز من ستة أرقام يصل بالبريد. وعلى النماذج العامة فحص من Cloudflare للروبوتات، وظهرت إعلانات Google، وصارت الصفحات تظهر في نتائج البحث كما ينبغي، وفي الإعدادات قسم أمان جديد.
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="التغييرات في 1.1.0">
-    <li><strong>رمز في بريدك</strong><span>يُؤكَّد تسجيل الدخول وإنشاء الحساب وتغيير البريد أو كلمة المرور برمز من ستة أرقام.</span></li>
-    <li><strong>فحص هادئ للروبوتات</strong><span>يحرس Cloudflare Turnstile كل نموذج عام، بلا أن يظهر لمعظم الناس.</span></li>
-    <li><strong>إعلانات تغطّي التكاليف</strong><span>إعلانات Google في وضع غير مخصّص، وما زالت موسومة بوضوح.</span></li>
-    <li><strong>قابل للعثور عليه</strong><span>عناوين وأوصاف ومعاينات روابط لكل صفحة، وخريطة موقع وبيانات منظّمة.</span></li>
-    <li><strong>خيارات أكثر بين يديك</strong><span>الأجهزة وتصدير البيانات والخلاصة الافتراضية وتقليل الحركة وتفضيلات البريد.</span></li>
+    <li><strong>رموز بالبريد</strong>يُؤكَّد تسجيل الدخول وإنشاء الحساب وتغيير البريد أو كلمة المرور برمز من ستة أرقام.</li>
+    <li><strong>فحص الروبوتات</strong>يفحص Cloudflare Turnstile كل نموذج عام، ولا يحتاج معظم الناس إلى النقر على شيء.</li>
+    <li><strong>إعلانات Google</strong>تُطلب بوضع غير مخصّص، وعليها عبارة «إعلان».</li>
+    <li><strong>نتائج البحث</strong>لكل صفحة عنوانها ووصفها ومعاينة رابطها، مع خريطة موقع وبيانات منظّمة.</li>
+    <li><strong>الإعدادات</strong>أجهزتك، ونسخة من بياناتك، والخلاصة التي تُفتح أولًا، وتقليل الحركة، وتفضيلات البريد.</li>
   </ul>
 
   <section class="area" id="v110-signin" aria-labelledby="v110-signin-title">
@@ -358,12 +448,12 @@
   </p>
 
   <ul class="highlights" data-hide-when-filtered aria-label="أبرز ما في الإصدار">
-    <li><strong>محرر حقيقي للكتابة التقنية</strong><span>عناوين وكتل شيفرة وجداول وروابط وثلاثة خطوط وستة أحجام وخمسة ألوان تتكيّف مع المظهر، مع معاينة حية ومسوّدات.</span></li>
-    <li><strong>العربية أولًا، والإنجليزية أيضًا</strong><span>تنقلب الواجهة بالكامل بين اليمين إلى اليسار واليسار إلى اليمين، وكل فقرة تجد اتجاهها بنفسها.</span></li>
-    <li><strong>خلاصة لها نهاية</strong><span>ثلاثة تبويبات و20 منشورًا في الصفحة وصفحات مرقّمة بدل التمرير اللانهائي.</span></li>
-    <li><strong>إعلانات صادقة ومتوقَّعة</strong><span>موسومة بوضوح، بعد كل 8 منشورات، ولا تُختار أبدًا بناءً على معلوماتك الشخصية.</span></li>
-    <li><strong>آمن من التصميم</strong><span>كلمات مرور Argon2id، وجلسات دوّارة تكتشف السرقة، ومحتوى منظَّف، وصور مرفوعة منقّاة.</span></li>
-    <li><strong>لا نبيع بياناتك أبدًا</strong><span>لا أدوات تتبّع، ولا تحليلات خارجية، وسياسة خصوصية بلغة واضحة.</span></li>
+    <li><strong>المحرّر</strong>عناوين وكتل كود وجداول وروابط وثلاثة خطوط وستة أحجام وخمسة ألوان تعمل في الوضع الداكن، مع معاينة ومسوّدات.</li>
+    <li><strong>العربية والإنجليزية</strong>تتبدّل الواجهة بين اليمين إلى اليسار واليسار إلى اليمين، وتأخذ كل فقرة اتجاهها بنفسها.</li>
+    <li><strong>الخلاصة</strong>ثلاثة تبويبات و20 منشورًا في الصفحة، وصفحات مرقّمة بدل التمرير بلا نهاية.</li>
+    <li><strong>الإعلانات</strong>عليها عبارة «إعلان»، وواحد بعد كل 8 منشورات، ولا تُختار أبدًا من معلوماتك الشخصية.</li>
+    <li><strong>الأمان</strong>كلمات مرور Argon2id، وجلسات دوّارة تكتشف الرموز المسروقة، ومحتوى منشورات وصور منظّفة.</li>
+    <li><strong>الخصوصية</strong>لا أدوات تتبّع، ولا تحليلات من أطراف أخرى، وسياسة خصوصية بلغة واضحة.</li>
   </ul>
 
   <!-- ====================================================== accounts -->

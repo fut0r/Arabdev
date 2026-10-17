@@ -268,6 +268,9 @@
 </div>
 <p>All three tabs are split into pages of 20 with numbered page links at the bottom.</p>
 
+<h2 id="profiles-menu">The ⋯ menu</h2>
+<p>The ⋯ button on someone else's profile has three items: <strong>Copy link</strong> copies the profile's address, <strong>RSS feed</strong> opens the feed of their posts (see <a href="#tags-and-interests-rss">RSS feeds</a>), and <strong>Block</strong> blocks the account (see <a href="#privacy-and-safety-blocking">Blocking</a>).</p>
+
 <h2 id="profiles-editing">Editing your profile</h2>
 <p>Open <strong>Edit profile</strong> from your profile or the account menu. The same editor is also under <a href="#settings-profile">Settings → Profile</a>.</p>
 <div class="table-wrap">
@@ -350,7 +353,7 @@
 <p>The box at the top of the feed ("What are you working on?") and the <strong>Write a post</strong> button both open the full post editor. See <a href="#writing-posts">Writing posts</a>.</p>
 
 <h2 id="home-feed-ads">Ads in the feed</h2>
-<p>An ad appears after every 8 posts: after the 8th and the 16th post of each page, so at most two per page. Ads are clearly labelled and never look like posts.</p>
+<p>Ads appear after the 3rd, 9th and 15th post of a page, and only when another post follows, so there are at most three per page. They are labelled and never look like posts. See <a href="#ads">Ads on ArabDev</a>.</p>
 <p class="see-also">Main article: <a href="#ads">Ads on ArabDev</a>.</p>
 
 <h2 id="home-feed-empty">When the feed is empty</h2>
@@ -665,6 +668,15 @@
 
 <h2 id="tags-and-interests-popular">Popular tags</h2>
 <p>The Popular tags list (in the side column and on Explore) ranks tags by how many posts used them in the last 30 days. If no posts were tagged in that time, it falls back to the all-time ranking. The list is refreshed every two minutes. The top three ranks are shown in red.</p>
+
+<h2 id="tags-and-interests-rss">RSS feeds</h2>
+<p>If you use a feed reader, you can follow ArabDev without an account:</p>
+<ul>
+  <li><span dir="ltr">arabdev.site/rss.xml</span>: the latest posts on the site.</li>
+  <li><span dir="ltr">arabdev.site/tags/<em>name</em>/rss.xml</span>: posts with one tag, for example <span dir="ltr">/tags/python/rss.xml</span>.</li>
+  <li><span dir="ltr">arabdev.site/u/<em>username</em>/rss.xml</span>: one person's posts. Accounts that turned off <em>Show me in search and suggestions</em> have no feed.</li>
+</ul>
+<p>Each feed holds the 20 newest posts, with their title and opening lines. Profile and tag pages announce their feed, so most readers find it if you paste the page's address.</p>
 </div>
 <p class="article-footer">Describes ArabDev 1.3.0 · Last updated 17 October 2026</p>
 </article>
@@ -884,6 +896,8 @@
 </table>
 </div>
 <div class="callout tip"><span class="callout-title">Tip</span><p>Keep both switched on. They are the two things most likely to stop someone who has learned your password.</p></div>
+<h3 id="settings-security-two-factor">Authenticator app</h3>
+<p>Shows whether an authenticator app is on and, when it is, how many recovery codes you have left. <strong>Set up</strong> walks you through adding one; <strong>New recovery codes</strong> and <strong>Turn off</strong> appear once it is on. See <a href="#account-security-two-factor">Authenticator app</a>.</p>
 <h3 id="settings-security-devices">Where you are signed in</h3>
 <p>A list of every browser that currently holds a sign-in to your account: the browser and system (for example "Chrome · Android"), a phone or computer icon, and when it signed in. The browser you are using is marked <strong>This device</strong>.</p>
 <ul>
@@ -893,6 +907,8 @@
 <p>If you see a browser you do not recognise, sign it out and <a href="#settings-account-password">change your password</a>.</p>
 <h3 id="settings-security-data">Your data</h3>
 <p><strong>Download my data</strong> saves one JSON file with everything your account holds: your account details, profile, settings, interests, posts, drafts, comments, the posts you liked and saved, and the people you follow. Downloading changes nothing. Passwords, session tokens and other people's private information are never included. You can download it five times an hour.</p>
+
+<p>The file also lists the accounts you blocked, the reports you sent, and whether the authenticator app is on.</p>
 
 <h2 id="settings-appearance">Appearance</h2>
 <ul>
@@ -914,6 +930,9 @@
 </table>
 </div>
 <p><strong>Who can notify you with a mention</strong> has three choices: <strong>Everyone</strong> (default), <strong>People you follow</strong> and <strong>No one</strong>. It controls mention notifications only; it does not stop people from writing your name.</p>
+
+<h3 id="settings-privacy-blocked">Blocked accounts</h3>
+<p>Everyone you blocked, with an <strong>Unblock</strong> button next to each. See <a href="#privacy-and-safety-blocking">Blocking</a>.</p>
 
 <h2 id="settings-notifications">Notifications</h2>
 <p>Five switches, all on by default: likes on your posts, comments and replies, new followers, reposts of your posts, and mentions.</p>
@@ -985,6 +1004,16 @@
   <li>Delete your account and everything in it. See <a href="#settings-account-delete">Deleting your account</a>.</li>
 </ul>
 
+<h2 id="privacy-and-safety-blocking">Blocking</h2>
+<p>Block an account from the ⋯ menu on its profile or on any of its posts. After that:</p>
+<ul>
+  <li>Neither of you can follow the other, comment on the other's posts, reply to the other's comments or repost the other's posts.</li>
+  <li>No notification goes between you. The follows between you are removed in both directions, along with the notifications they had sent you.</li>
+  <li>You stop seeing their posts and comments, and they are no longer suggested to you.</li>
+  <li>They aren't told. If they open your profile they can still read your public posts, as anyone can without an account.</li>
+</ul>
+<p>Unblock from the same menu, or from <a href="#settings-privacy-blocked">Settings → Privacy → Blocked accounts</a>. Unblocking doesn't bring back the old follows.</p>
+
 <h2 id="privacy-and-safety-staying-safe">Staying safe</h2>
 <ul>
   <li>Never share your password. ArabDev staff will never ask for it.</li>
@@ -1027,6 +1056,26 @@
 <div class="callout warning"><span class="callout-title">Never share a code</span><p>ArabDev will never ask you for a code or your password, by email, message or anywhere else. If someone asks, it is an attempt to take over your account.</p></div>
 <h3 id="account-security-alerts">Security alerts</h3>
 <p>ArabDev emails you when your password changes and when a new browser signs in, with the browser and network address it used, so you can tell whether it was you. When your email address changes, the <em>old</em> address is always told. You can switch the other alerts off under <a href="#settings-security-signin">Settings → Security</a>.</p>
+
+<h2 id="account-security-two-factor">Authenticator app</h2>
+<p>An authenticator app on your phone makes a new six-digit code every 30 seconds. With one turned on, signing in needs your password and the code the app shows at that moment, so someone who learns your password still can't get in. ArabDev works with Google Authenticator, Microsoft Authenticator, 1Password, Authy and any other app that supports standard time-based codes (TOTP).</p>
+<h3 id="account-security-two-factor-setup">Turning it on</h3>
+<ol>
+  <li>Go to <a href="#settings-security">Settings → Security</a> and choose <strong>Set up</strong> next to Authenticator app.</li>
+  <li>Enter your password.</li>
+  <li>Scan the QR code with the app. If you can't scan it, add the account by hand with the key shown under it.</li>
+  <li>Type the six-digit code the app shows, and choose <strong>Turn on</strong>.</li>
+  <li>Save the ten recovery codes that appear: copy them, download them as a file, or write them down. You won't see them again.</li>
+</ol>
+<p>From then on, after your password ArabDev asks for <strong>the code from your app</strong> instead of emailing you one. You get five tries; after that, start signing in again. A code that has already been used is refused, even before it changes in the app.</p>
+<h3 id="account-security-recovery">Recovery codes</h3>
+<p>Each recovery code gets you in once, in place of the app's code, if you lose your phone or it is reset. Settings shows how many you have left. <strong>New recovery codes</strong> makes a fresh set of ten and cancels the old ones. Recovery codes are stored only as one-way hashes, so ArabDev can't show them to you again.</p>
+<h3 id="account-security-two-factor-off">Turning it off</h3>
+<p>Choose <strong>Turn off</strong> under Settings → Security and enter your password and a code from the app (or a recovery code). Your recovery codes are deleted, and signing in goes back to emailed codes if you have those switched on.</p>
+<p>With account alerts on (they are by default), ArabDev emails you when the app is turned on or off, when a recovery code is used, with how many are left, and when new recovery codes are made.</p>
+
+<h2 id="account-security-leaked">Leaked passwords</h2>
+<p>Passwords stolen from other sites end up in lists that attackers try everywhere. When you choose a new password, ArabDev checks it against the Have I Been Pwned list of passwords from public breaches and refuses it if it is there, with the message "This password has turned up in a data breach". Your password is not sent: only the first five characters of its SHA-1 hash are, and the comparison happens on ArabDev's server. If the list can't be reached, the password is accepted.</p>
 
 <h2 id="account-security-bots">The security check</h2>
 <p>Sign-in, sign-up, password reset, account changes, publishing and commenting are protected by Cloudflare Turnstile, which checks that a real browser, not a script, is sending the request. For almost everyone it is invisible. Occasionally it shows a small box to tick above the button.</p>
@@ -1108,6 +1157,7 @@
 
 <h2 id="account-security-tips">Tips</h2>
 <ul>
+  <li>Turn on an <a href="#account-security-two-factor">authenticator app</a>, and keep the recovery codes somewhere other than your phone.</li>
   <li>Use a unique password for ArabDev and keep it in a password manager.</li>
   <li>Keep <strong>Email me a code when signing in</strong> and the account alerts switched on.</li>
   <li>Protect the email account itself with its own two-step verification: whoever reads your inbox can confirm codes.</li>
@@ -1125,21 +1175,22 @@
 <h1 class="page-title">Ads on ArabDev</h1>
 </header>
 <div class="prose">
-<p>ArabDev shows a small number of ads to keep the platform free. Most come from Google AdSense; direct sponsors and ArabDev's own messages fill the rest. They follow strict rules so they never get in the way of reading or mislead anyone.</p>
+<p>ArabDev shows ads to pay for its servers. Most come from Google AdSense; sponsors who deal with us directly and ArabDev's own notices fill the rest. They have fixed places, are always labelled, and are never put inside posts or comments.</p>
 
 <h2 id="ads-placement">Where ads appear</h2>
 <ul>
-  <li><strong>In feeds:</strong> after every 8 posts, so after the 8th and the 16th post of a 20-post page. Never at random places.</li>
-  <li><strong>In the side column:</strong> one ad slot, only on large screens.</li>
-  <li><strong>Automatic placements:</strong> Google may also place a few ads of its own elsewhere on the page, for example a bar along the edge of the screen. These are always marked as ads by Google.</li>
-  <li><strong>Never inside content:</strong> no ads inside posts or comments, and no ads disguised as posts.</li>
+  <li><strong>Homepage:</strong> one ad after the latest posts and, on screens wide enough for it, a 728×90 banner near the bottom.</li>
+  <li><strong>Feeds:</strong> after the 3rd, 9th and 15th post of a page, and only when another post follows, so a page never ends on an ad.</li>
+  <li><strong>Side column:</strong> one ad, on large screens.</li>
+  <li><strong>A post's page:</strong> one ad between the post and its comments.</li>
+  <li><strong>Automatic placements:</strong> Google may place a few ads of its own elsewhere on the page, such as a bar along the edge of the screen. Google marks these as ads itself.</li>
+  <li><strong>Never inside content:</strong> no ads inside posts or comments, and no ads made to look like posts.</li>
 </ul>
 
 <h2 id="ads-labels">How to recognise an ad</h2>
 <ul>
-  <li>ArabDev's ad boxes carry a <strong>Sponsored</strong> label and sit on a tinted background with a dashed frame, with no profile picture or action row, so they cannot be mistaken for posts.</li>
-  <li>Ads placed by Google carry Google's own "Ad" marking.</li>
-  <li>Direct sponsor and ArabDev messages also say who is promoting them, with an information icon explaining why the ad is there.</li>
+  <li>Google ads sit in a frame labelled <strong>Advertisement</strong>.</li>
+  <li>Sponsor ads and ArabDev's own notices are labelled <strong>Sponsored</strong>, say who is promoting them, and have an information icon explaining why the ad is there. They have no profile picture or buttons, so they can't be mistaken for posts.</li>
 </ul>
 
 <h2 id="ads-selection">How ads are chosen</h2>
@@ -1152,8 +1203,8 @@
 <h2 id="ads-counting">What is counted</h2>
 <p>For direct sponsor and ArabDev ads, ArabDev keeps two totals: how many times each was shown and how many times it was clicked. Google counts views and clicks of its own ads to pay ArabDev, and ArabDev sees only those totals. None of these numbers are linked to you or to any account.</p>
 
-<h2 id="ads-house">House and sponsor ads</h2>
-<p>Where no Google ad is set up for a slot, ArabDev shows a direct sponsor's ad or one of its own messages, for example inviting you to share an open-source project or complete your profile. ArabDev's messages are labelled "Promoted by ArabDev". To sponsor ArabDev, write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
+<h2 id="ads-house">When Google has no ad</h2>
+<p>Google doesn't always have an ad for every place. If it has none, or hasn't answered within six seconds, the place in the feed or the side column shows a sponsor's ad or one of ArabDev's notices instead (for example, an invitation to share an open-source project); anywhere else the space simply closes. ArabDev's notices are labelled "Promoted by ArabDev". To sponsor ArabDev, write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
 
 <h2 id="ads-blocking">If you use an ad blocker</h2>
 <p>That is your choice. ArabDev works the same with ads blocked and never hides anything behind them. If a blocker also stops Cloudflare's security check, sign-in and posting may ask you to try again; see <a href="#account-security-bots">The security check</a>.</p>
@@ -1285,6 +1336,9 @@
 <h3 id="faq-delete">How do I delete my account?</h3>
 <p>Settings → Account → Delete my account. You confirm with your password, and everything is removed permanently.</p>
 
+<h3 id="faq-lost-phone">I lost the phone with my authenticator app. How do I sign in?</h3>
+<p>Type one of your recovery codes where the app's code goes; each one works once. Once you are in, turn the app off and on again under Settings → Security to set up your new phone, or make a new set of recovery codes. If you have no recovery codes left, write to <a href="mailto:support@arabdev.site" dir="ltr">support@arabdev.site</a> from the account's email address. See <a href="#account-security-two-factor">Authenticator app</a>.</p>
+
 <h2 id="faq-posting">Posting</h2>
 <h3 id="faq-title-required">Does a post need a title?</h3>
 <p>No, but it helps people decide whether to read it. Without a title, the post is shown as "by" and your name.</p>
@@ -1315,8 +1369,10 @@
 <p>The author of a post is notified when you like it. There is no public list of your likes.</p>
 <h3 id="faq-bookmarks-private">Are bookmarks private?</h3>
 <p>Yes, completely.</p>
+<h3 id="faq-block">How do I block someone?</h3>
+<p>Open the ⋯ menu on their profile or on one of their posts and choose <strong>Block</strong>. They aren't told. To undo it, use the same menu or <strong>Settings → Privacy → Blocked accounts</strong>. See <a href="#privacy-and-safety-blocking">Blocking</a>.</p>
 <h3 id="faq-ads-count">How many ads will I see?</h3>
-<p>At most two ad boxes in each 20-post page of a feed, plus one in the side column on large screens. Google may add a few automatic placements elsewhere on the page, always marked as ads. See <a href="#ads">Ads on ArabDev</a>.</p>
+<p>Up to three in a page of the feed (after the 3rd, 9th and 15th post), one in the side column on large screens, one under a post, and one or two on the homepage. Google may add a few automatic placements, which it marks as ads. See <a href="#ads">Ads on ArabDev</a>.</p>
 
 <h2 id="faq-other">Other</h2>
 <h3 id="faq-messages">Is there private messaging?</h3>
@@ -1324,7 +1380,7 @@
 <h3 id="faq-app">Is there a mobile app?</h3>
 <p>ArabDev is a responsive website designed for phones as well as computers, and you can add it to your home screen: in your phone’s browser menu choose <strong>Add to Home screen</strong> (or <strong>Install app</strong>). It then opens full screen with its own icon. There is no separate app-store app.</p>
 <h3 id="faq-code">Why does ArabDev email me a code?</h3>
-<p>To make sure it is really you. Signing in, creating an account and changing your email or password are confirmed with a six-digit code, so a stolen password alone cannot open your account. See <a href="#account-security-codes">Confirmation codes</a>.</p>
+<p>To make sure it is really you. Signing in, creating an account and changing your email or password are confirmed with a six-digit code, so a stolen password alone cannot open your account. See <a href="#account-security-codes">Confirmation codes</a>. If you turned on an authenticator app, signing in asks for a code from the app instead of an email.</p>
 <h3 id="faq-contribute">Can I contribute to ArabDev?</h3>
 <p>Yes. See <a href="#contributing-and-license">Contributing and license</a>, or write to <a href="mailto:hi@arabdev.site" dir="ltr">hi@arabdev.site</a>.</p>
 <h3 id="faq-contact">How do I contact ArabDev?</h3>
@@ -1356,6 +1412,8 @@
     <tr><td>"That code is not right."</td><td>Check the newest email: each new code replaces the previous one. After five wrong tries, start again.</td></tr>
     <tr><td>"This code has expired."</td><td>Codes last 10 minutes. Ask for a new one.</td></tr>
     <tr><td>"Please complete the security check and try again."</td><td>Reload the page and try again. If it keeps happening, allow <span dir="ltr">challenges.cloudflare.com</span> in your blocker or privacy extension. See <a href="#account-security-bots">The security check</a>.</td></tr>
+    <tr><td>"That code isn't right. Check the app and try again."</td><td>Make sure your phone sets its clock automatically: the codes depend on it. Type the code showing now, not one about to change. If you lost the phone, use a <a href="#account-security-recovery">recovery code</a>.</td></tr>
+    <tr><td>"This password has turned up in a data breach…"</td><td>The password is on a public list of leaked passwords, so attackers already try it. Choose a different one. See <a href="#account-security-leaked">Leaked passwords</a>.</td></tr>
   </tbody>
 </table>
 </div>
@@ -1485,23 +1543,27 @@
 </header>
 <div class="prose">
 <dl>
+  <dt><strong>Authenticator app</strong></dt><dd>A phone app, such as Google Authenticator, that makes a new six-digit sign-in code every 30 seconds. Optional; see <a href="#account-security-two-factor">Authenticator app</a>.</dd>
   <dt><strong>Bookmark</strong></dt><dd>A private save of a post, listed on your Bookmarks page and the Saved tab of your profile.</dd>
+  <dt><strong>Block</strong></dt><dd>Cutting off an account: neither of you can follow, comment on, reply to or repost the other, and you stop seeing their posts. See <a href="#privacy-and-safety-blocking">Blocking</a>.</dd>
   <dt><strong>Display name</strong></dt><dd>The name shown on your profile and posts. Any script, up to 50 characters.</dd>
   <dt><strong>Draft</strong></dt><dd>An unpublished post that only you can see.</dd>
   <dt><strong>Feed</strong></dt><dd>A list of posts. The home feed has three tabs: For you, Following and Latest.</dd>
   <dt><strong>Follow</strong></dt><dd>Subscribing to someone's posts and reposts in your Following feed.</dd>
   <dt><strong>Confirmation code</strong></dt><dd>A six-digit code emailed to confirm a sign-in, a new account, or a change of email or password. Valid for 10 minutes, once.</dd>
-  <dt><strong>House ad</strong></dt><dd>An ad in which ArabDev promotes its own features, shown where no Google or sponsor ad is set up.</dd>
+  <dt><strong>House ad</strong></dt><dd>An ad in which ArabDev promotes its own features, shown where Google has no ad and no sponsor ad is booked.</dd>
   <dt><strong>Security check</strong></dt><dd>Cloudflare Turnstile, which checks that a real browser is behind sign-ins, sign-ups, posts and comments. Usually invisible.</dd>
   <dt><strong>Interest</strong></dt><dd>One of 25 topics you can pick to shape your feed and suggestions.</dd>
   <dt><strong>Moderator</strong></dt><dd>A member of the ArabDev team who reviews reports and decides whether to keep a post, remove it, or restrict or suspend its author.</dd>
   <dt><strong>Mention</strong></dt><dd>Writing <code>@username</code> in a post or comment, which notifies that person.</dd>
   <dt><strong>Onboarding</strong></dt><dd>The four-step setup window shown on your first visit.</dd>
+  <dt><strong>Recovery code</strong></dt><dd>One of ten single-use codes that sign you in in place of the authenticator app's code, if you lose your phone.</dd>
   <dt><strong>Report</strong></dt><dd>Flagging a post that breaks the community guidelines, with a reason, so the moderators review it.</dd>
   <dt><strong>Repost</strong></dt><dd>Sharing someone else's post with your followers without changing it.</dd>
   <dt><strong>Restricted account</strong></dt><dd>An account the moderators stopped from posting, commenting and reposting until a set date. It can still read, like and save.</dd>
+  <dt><strong>RSS feed</strong></dt><dd>A list of the newest posts that feed readers can follow, for the whole site, a tag or a person. See <a href="#tags-and-interests-rss">RSS feeds</a>.</dd>
   <dt><strong>RTL / LTR</strong></dt><dd>Right-to-left (Arabic) and left-to-right (English) text direction.</dd>
-  <dt><strong>Sponsored</strong></dt><dd>The label that marks every ad.</dd>
+  <dt><strong>Sponsored</strong></dt><dd>The label on ads from sponsors and on ArabDev's own notices. Google ads are labelled <strong>Advertisement</strong>.</dd>
   <dt><strong>Tag</strong></dt><dd>A keyword describing a post, such as <code>#python</code>. Up to 5 per post.</dd>
   <dt><strong>Trending</strong></dt><dd>Posts from the last 7 days ranked by how quickly they are gathering likes, comments and reposts.</dd>
   <dt><strong>Username</strong></dt><dd>Your unique handle, used in your profile address and in mentions.</dd>
@@ -1531,11 +1593,12 @@
     <tr><td>Build</td><td>Vite 8</td></tr>
     <tr><td>API</td><td>Python, FastAPI, Pydantic 2</td></tr>
     <tr><td>Database</td><td>SQLAlchemy 2 with Alembic migrations: SQLite for development and single-server hosting, PostgreSQL (Neon) on Vercel</td></tr>
-    <tr><td>Security</td><td>Argon2id password hashing, JWT access tokens, rotating refresh tokens, emailed six-digit codes, Cloudflare Turnstile, security headers</td></tr>
+    <tr><td>Security</td><td>Argon2id password hashing, JWT access tokens, rotating refresh tokens, emailed six-digit codes, authenticator apps (TOTP), a leaked-password check, Cloudflare Turnstile, security headers</td></tr>
     <tr><td>Content safety</td><td>nh3 on the server, DOMPurify in the browser</td></tr>
     <tr><td>Images</td><td>Pillow, re-encoding to WebP</td></tr>
     <tr><td>Redis</td><td>Shared rate limits and caching (Upstash in production; optional elsewhere)</td></tr>
-    <tr><td>Tests</td><td>pytest (74 tests, run against SQLite and PostgreSQL), run by continuous integration on every pull request</td></tr>
+    <tr><td>Code checks</td><td>Ruff (lint and format) and pip-audit for Python; oxlint, Prettier and npm audit for the frontend</td></tr>
+    <tr><td>Tests</td><td>pytest (111 tests, run against SQLite and PostgreSQL), run by continuous integration on every pull request</td></tr>
   </tbody>
 </table>
 </div>
@@ -1551,6 +1614,9 @@
 ├── vercel.json       Build, routing and the scheduled clean-up
 ├── requirements.txt  Python packages for the Vercel function
 ├── LICENSE           GNU GPL v3
+├── CONTRIBUTING.md   How to contribute, and the checks to run
+├── CODE_OF_CONDUCT.md
+├── .github/          CI, issue and pull request templates
 ├── docker-compose.yml
 └── README.md</code></pre>
 
@@ -1558,10 +1624,11 @@
 <ul>
   <li><code>app/main.py</code> creates the application: middleware, error handlers, the API router and the media file mount.</li>
   <li><code>app/core/</code>: settings, database engine, security helpers, dependencies, error types, rate limiting and caching.</li>
-  <li><code>app/models/</code>: SQLAlchemy models for the 19 tables.</li>
+  <li><code>app/models/</code>: SQLAlchemy models for the 21 tables.</li>
   <li><code>app/schemas/</code>: Pydantic models for requests and responses.</li>
   <li><code>app/api/v1/</code>: route modules grouped by topic.</li>
   <li><code>app/api/pages.py</code> and <code>app/services/page_service.py</code>: write a post's, profile's, tag's or Explore's own title, description and text into the app shell, so crawlers and link previews that do not run JavaScript can read them. The text is built from plain text and escaped; the app replaces it when it starts.</li>
+  <li><code>app/api/feeds.py</code>: the RSS feeds.</li>
   <li><code>app/repositories/</code>: query builders.</li>
   <li><code>app/services/</code>: business rules such as permissions, notifications, feeds and media processing.</li>
   <li><code>app/utils/</code>: the HTML sanitizer, validators, pagination and text helpers.</li>
@@ -1570,7 +1637,7 @@
 <h2 id="developers-overview-frontend">Frontend structure</h2>
 <ul>
   <li><code>src/api/</code>: the HTTP client, endpoint functions, query keys and cache update helpers.</li>
-  <li><code>src/features/</code>: auth, onboarding, posts, editor, comments, profile, users, search, ads, notifications and preferences.</li>
+  <li><code>src/features/</code>: one folder per feature (auth, posts, editor, comments, settings, moderation, ads, users and so on) with its components and hooks. Pages only put them together for a route.</li>
   <li><code>src/components/</code>: shared pieces such as Logo, EmptyState, LoadingState, Pagination and Notifier.</li>
   <li><code>src/layouts/</code>: AppLayout, Navbar, Sidebar, RightSidebar and MobileNavigation.</li>
   <li><code>src/pages/</code>: route components, loaded on demand.</li>
@@ -1583,7 +1650,7 @@
 <table>
   <thead><tr><th scope="col">Table</th><th scope="col">Holds</th></tr></thead>
   <tbody>
-    <tr><td><code>users</code></td><td>Accounts: username, email, password hash, flags, token version</td></tr>
+    <tr><td><code>users</code></td><td>Accounts: username, email, password hash, flags, token version, authenticator app key (encrypted)</td></tr>
     <tr><td><code>profiles</code></td><td>Display name, bio, location, website, avatar</td></tr>
     <tr><td><code>user_settings</code></td><td>Theme, language, privacy and notification preferences</td></tr>
     <tr><td><code>interests</code>, <code>user_interests</code></td><td>The 25 topics and who picked them</td></tr>
@@ -1597,10 +1664,26 @@
     <tr><td><code>refresh_tokens</code>, <code>password_reset_tokens</code></td><td>Hashed session and reset tokens with expiry</td></tr>
     <tr><td><code>verification_codes</code></td><td>Hashed six-digit codes, what each confirms, attempts and expiry</td></tr>
     <tr><td><code>reports</code></td><td>Reports on posts: reason, details, who reported, a copy of the post's title and opening, and the moderators' decision</td></tr>
-  </tbody>
+  <tr><td><code>blocks</code></td><td>Who blocked whom, and when</td></tr>
+    <tr><td><code>recovery_codes</code></td><td>Hashed single-use recovery codes for the authenticator app</td></tr>
+    </tbody>
 </table>
 </div>
 <p>Foreign keys, usernames, emails, creation dates, tags and follow relationships are indexed. SQLite runs in WAL mode with foreign keys enforced.</p>
+
+<h2 id="developers-overview-checks">Checks</h2>
+<p>Continuous integration runs these on every pull request. Run them before you push:</p>
+<pre><code>cd backend
+pytest
+ruff check .
+ruff format --check .
+pip-audit
+
+cd frontend
+npm run lint
+npm run format:check
+npm run build</code></pre>
+<p><a href="https://github.com/fut0r/Arabdev/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a> explains how the code is organised and what a pull request needs.</p>
 </div>
 <p class="article-footer">Describes ArabDev 1.3.0 · Last updated 17 October 2026</p>
 </article>
@@ -1658,10 +1741,12 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td><code>MODERATION_EMAIL</code></td><td>the support address</td><td>Where new reports are emailed.</td></tr>
     <tr><td><code>REPORT_AUTO_HIDE_THRESHOLD</code></td><td>3</td><td>How many different people must report a post before it is hidden until reviewed.</td></tr>
     <tr><td><code>REPORT_RETENTION_DAYS</code></td><td>365</td><td>How long decided reports are kept before the scheduled clean-up deletes them.</td></tr>
-    <tr><td><code>VITE_ADSENSE_FEED_SLOT</code>, <code>VITE_ADSENSE_SIDEBAR_SLOT</code></td><td>unset</td><td>Build-time ad unit ids for Google AdSense. Without them the house ads fill those slots.</td></tr>
+    <tr><td><code>PWNED_PASSWORDS_ENABLED</code></td><td><code>true</code></td><td>Checks new passwords against Have I Been Pwned's list of leaked passwords. Turn it off on a server without internet access.</td></tr>
   </tbody>
 </table>
 </div>
+
+<p>Google AdSense unit ids are not settings: they live in <code>frontend/src/site.ts</code>. Change them there when you run your own copy.</p>
 
 <h2 id="self-hosting-commands">Management commands</h2>
 <ul>
@@ -1741,6 +1826,9 @@ npm run dev                   # http://localhost:5173</code></pre>
     <tr><td>Health</td><td><code>GET /health</code></td></tr>
     <tr><td>Search engines</td><td><code>GET|HEAD /sitemap.xml</code> (at the site root, outside <code>/api</code>)</td></tr>
     <tr><td>Readable pages</td><td><code>GET|HEAD /posts/{id}</code>, <code>/u/{username}</code>, <code>/tags/{slug}</code> and <code>/explore</code> at the site root return the app's HTML with that page's title, description and text already in it</td></tr>
+    <tr><td>Two-step sign-in</td><td><code>POST /users/me/two-factor/setup</code>, <code>POST /users/me/two-factor/enable</code>, <code>POST /users/me/two-factor/disable</code>, <code>POST /users/me/two-factor/recovery-codes</code>. While it is on, <code>POST /auth/login</code> answers with a <code>login_2fa</code> challenge, which <code>POST /auth/verify</code> completes with the app's code or a recovery code.</td></tr>
+    <tr><td>Blocking</td><td><code>GET /users/me/blocked</code>, <code>POST|DELETE /users/{id}/block</code></td></tr>
+    <tr><td>RSS</td><td><code>GET|HEAD /rss.xml</code>, <code>/u/{username}/rss.xml</code> and <code>/tags/{slug}/rss.xml</code> at the site root</td></tr>
   </tbody>
 </table>
 </div>
@@ -1786,11 +1874,12 @@ Content-Type: application/json
 
 <h2 id="contributing-and-license-code">Contributing code</h2>
 <ul>
+  <li>Read <a href="https://github.com/fut0r/Arabdev/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">CONTRIBUTING.md</a> first, and open an issue before starting anything bigger than a small fix. The <a href="https://github.com/fut0r/Arabdev/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener">code of conduct</a> applies everywhere around the project.</li>
   <li>Keep the backend layering: routes call services, services use repositories.</li>
   <li>Return errors with a stable <code>code</code> and add its translation to both language files.</li>
   <li>Never put interface text directly in components: add keys to <code>src/i18n/ar.json</code> and <code>src/i18n/en.json</code>.</li>
   <li>Use theme values, not hard-coded colors, and physical CSS properties that the RTL plugin can mirror (or logical ones where content direction matters).</li>
-  <li>Add or update tests for backend changes and run <code>pytest</code>, <code>npm run typecheck</code> and <code>npm run format:check</code>.</li>
+  <li>Add or update tests for backend changes, and run the <a href="#developers-overview-checks">checks</a> before opening a pull request.</li>
   <li>Update this wiki and the patch notes when behaviour changes.</li>
 </ul>
 

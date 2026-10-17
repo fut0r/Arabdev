@@ -102,9 +102,8 @@
     comments and profile details that people choose to publish.
   </p>
   <p>
-    We believe you should be able to understand exactly what happens to that information. This policy
-    therefore describes our real practices in concrete terms. Where it names a specific cookie, a specific
-    time limit or a specific protection, that is how the service actually works today.
+    This policy describes what actually happens to that information. Where it names a cookie, a time
+    limit or a protection, that is how the service works today.
   </p>
   <h3>What this policy covers</h3>
   <ul>
@@ -319,6 +318,8 @@
         <tr><td>Reposts</td><td>Which posts you reposted. Reposts appear on your profile and in your followers' feeds.</td><td><span class="pill public">Public</span></td></tr>
         <tr><td>Bookmarks (saved posts)</td><td>Which posts you saved for later.</td><td><span class="pill private">Only you</span></td></tr>
         <tr><td>Notifications</td><td>Who liked, commented on or reposted your posts, who followed you, who mentioned you, and whether you have read each notification.</td><td><span class="pill private">Only you</span></td></tr>
+        <tr><td>Blocks</td><td>Which accounts you blocked, and when.</td><td><span class="pill private">Only you</span></td></tr>
+        <tr><td>Authenticator app</td><td>Only if you turn it on: the app's secret key (encrypted), when you turned it on, which 30-second step your last code came from (so no code works twice), and your ten recovery codes as one-way hashes, with when each was used.</td><td><span class="pill private">Only you</span></td></tr>
         <tr><td>Onboarding status</td><td>Whether you have finished the four-step welcome, so we do not show it again.</td><td><span class="pill private">Only you</span></td></tr>
         <tr><td>Account timestamps</td><td>When your account was created, when it was last updated, and when you last signed in.</td><td>Joining month is <span class="pill public">public</span>; the rest are private</td></tr>
         <tr><td>Post statistics</td><td>The number of likes, comments and reposts on each post, and when it was published or edited.</td><td><span class="pill public">Public</span></td></tr>
@@ -549,6 +550,8 @@
         <tr><td>Settings</td><td><span class="pill private">Private</span></td><td>Only you can see them.</td></tr>
         <tr><td>Reports you send</td><td><span class="pill private">Private</span></td><td>Only you and the moderators. The author is told their post was reported and why, never by whom.</td></tr>
         <tr><td>A restriction on your account</td><td><span class="pill private">Private</span></td><td>Shown to you and the moderators, not on your public profile.</td></tr>
+        <tr><td>Accounts you blocked</td><td><span class="pill private">Private</span></td><td>Only you. The person you block is not told, though they may notice they can no longer follow you or reply to you.</td></tr>
+        <tr><td>Authenticator app key and recovery codes</td><td><span class="pill never">Unreadable</span></td><td>The key is stored encrypted and the recovery codes as one-way hashes. We can't show either to you again.</td></tr>
         <tr><td>Password</td><td><span class="pill never">Unreadable</span></td><td>Stored only as a one-way hash.</td></tr>
       </tbody>
     </table>
@@ -559,6 +562,8 @@
     <li><strong>Follow lists</strong>: hide who you follow and who follows you.</li>
     <li><strong>Mentions</strong>: choose whether everyone, only people you follow, or no one may mention you.</li>
     <li><strong>Editing and deleting</strong>: edit or delete your posts at any time. Deleting a post also removes its comments, likes, reposts and bookmarks.</li>
+    <li><strong>Blocking</strong>: block an account from its profile or from any of its posts. Neither of you can then follow, comment on, reply to or repost the other, and you stop seeing their posts and comments. Settings → Privacy lists everyone you blocked.</li>
+    <li><strong>RSS feeds</strong>: public posts appear in the site's RSS feeds, the same way they appear in the Latest feed. Your profile also has its own feed, which is switched off while discoverability is off.</li>
   </ul>
   <div class="callout">
     <span class="callout-title">A note on copies</span>
@@ -588,6 +593,16 @@
     <li>Are not allowed to use it for their own purposes, including advertising.</li>
     <li>Must delete or return it when their service to us ends.</li>
   </ul>
+
+  <h3 id="sharing-passwords">Checking new passwords</h3>
+  <p>
+    When you choose a new password (signing up, resetting it or changing it), our server works out its
+    SHA-1 hash and sends only the first five characters of that hash to the Have I Been Pwned service
+    (<span dir="ltr">api.pwnedpasswords.com</span>). The service answers with every hash from known data
+    breaches that starts with those five characters, and our server compares them itself. Your password,
+    the rest of its hash, your email address and your IP address are not sent. If the password is on the
+    list we ask you for another one; the result of the check is not stored.
+  </p>
 
   <h3 id="sharing-legal">Legal requirements</h3>
   <p>
@@ -637,6 +652,14 @@
   <p>
     It does <strong>not</strong> mean Google builds an advertising profile from what you read on ArabDev.
     Non-personalised ads are not based on your past browsing or on interests inferred about you.
+  </p>
+
+  <h3 id="ads-where">Where ads appear</h3>
+  <p>
+    Ads have fixed places: one or two on the homepage, in the feed after the 3rd, 9th and 15th post of a
+    page, one in the sidebar, and one between a post and its comments. Each Google ad is labelled
+    <em>Advertisement</em>. Where Google has no ad, the space shows one of ArabDev's own sponsor cards or
+    nothing at all.
   </p>
 
   <h3 id="ads-measure">What Google receives, and what it does not</h3>
@@ -703,7 +726,7 @@
   </p>
   <p>
     Two third parties run code in your browser and may store something of their own: Google, for the ads
-    (frequency capping and fraud prevention — see <a href="#advertising">Advertising</a>), and Cloudflare
+    (frequency capping and fraud prevention; see <a href="#advertising">Advertising</a>), and Cloudflare
     Turnstile, for the check that tells a person from a script on the sign-in, sign-up and posting forms.
     Where the law requires consent for those, Google and Cloudflare ask for it themselves and record your
     answer; ArabDev does not show a banner of its own, and nothing on this site depends on you accepting
@@ -768,6 +791,7 @@
     <li>Sign-in takes the same time whether or not an email address is registered, and the password reset page gives the same answer either way, so neither can be used to find out who has an account.</li>
     <li>Signing in, creating an account and changing your email or password are confirmed with a six-digit code sent by email, so a stolen password alone is not enough. A code expires after 10 minutes, allows five attempts and works once. A new email address gets its code at the new address, and the old address is told about the change.</li>
     <li>Each account allows eight sign-in attempts every fifteen minutes, however many networks they come from, and each inbox receives at most five password reset emails an hour.</li>
+    <li>A new password is checked against passwords leaked in public data breaches, and refused if it is on that list. See <a href="#sharing-passwords">Checking new passwords</a> for what is sent.</li>
   </ul>
   <h3 id="security-sessions">Sessions</h3>
   <ul>
@@ -777,6 +801,13 @@
     <li>Session refreshes require a special request header that other websites cannot send, which protects against cross-site request forgery.</li>
     <li>Password reset links are single-use, expire after 30 minutes and are stored only as hashes.</li>
     <li>You can see every browser signed in to your account under Settings → Security and sign any of them out, and you get an email when a new one signs in.</li>
+  </ul>
+  <h3 id="security-two-factor">Authenticator app</h3>
+  <ul>
+    <li>You can add an authenticator app under Settings → Security. After that, signing in needs your password and a six-digit code from the app.</li>
+    <li>The app's secret key is encrypted before it is stored, with a key derived from the server's secret, and each code works only once.</li>
+    <li>The ten recovery codes are stored only as one-way hashes, so we can't show them to you again. Making a new set cancels the old one, and turning the app off deletes them.</li>
+    <li>Unless you switched account alerts off, we email you when the app is turned on or off, when a recovery code is used, and when new recovery codes are made.</li>
   </ul>
   <h3 id="security-content">Content and uploads</h3>
   <ul>
@@ -822,6 +853,8 @@
         <tr><td>Drafts</td><td>Until you publish or discard them, or delete your account.</td></tr>
         <tr><td>Uploaded images</td><td>Until the post or profile they belong to is deleted, or your account is deleted. Images uploaded but never used can be removed right away.</td></tr>
         <tr><td>Notifications</td><td>Until the related post, comment or account is deleted, or your account is deleted.</td></tr>
+        <tr><td>Blocks</td><td>Until you unblock the account, or either account is deleted.</td></tr>
+        <tr><td>Authenticator app key and recovery codes</td><td>Until you turn the app off or delete your account. Old recovery codes are deleted when you make a new set.</td></tr>
         <tr><td>Sign-in session records</td><td>Until the session expires or ends, plus 7 days (so that stolen tokens can still be recognised), then deleted automatically.</td></tr>
         <tr><td>Password reset links</td><td>Valid for 30 minutes; deleted automatically one day after they are used or expire.</td></tr>
         <tr><td>Rate-limit counters</td><td>For the length of the limit window, at most one hour, in a shared in-memory store. Email addresses in them are one-way hashes.</td></tr>
@@ -895,7 +928,7 @@
         <tr><td>Access</td><td>Know what information we hold about you and get a copy.</td><td>Your profile, posts, drafts, bookmarks and settings are visible to you in the app, and <em>Settings → Security → Download my data</em> gives you a copy straight away. For anything it does not cover, contact us.</td></tr>
         <tr><td>Correction</td><td>Fix information that is wrong or incomplete.</td><td>Settings → Account and Settings → Profile let you change your username, email, password and every profile detail.</td></tr>
         <tr><td>Deletion</td><td>Have your information erased.</td><td>Delete individual posts, comments and images at any time, or delete your whole account in Settings.</td></tr>
-        <tr><td>Portability</td><td>Receive your information in a structured, machine-readable format.</td><td><em>Settings → Security → Download my data</em> downloads one JSON file with your account, profile, settings, interests, posts, drafts, comments, likes, bookmarks, the people you follow, and the reports you sent.</td></tr>
+        <tr><td>Portability</td><td>Receive your information in a structured, machine-readable format.</td><td><em>Settings → Security → Download my data</em> downloads one JSON file with your account, profile, settings, interests, posts, drafts, comments, likes, bookmarks, the people you follow, the accounts you blocked, whether the authenticator app is on, and the reports you sent.</td></tr>
         <tr><td>Objection</td><td>Object to processing based on our legitimate interests.</td><td>Contact us and explain your situation; we will stop unless we have compelling grounds or need it for a legal claim.</td></tr>
         <tr><td>Restriction</td><td>Ask us to pause the use of your information while a concern is resolved.</td><td>Contact us.</td></tr>
         <tr><td>Withdraw consent</td><td>Take back consent you gave, without affecting earlier processing.</td><td>Remove the optional detail or switch the feature off.</td></tr>
@@ -1130,6 +1163,7 @@
     <table>
       <thead><tr><th scope="col">Version</th><th scope="col">Date</th><th scope="col">Summary</th></tr></thead>
       <tbody>
+        <tr><td>1.5</td><td>17 October 2026</td><td>Covers the authenticator app and its recovery codes, blocking, the check of new passwords against leaked ones, RSS feeds, and where ads appear.</td></tr>
         <tr><td>1.4</td><td>5 October 2026</td><td>Explains that public pages are sent with their text in the page and kept by our hosting for a few minutes, so an edited or deleted post can remain visible at its address for up to about ten minutes.</td></tr>
         <tr><td>1.3</td><td>29 September 2026</td><td>Describes reporting posts: what a report stores, who sees who reported, the emails to authors and reporters, restrictions and suspensions, and how long reports are kept. Reports you send are now part of the data download.</td></tr>
         <tr><td>1.2</td><td>28 September 2026</td><td>Names every provider and where it runs; describes confirmation codes, the shared rate-limit store and how long each is kept; adds the in-app data download, the devices list and the security alert emails.</td></tr>
