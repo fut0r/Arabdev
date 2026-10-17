@@ -59,7 +59,7 @@
     "more": "More",
     "account": "Account menu",
     "mainNavigation": "Main navigation",
-    "footerAbout": "ArabDev — a community for Arabic-speaking developers.",
+    "footerAbout": "ArabDev is a community for Arabic-speaking developers, and its code is open source.",
     "apiDocs": "API docs",
     "wiki": "Wiki",
     "privacy": "Privacy Policy",
@@ -115,7 +115,7 @@
       {
         "title": "Why it exists",
         "body": [
-          "A lot of what Arabic-speaking developers write is scattered across platforms that were never designed for the language: layouts that are only mirrored, fonts that fight the script, and editors that break as soon as a right-to-left sentence meets a line of code.",
+          "A lot of what Arabic-speaking developers write is scattered across sites that were never built for the language: layouts that are only mirrored, fonts that don't suit the script, and editors that break as soon as a right-to-left sentence meets a line of code.",
           "ArabDev starts from Arabic instead of adding it later. Every paragraph picks its own direction, so an Arabic explanation and an English snippet sit in the same post without breaking. The interface is complete in both Arabic and English, and you can switch at any time."
         ]
       },
@@ -137,14 +137,14 @@
       {
         "title": "How it is paid for",
         "body": [
-          "ArabDev is free to use. Its running costs are covered by a small number of clearly labelled ads in fixed places in the feed and the sidebar. Ads are requested without personalisation: they are not chosen from what you read or write.",
+          "ArabDev is free to use. The servers are paid for by ads in a few fixed places: the homepage, between posts in the feed, the sidebar and under a post. Every ad is labelled, and we ask Google for non-personalised ads, so they aren't picked from what you read or write.",
           "We do not sell your information. The privacy policy explains in plain language what is collected, why, and for how long."
         ]
       },
       {
         "title": "Keeping it a good place",
         "body": [
-          "The community guidelines ask for what makes technical discussion worth reading: share what you learned, credit other people's work, and criticise the code, not the person. Harassment, hate, spam and stolen content are not welcome.",
+          "The community guidelines are short: share what you learned, credit other people's work, and criticise the code, not the person. Harassment, hate, spam and copied content get removed.",
           "Every post has a report button. Moderators review each report and can remove a post, pause an account's publishing for a time, or suspend it. The author is always told what was decided, and never who reported them."
         ]
       }
@@ -250,7 +250,7 @@
   },
   "auth": {
     "signInTitle": "Sign in",
-    "signInSubtitle": "Welcome back. Pick up where you left off.",
+    "signInSubtitle": "Use the email and password you signed up with.",
     "email": "Email",
     "password": "Password",
     "rememberMe": "Keep me signed in",
@@ -306,7 +306,7 @@
     "resent": "A new code is on its way.",
     "expiresIn": "The code expires in {{time}}",
     "expired": "This code has expired. Ask for a new one.",
-    "spamHint": "Nothing yet? Check your spam folder — and make sure the address is right.",
+    "spamHint": "Nothing yet? Check your spam folder, and make sure the address is right.",
     "useAnotherAccount": "Use another account",
     "changeEmail": "Use a different email",
     "appTitle": "Enter the code from your app",
@@ -316,16 +316,16 @@
   },
   "landing": {
     "eyebrow": "For Arabic-speaking developers",
-    "headline": "Write, share and learn with developers who speak your language.",
-    "lead": "ArabDev is where developers publish technical posts, follow each other's work and discuss code — in Arabic and English.",
-    "featureConnectTitle": "Connect with developers",
-    "featureConnectBody": "Follow people working on the same stack and see what they ship.",
-    "featureShareTitle": "Share knowledge",
-    "featureShareBody": "Write posts with code, tables and links. Drafts save your half-finished ideas.",
-    "featureDiscoverTitle": "Discover projects",
-    "featureDiscoverBody": "Find open-source work and tools through tags and trending discussions.",
-    "featureLearnTitle": "Learn from the community",
-    "featureLearnBody": "Ask, answer and review in comments, without the noise.",
+    "headline": "Technical posts by developers who speak Arabic.",
+    "lead": "Developers post what they're building and what they've learned, follow each other, and talk about code here, in Arabic and English.",
+    "featureConnectTitle": "Follow developers",
+    "featureConnectBody": "Follow people who use the same tools as you and see what they post.",
+    "featureShareTitle": "Write posts",
+    "featureShareBody": "Code blocks, tables and links. Posts you haven't finished wait in your drafts.",
+    "featureDiscoverTitle": "Find things to read",
+    "featureDiscoverBody": "Browse by tag, or see what people are discussing this week.",
+    "featureLearnTitle": "Ask and answer",
+    "featureLearnBody": "Every post has comments and replies, so questions get answered where they were asked.",
     "topicsLabel": "Topics people write about"
   },
   "onboarding": {
@@ -344,7 +344,7 @@
     "interestsHint": "Pick at least 3 for better suggestions",
     "peopleTitle": "Developers you might want to follow",
     "peopleBody": "Based on your interests. You can always find more in Explore.",
-    "peopleEmpty": "No suggestions yet — you're early! Explore the community once you're in.",
+    "peopleEmpty": "No suggestions yet. Once you're in, Explore shows who's posting.",
     "followingCount_one": "Following {{count}} developer",
     "followingCount_other": "Following {{count}} developers"
   },
@@ -431,7 +431,7 @@
     "tabOpen": "Open",
     "tabResolved": "Decided",
     "tabRestricted": "Restricted accounts",
-    "emptyOpen": "Nothing to review. The community is behaving.",
+    "emptyOpen": "Nothing to review right now.",
     "emptyResolved": "No decisions yet.",
     "emptyRestricted": "No account is restricted or suspended.",
     "reportsCount_one": "{{count}} report",
@@ -562,7 +562,7 @@
     "delete": "Delete comment",
     "deleted": "Comment deleted",
     "emptyTitle": "No comments yet",
-    "emptyBody": "Start the discussion — ask a question or share what you think.",
+    "emptyBody": "Ask a question or say what you think.",
     "signInPrompt": "Sign in to join the discussion.",
     "onPost": "on {{title}}"
   },
@@ -589,7 +589,7 @@
     "emptyRepliesTitle": "No replies yet",
     "emptyRepliesBody": "Comments written by this account appear here.",
     "emptyFollowersTitle": "No followers yet",
-    "emptyFollowersBodyMe": "Share a post or two — people follow developers whose work they find useful.",
+    "emptyFollowersBodyMe": "Write a post or two. People follow developers whose posts helped them.",
     "emptyFollowersBody": "Be the first to follow @{{username}}.",
     "emptyFollowingTitle": "Not following anyone yet",
     "emptyFollowingBodyMe": "Follow developers to fill your feed with their posts.",
@@ -682,7 +682,7 @@
     "securityAlerts": "Tell me about account changes",
     "securityAlertsHelp": "An email when your password changes or a new browser signs in.",
     "devices": "Where you are signed in",
-    "devicesHelp": "Every browser holding a live session. Anything you do not recognise, end it.",
+    "devicesHelp": "Browsers signed in to your account right now. Sign out any you don't recognise.",
     "thisDevice": "This device",
     "unknownDevice": "Unknown browser",
     "signedInAt": "Signed in {{date}}",
@@ -696,7 +696,7 @@
     "emailPreferences": "Email",
     "emailPreferencesHelp": "What ArabDev may send to your inbox.",
     "productUpdates": "What changed in ArabDev",
-    "productUpdatesHelp": "An occasional note when a release adds something worth knowing about.",
+    "productUpdatesHelp": "An occasional email when a release adds something new.",
     "noMarketing": "No marketing email, ever. Your address is never shared or sold.",
     "defaultFeed": "Feed to open first",
     "defaultFeedHelp": "Which tab the home page starts on.",
@@ -714,7 +714,7 @@
     "postsCount_other": "{{count}} posts",
     "noTags": "Tags will appear here as people start posting.",
     "noTrending": "Nothing is trending yet.",
-    "metaDescription": "Discover what Arabic-speaking developers are writing: trending posts, popular tags and people to follow."
+    "metaDescription": "Trending posts, popular tags and developers to follow on ArabDev."
   },
   "search": {
     "label": "Search",
@@ -768,7 +768,7 @@
     "deleteDraft": "Delete draft",
     "deleted": "Draft deleted",
     "emptyTitle": "No drafts",
-    "emptyBody": "Drafts you save while writing appear here, ready to finish later.",
+    "emptyBody": "Drafts you save while writing show up here.",
     "emptyAction": "Start writing"
   },
   "ads": {
