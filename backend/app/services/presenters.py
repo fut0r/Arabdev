@@ -7,7 +7,7 @@ never one query per row.
 from sqlalchemy.orm import Session
 
 from app.core.permissions import is_admin, is_restricted
-from app.models import Comment, Draft, Media, Notification, Post, User
+from app.models import Block, Comment, Draft, Media, Notification, Post, User
 from app.repositories import posts as posts_repo
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentOut, ReplyOut
@@ -15,6 +15,7 @@ from app.schemas.misc import MediaOut
 from app.schemas.notification import NotificationOut
 from app.schemas.post import DraftOut, ImageOut, PostOut, PostRef, TagOut
 from app.schemas.user import InterestOut, MeOut, ProfileOut, SettingsOut, UserCard, UserSummary
+from app.services import two_factor_service
 from app.services.media_service import media_url
 from app.utils.html import excerpt, reading_minutes
 
@@ -63,6 +64,7 @@ def profile_out(db: Session, user: User, viewer: User | None) -> ProfileOut:
         posts_count=users_repo.post_counts(db, [user.id]).get(user.id, 0),
         is_me=is_me,
         follow_lists_visible=is_me or settings.show_follow_lists,
+        blocked=viewer_id is not None and db.get(Block, (viewer_id, user.id)) is not None,
     )
 
 
@@ -84,6 +86,8 @@ def me_out(db: Session, user: User) -> MeOut:
         is_admin=is_admin(user),
         restricted_until=user.restricted_until if is_restricted(user) else None,
         restriction_reason=user.restriction_reason if is_restricted(user) else None,
+        two_factor_enabled=two_factor_service.is_enabled(user),
+        recovery_codes_left=two_factor_service.recovery_codes_left(db, user) if user.totp_enabled_at else 0,
         created_at=user.created_at,
         followers_count=users_repo.follower_counts(db, [user.id]).get(user.id, 0),
         following_count=users_repo.following_counts(db, [user.id]).get(user.id, 0),

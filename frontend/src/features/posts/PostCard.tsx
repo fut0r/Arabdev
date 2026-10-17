@@ -1,3 +1,4 @@
+import BlockIcon from '@mui/icons-material/Block';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
@@ -22,6 +23,7 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 import { useNotify } from '@/components/Notifier';
 import { useAuth } from '@/features/auth/AuthProvider';
 import { ReportDialog } from '@/features/moderation/ReportDialog';
+import { useBlockActions } from '@/features/users/BlockControls';
 import type { Post } from '@/types/api';
 import { hostnameOf } from '@/utils/format';
 
@@ -37,6 +39,7 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const [confirming, setConfirming] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const blocking = useBlockActions();
   const deletion = useDeletePost(() => {
     setConfirming(false);
     onDeleted?.();
@@ -110,6 +113,19 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
             {t('report.action')}
           </MenuItem>
         )}
+        {!isOwner && user && (
+          <MenuItem
+            onClick={() => {
+              setAnchor(null);
+              blocking.ask({ id: post.author.id, username: post.author.username });
+            }}
+          >
+            <ListItemIcon>
+              <BlockIcon fontSize="small" />
+            </ListItemIcon>
+            {t('block.blockUser', { username: post.author.username })}
+          </MenuItem>
+        )}
         {canDelete && (
           <MenuItem
             onClick={() => {
@@ -135,6 +151,7 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
         onConfirm={() => deletion.mutate(post.id)}
       />
       {!isOwner && user && <ReportDialog postId={post.id} open={reporting} onClose={() => setReporting(false)} />}
+      {blocking.dialog}
     </>
   );
 }

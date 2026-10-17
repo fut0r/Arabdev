@@ -13,3 +13,5 @@ python-multipart>=0.0.18
 pillow>=11.0
 nh3>=0.2.18
 redis>=5.2
+cryptography>=43
+segno>=1.6

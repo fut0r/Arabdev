@@ -3,7 +3,7 @@ from collections.abc import Iterable
 from sqlalchemy import Select, func, or_, select
 from sqlalchemy.orm import Session
 
-from app.models import Follow, Post, Profile, User, UserSettings, user_interests
+from app.models import Block, Follow, Post, Profile, User, UserSettings, user_interests
 from app.utils.text import escape_like
 
 
@@ -172,7 +172,12 @@ def recommended_stmt(viewer_id: int | None, interest_ids: list[int], limit: int)
     return (
         stmt.outerjoin(shared, shared.c.uid == User.id)
         .outerjoin(mutual, mutual.c.uid == User.id)
-        .where(User.id != viewer_id, User.id.not_in(followed))
+        .where(
+            User.id != viewer_id,
+            User.id.not_in(followed),
+            User.id.not_in(select(Block.blocked_id).where(Block.blocker_id == viewer_id)),
+            User.id.not_in(select(Block.blocker_id).where(Block.blocked_id == viewer_id)),
+        )
         .order_by(score.desc(), follower_rank.desc(), User.created_at.desc())
         .limit(limit)
     )

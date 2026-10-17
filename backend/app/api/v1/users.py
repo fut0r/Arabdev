@@ -11,6 +11,13 @@ from app.schemas.auth import PasswordChangeOut, TokenOut
 from app.schemas.comment import ReplyOut
 from app.schemas.common import MessageOut, Page
 from app.schemas.post import PostOut
+from app.schemas.security import (
+    PasswordConfirm,
+    RecoveryCodesOut,
+    TwoFactorCodeIn,
+    TwoFactorDisableIn,
+    TwoFactorSetupOut,
+)
 from app.schemas.user import (
     AccountDelete,
     EmailChangeOut,
@@ -30,11 +37,13 @@ from app.schemas.user import (
 from app.schemas.verification import VerifyCodeIn
 from app.services import (
     auth_service,
+    block_service,
     comment_service,
     media_service,
     post_service,
     presenters,
     turnstile_service,
+    two_factor_service,
     user_service,
 )
 from app.utils.pagination import PageParams, page_params
@@ -122,6 +131,85 @@ def verify_password(
     auth_service.complete_password_change(db, user, data.challenge_id, data.code)
     issued = auth_service.issue_tokens(db, user, remember=True, user_agent=request.headers.get("user-agent"))
     return token_response(db, response, issued)
+
+
+# ------------------------------------------------------------ two-factor sign-in
+
+_two_factor_limit = [Depends(rate_limit("two_factor", limit=10, window=900))]
+
+
+@router.post(
+    "/me/two-factor/setup",
+    response_model=TwoFactorSetupOut,
+    summary="Start setting up an authenticator app (needs the password)",
+    dependencies=_two_factor_limit,
+)
+def start_two_factor(data: PasswordConfirm, db: DbSession, user: CurrentUser) -> TwoFactorSetupOut:
+    setup = two_factor_service.start_setup(db, user, data.password)
+    return TwoFactorSetupOut(secret=setup.secret, otpauth_uri=setup.otpauth_uri, qr_code=setup.qr_code)
+
+
+@router.post(
+    "/me/two-factor/enable",
+    response_model=RecoveryCodesOut,
+    summary="Turn it on with a first code from the app; returns the recovery codes once",
+    dependencies=_two_factor_limit,
+)
+def enable_two_factor(data: TwoFactorCodeIn, db: DbSession, user: CurrentUser) -> RecoveryCodesOut:
+    codes = two_factor_service.enable(db, user, data.code)
+    auth_service.notify_security(db, user, "two_factor_enabled")
+    return RecoveryCodesOut(recovery_codes=codes)
+
+
+@router.post(
+    "/me/two-factor/disable",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Turn it off (needs the password and a code)",
+    dependencies=_two_factor_limit,
+)
+def disable_two_factor(data: TwoFactorDisableIn, db: DbSession, user: CurrentUser) -> Response:
+    was_on = two_factor_service.is_enabled(user)
+    two_factor_service.disable(db, user, data.password, data.code)
+    if was_on:
+        auth_service.notify_security(db, user, "two_factor_disabled")
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.post(
+    "/me/two-factor/recovery-codes",
+    response_model=RecoveryCodesOut,
+    summary="Replace the recovery codes (the old ones stop working)",
+    dependencies=_two_factor_limit,
+)
+def new_recovery_codes(data: PasswordConfirm, db: DbSession, user: CurrentUser) -> RecoveryCodesOut:
+    codes = two_factor_service.regenerate_recovery_codes(db, user, data.password)
+    auth_service.notify_security(db, user, "recovery_codes_regenerated")
+    return RecoveryCodesOut(recovery_codes=codes)
+
+
+# ------------------------------------------------------------ blocked accounts
+
+
+@router.get("/me/blocked", response_model=Page[UserCard], summary="Accounts you have blocked")
+def blocked_accounts(db: DbSession, user: CurrentUser, params: Pagination) -> Page[UserCard]:
+    return block_service.list_blocked(db, user, params)
+
+
+@router.post(
+    "/{user_id}/block",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Block an account (also ends follows in both directions)",
+    dependencies=[Depends(rate_limit("block", limit=60, window=3600))],
+)
+def block_user(user_id: int, db: DbSession, user: CurrentUser) -> Response:
+    block_service.block(db, user, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.delete("/{user_id}/block", status_code=status.HTTP_204_NO_CONTENT, summary="Unblock an account")
+def unblock_user(user_id: int, db: DbSession, user: CurrentUser) -> Response:
+    block_service.unblock(db, user, user_id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 # ------------------------------------------------------------ signed-in devices

@@ -4,7 +4,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-Purpose = Literal["register", "login", "email_change", "password_change"]
+# login_2fa is answered from an authenticator app (or with a recovery code), not from email.
+Purpose = Literal["register", "login", "login_2fa", "email_change", "password_change"]
 
 
 class ChallengeOut(BaseModel):

@@ -18,6 +18,7 @@ os.environ["SMTP_HOST"] = ""
 os.environ["EMAIL_CODES_ENABLED"] = "false"
 os.environ["TURNSTILE_SITE_KEY"] = ""
 os.environ["TURNSTILE_SECRET_KEY"] = ""
+os.environ["PWNED_PASSWORDS_ENABLED"] = "false"  # no network in tests; test_security_features.py fakes it
 
 from dataclasses import dataclass
 

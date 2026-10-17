@@ -1,4 +1,5 @@
 import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutlined';
+import PhonelinkLockOutlinedIcon from '@mui/icons-material/PhonelinkLockOutlined';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,6 +13,14 @@ import { errorMessage } from '@/api/errors';
 import type { Challenge } from '@/types/api';
 
 const CODE_LENGTH = 6;
+// Recovery codes look like "k7f2q-9zpx3": ten letters and digits, with a dash in the middle.
+const RECOVERY_LENGTH = 11;
+
+/** Six digits, or (for app sign-in) something shaped like a recovery code. */
+function isComplete(value: string, appCode: boolean): boolean {
+  if (/^\d{6}$/.test(value)) return true;
+  return appCode && value.replace(/[^a-z0-9]/g, '').length === 10;
+}
 
 /** Seconds left, counted down once a second. Restarts for every new code (`startedBy`). */
 function useCountdown(seconds: number, startedBy: unknown) {
@@ -88,14 +97,22 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
     [onVerify, t],
   );
 
+  // A code from an authenticator app, instead of one sent by email.
+  const appCode = current.purpose === 'login_2fa';
+
   const onChange = (raw: string) => {
-    const digits = raw.replace(/\D/g, '').slice(0, CODE_LENGTH);
-    setCode(digits);
+    const value = appCode
+      ? raw
+          .toLowerCase()
+          .replace(/[^a-z0-9-]/g, '')
+          .slice(0, RECOVERY_LENGTH)
+      : raw.replace(/\D/g, '').slice(0, CODE_LENGTH);
+    setCode(value);
     setError(null);
     // Six digits in means the visitor is done typing: no need to press a button.
-    if (digits.length === CODE_LENGTH && !submitted.current) {
+    if (/^\d{6}$/.test(value) && !submitted.current) {
       submitted.current = true;
-      void submit(digits);
+      void submit(value);
     }
   };
 
@@ -117,18 +134,28 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
 
   return (
     <Stack spacing={2.5}>
-      <Box>
-        <MarkEmailUnreadOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1 }} />
-        <Typography variant="h3" component="h2" sx={{ mb: 0.5 }}>
-          {t('verify.title')}
-        </Typography>
-        <Typography color="text.secondary">
-          {t('verify.subtitle')}{' '}
-          <Box component="b" dir="ltr">
-            {current.email}
-          </Box>
-        </Typography>
-      </Box>
+      {appCode ? (
+        <Box>
+          <PhonelinkLockOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1 }} />
+          <Typography variant="h3" component="h2" sx={{ mb: 0.5 }}>
+            {t('verify.appTitle')}
+          </Typography>
+          <Typography color="text.secondary">{t('verify.appSubtitle')}</Typography>
+        </Box>
+      ) : (
+        <Box>
+          <MarkEmailUnreadOutlinedIcon color="primary" sx={{ fontSize: 34, mb: 1 }} />
+          <Typography variant="h3" component="h2" sx={{ mb: 0.5 }}>
+            {t('verify.title')}
+          </Typography>
+          <Typography color="text.secondary">
+            {t('verify.subtitle')}{' '}
+            <Box component="b" dir="ltr">
+              {current.email}
+            </Box>
+          </Typography>
+        </Box>
+      )}
 
       {error && (
         <Alert severity="error" role="alert">
@@ -142,12 +169,12 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
         noValidate
         onSubmit={(event) => {
           event.preventDefault();
-          if (code.length === CODE_LENGTH) void submit(code);
+          if (isComplete(code, appCode)) void submit(code);
         }}
       >
         <Stack spacing={2}>
           <TextField
-            label={t('verify.codeLabel')}
+            label={appCode ? t('verify.appCodeLabel') : t('verify.codeLabel')}
             value={code}
             onChange={(event) => onChange(event.target.value)}
             autoFocus
@@ -156,11 +183,12 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
             slotProps={{
               htmlInput: {
                 dir: 'ltr',
-                inputMode: 'numeric',
+                inputMode: appCode ? 'text' : 'numeric',
                 autoComplete: 'one-time-code',
-                pattern: '[0-9]*',
-                maxLength: CODE_LENGTH,
-                'aria-label': t('verify.codeLabel'),
+                autoCapitalize: 'none',
+                spellCheck: false,
+                maxLength: appCode ? RECOVERY_LENGTH : CODE_LENGTH,
+                'aria-label': appCode ? t('verify.appCodeLabel') : t('verify.codeLabel'),
                 style: { textAlign: 'center', fontSize: '1.6rem', letterSpacing: '0.5em', fontWeight: 700 },
               },
             }}
@@ -172,7 +200,7 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
             size="large"
             fullWidth
             loading={pending}
-            disabled={code.length !== CODE_LENGTH}
+            disabled={!isComplete(code, appCode)}
           >
             {submitLabel ?? t('verify.submit')}
           </Button>
@@ -181,9 +209,18 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
             spacing={1}
             sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}
           >
-            <Button onClick={() => void resend()} disabled={resendIn > 0 || resending} loading={resending} size="small">
-              {resendIn > 0 ? t('verify.resendIn', { seconds: resendIn }) : t('verify.resend')}
-            </Button>
+            {appCode ? (
+              <Box />
+            ) : (
+              <Button
+                onClick={() => void resend()}
+                disabled={resendIn > 0 || resending}
+                loading={resending}
+                size="small"
+              >
+                {resendIn > 0 ? t('verify.resendIn', { seconds: resendIn }) : t('verify.resend')}
+              </Button>
+            )}
             {onCancel && (
               <Button onClick={onCancel} color="inherit" size="small">
                 {cancelLabel ?? t('common.cancel')}
@@ -194,7 +231,7 @@ export function VerifyCode({ challenge, onVerify, onResend, onCancel, cancelLabe
       </Box>
 
       <Typography variant="body2" color="text.secondary">
-        {t('verify.spamHint')}
+        {appCode ? t('verify.appHint') : t('verify.spamHint')}
       </Typography>
     </Stack>
   );

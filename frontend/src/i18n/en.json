@@ -264,6 +264,48 @@
     ],
     "wikiLink": "Open the wiki"
   },
+  "twoFactor": {
+    "title": "Authenticator app",
+    "help": "Sign in with your password and a code from an app such as Google Authenticator, Microsoft Authenticator or 1Password.",
+    "on": "On",
+    "off": "Off",
+    "codesLeft_one": "{{count}} recovery code left.",
+    "codesLeft_other": "{{count}} recovery codes left.",
+    "setUp": "Set up",
+    "turnOn": "Turn on",
+    "turnOff": "Turn off",
+    "turnOffTitle": "Turn off the authenticator app",
+    "turnOffHelp": "Enter your password and a code from the app, or one of your recovery codes.",
+    "newCodes": "New recovery codes",
+    "passwordFirst": "Enter your password to continue.",
+    "scan": "Scan this with your authenticator app.",
+    "qrAlt": "QR code for adding ArabDev to an authenticator app",
+    "cantScan": "Can't scan it? Add the account by hand with this key:",
+    "firstCode": "Six-digit code from the app",
+    "codesTitle": "Save your recovery codes",
+    "codesWarning": "Each code gets you in once if you lose your phone. You won't see them again, so keep them somewhere safe.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "download": "Download",
+    "saved": "I've saved them",
+    "enabled": "The authenticator app is on.",
+    "disabled": "The authenticator app is off.",
+    "codeOrRecovery": "Code from the app, or a recovery code"
+  },
+  "block": {
+    "title": "Blocked accounts",
+    "help": "People you block can't follow you, reply to your posts or repost them, and you won't see their posts or comments.",
+    "none": "You haven't blocked anyone.",
+    "block": "Block",
+    "blockUser": "Block @{{username}}",
+    "unblock": "Unblock",
+    "unblockUser": "Unblock @{{username}}",
+    "confirmTitle": "Block @{{username}}?",
+    "confirmBody": "They won't be able to follow you, reply to your posts or repost them, and you'll stop seeing their posts and comments. We don't tell them.",
+    "blocked": "@{{username}} is blocked.",
+    "unblocked": "Unblocked.",
+    "youBlocked": "You blocked @{{username}}, so their posts are hidden from you."
+  },
   "auth": {
     "signInTitle": "Sign in",
     "signInSubtitle": "Welcome back. Pick up where you left off.",
@@ -324,7 +366,11 @@
     "expired": "This code has expired. Ask for a new one.",
     "spamHint": "Nothing yet? Check your spam folder — and make sure the address is right.",
     "useAnotherAccount": "Use another account",
-    "changeEmail": "Use a different email"
+    "changeEmail": "Use a different email",
+    "appTitle": "Enter the code from your app",
+    "appSubtitle": "Open your authenticator app and type the six-digit code it shows for ArabDev.",
+    "appCodeLabel": "Code",
+    "appHint": "Lost your phone? Type one of your recovery codes instead."
   },
   "landing": {
     "eyebrow": "For Arabic-speaking developers",
@@ -609,7 +655,9 @@
     "findDevelopers": "Find developers",
     "followersOf": "People following {{name}}",
     "followingOf": "People {{name}} follows",
-    "metaDescription": "{{name}} on ArabDev: posts, replies and the topics they follow."
+    "metaDescription": "{{name}} on ArabDev: posts, replies and the topics they follow.",
+    "moreActions": "More",
+    "rss": "RSS feed"
   },
   "editProfile": {
     "title": "Edit profile",
@@ -869,6 +917,14 @@
     "admin_required": "Only moderators can do that.",
     "report_not_found": "This report no longer exists.",
     "report_already_resolved": "Someone already decided this report.",
-    "cannot_moderate_admin": "Moderators can't restrict or suspend another moderator."
+    "cannot_moderate_admin": "Moderators can't restrict or suspend another moderator.",
+    "password_breached": "This password has turned up in a data breach, so attackers already try it. Pick another one.",
+    "blocked": "You can't do that with this account.",
+    "cannot_block_self": "You can't block yourself.",
+    "two_factor_code_invalid": "That code isn't right. Check the app and try again.",
+    "two_factor_already_enabled": "The authenticator app is already on.",
+    "two_factor_not_enabled": "Turn on the authenticator app first.",
+    "two_factor_setup_missing": "Please start the setup again.",
+    "code_resend_unavailable": "This code comes from your authenticator app, so there's nothing to resend."
   }
 }

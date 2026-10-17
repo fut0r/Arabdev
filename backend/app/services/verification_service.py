@@ -9,6 +9,7 @@ import hmac
 import json
 import secrets
 import uuid
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import timedelta
 from hashlib import sha256
@@ -28,6 +29,8 @@ MAX_RESENDS = 4
 # How long a used or expired row is kept, so a replayed code still says "expired"
 # rather than "unknown", and so the audit trail survives a support question.
 RETENTION = timedelta(days=1)
+# Challenges whose code is not emailed, so there is nothing to resend.
+UNSENT_PURPOSES = {"login_2fa"}
 
 
 @dataclass
@@ -81,11 +84,13 @@ def start(
     user_id: int | None = None,
     payload: dict | None = None,
     ip: str | None = None,
+    send: bool = True,
 ) -> Challenge:
     """Create a code, email it, and return the challenge for the browser to answer.
 
     Any earlier unused challenge for the same purpose and address is dropped, so only the
-    newest code in someone's inbox works.
+    newest code in someone's inbox works. With send=False nothing is emailed: the challenge
+    only holds the pending step (two-factor sign-in, answered from an authenticator app).
     """
     now = utcnow()
     db.execute(
@@ -115,11 +120,12 @@ def start(
     db.commit()
     # Sending raises if the message cannot go out, so nobody waits for a code that is
     # never coming. The row stays behind, unused and harmless, and expires on its own.
-    email_service.send_verification_code(email, code, purpose, language)
+    if send:
+        email_service.send_verification_code(email, code, purpose, language)
     return _challenge(record)
 
 
-def _load(db: Session, challenge_id: str) -> VerificationCode:
+def load(db: Session, challenge_id: str) -> VerificationCode:
     record = db.scalar(select(VerificationCode).where(VerificationCode.challenge_id == challenge_id))
     if record is None:
         raise UnprocessableEntity(
@@ -130,12 +136,16 @@ def _load(db: Session, challenge_id: str) -> VerificationCode:
 
 def purpose_of(db: Session, challenge_id: str) -> str:
     """What a challenge is for, so one endpoint can finish either kind of sign-in."""
-    return _load(db, challenge_id).purpose
+    return load(db, challenge_id).purpose
 
 
 def resend(db: Session, challenge_id: str, ip: str | None = None) -> Challenge:
-    record = _load(db, challenge_id)
+    record = load(db, challenge_id)
     now = utcnow()
+    if record.purpose in UNSENT_PURPOSES:
+        raise UnprocessableEntity(
+            "This code comes from your authenticator app", "code_resend_unavailable", field="code"
+        )
     if record.consumed_at is not None or record.expires_at <= now:
         raise UnprocessableEntity("This confirmation has expired. Please start again.", "code_expired", field="code")
     wait = settings.verification_resend_seconds - int((now - record.sent_at).total_seconds())
@@ -161,8 +171,23 @@ def resend(db: Session, challenge_id: str, ip: str | None = None) -> Challenge:
 
 
 def consume(db: Session, challenge_id: str, code: str, *, purpose: str) -> VerificationCode:
-    """Check a code and burn it. Returns the record, with `payload` still readable."""
-    record = _load(db, challenge_id)
+    """Check an emailed code and burn it. Returns the record, with `payload` still readable."""
+    cleaned = "".join(character for character in code if character.isdigit())
+    return consume_checked(
+        db,
+        challenge_id,
+        purpose=purpose,
+        check=lambda record: hmac.compare_digest(record.code_hash, _hash_code(record.challenge_id, cleaned)),
+        wrong="That code is not right. Check the email and try again.",
+    )
+
+
+def consume_checked(
+    db: Session, challenge_id: str, *, purpose: str, check: Callable[[VerificationCode], bool], wrong: str
+) -> VerificationCode:
+    """Like consume(), with the answer checked by `check`: the same expiry, attempt limit and
+    one-time use, whatever the code is checked against."""
+    record = load(db, challenge_id)
     now = utcnow()
     if record.purpose != purpose:
         raise UnprocessableEntity(
@@ -177,8 +202,7 @@ def consume(db: Session, challenge_id: str, code: str, *, purpose: str) -> Verif
         db.commit()
         raise UnprocessableEntity("Too many wrong codes. Please start again.", "code_attempts_exhausted", field="code")
 
-    cleaned = "".join(character for character in code if character.isdigit())
-    if not hmac.compare_digest(record.code_hash, _hash_code(record.challenge_id, cleaned)):
+    if not check(record):
         record.attempts += 1
         db.commit()
         remaining = max(settings.verification_max_attempts - record.attempts, 0)
@@ -186,9 +210,7 @@ def consume(db: Session, challenge_id: str, code: str, *, purpose: str) -> Verif
             raise UnprocessableEntity(
                 "Too many wrong codes. Please start again.", "code_attempts_exhausted", field="code"
             )
-        raise UnprocessableEntity(
-            "That code is not right. Check the email and try again.", "code_invalid", field="code"
-        )
+        raise UnprocessableEntity(wrong, "code_invalid", field="code")
 
     record.consumed_at = now
     db.commit()

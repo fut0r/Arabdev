@@ -45,3 +45,19 @@ class Follow(Base):
         ID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, index=True
     )
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
+
+
+class Block(Base):
+    """One member has blocked another. Blocks are private: only the blocker sees them.
+
+    Neither side can follow, comment on or repost the other, nobody is notified about the
+    other, and the blocker stops seeing the blocked account's posts.
+    """
+
+    __tablename__ = "blocks"
+
+    blocker_id: Mapped[int] = mapped_column(ID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    blocked_id: Mapped[int] = mapped_column(
+        ID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True, index=True
+    )
+    created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)

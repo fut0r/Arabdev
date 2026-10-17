@@ -21,7 +21,8 @@ from app.core.security import (
 from app.models import PasswordResetToken, RefreshToken, User
 from app.repositories import users as users_repo
 from app.schemas.auth import AvailabilityOut, FieldAvailability, RegisterIn
-from app.services import email_service, verification_service
+from app.services import email_service, two_factor_service, verification_service
+from app.services.password_check import ensure_not_breached
 from app.services.verification_service import Challenge
 from app.utils.time import utcnow
 from app.utils.validators import normalize_username
@@ -64,6 +65,7 @@ def _check_new_account(db: Session, username: str, email: str) -> None:
 
 def register(db: Session, data: RegisterIn, language: str = "ar", *, email_verified: bool = False) -> User:
     _check_new_account(db, data.username, data.email)
+    ensure_not_breached(data.password)
     user = users_repo.create_user(
         db,
         username=data.username,
@@ -80,6 +82,7 @@ def register(db: Session, data: RegisterIn, language: str = "ar", *, email_verif
 def start_registration(db: Session, data: RegisterIn, language: str = "ar", ip: str | None = None) -> Challenge:
     """Hold the account until the address is confirmed: nothing is created yet."""
     _check_new_account(db, data.username, data.email)
+    ensure_not_breached(data.password)
     return verification_service.start(
         db,
         purpose="register",
@@ -156,6 +159,46 @@ def start_login(db: Session, user: User, *, remember: bool, ip: str | None = Non
         payload={"remember": remember},
         ip=ip,
     )
+
+
+def start_two_factor_login(db: Session, user: User, *, remember: bool, ip: str | None = None) -> Challenge:
+    """Password accepted; the code comes from the authenticator app, so nothing is emailed."""
+    return verification_service.start(
+        db,
+        purpose="login_2fa",
+        email=user.email,
+        language=users_repo.get_settings(db, user).language,
+        user_id=user.id,
+        payload={"remember": remember},
+        ip=ip,
+        send=False,
+    )
+
+
+def complete_two_factor_login(db: Session, challenge_id: str, code: str) -> tuple[User, bool]:
+    pending = verification_service.load(db, challenge_id)
+    user = users_repo.get_by_id(db, pending.user_id) if pending.user_id else None
+    if user is None or not user.is_active:
+        raise Unauthorized("This account is no longer available", "account_inactive")
+    used: list[str] = []
+
+    def check(_record) -> bool:
+        kind = two_factor_service.check_code(db, user, code)
+        if kind:
+            used.append(kind)
+        return kind is not None
+
+    record = verification_service.consume_checked(
+        db,
+        challenge_id,
+        purpose="login_2fa",
+        check=check,
+        wrong="That code is not right. Check your authenticator app.",
+    )
+    if used == ["recovery"]:
+        left = two_factor_service.recovery_codes_left(db, user)
+        notify_security(db, user, "recovery_code_used", detail=str(left))
+    return user, bool(verification_service.read_payload(record).get("remember"))
 
 
 def complete_login(db: Session, challenge_id: str, code: str) -> tuple[User, bool]:
@@ -300,6 +343,7 @@ def reset_password(db: Session, raw_token: str, new_password: str) -> None:
     user = users_repo.get_by_id(db, stored.user_id)
     if user is None:
         raise UnprocessableEntity("This reset link is invalid or has expired.", "reset_token_invalid", field="token")
+    ensure_not_breached(new_password)
     user.hashed_password = hash_password(new_password)
     user.password_changed_at = now
     stored.used_at = now
@@ -315,6 +359,7 @@ def _check_password_change(db: Session, user: User, current_password: str, new_p
         raise UnprocessableEntity(
             "Choose a password different from your current one", "password_unchanged", field="new_password"
         )
+    ensure_not_breached(new_password, field="new_password")
 
 
 def change_password(db: Session, user: User, current_password: str, new_password: str) -> None:

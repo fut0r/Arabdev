@@ -86,6 +86,7 @@ class Page:
     author_name: str | None = None
     noindex: bool = False
     status: int = 200
+    feed: str | None = None  # this page's RSS feed, e.g. /tags/python/rss.xml
 
 
 # ---------------------------------------------------------------- the shell
@@ -184,6 +185,9 @@ def render(page: Page, shell: str) -> str:
         html = _set_meta(html, "name", "robots", "noindex, nofollow")
     else:
         html = _before_head_end(html, f'<link rel="canonical" href="{escape(url, quote=True)}" />')
+    if page.feed:
+        feed_url = escape(page.feed, quote=True)
+        html = _before_head_end(html, f'<link rel="alternate" type="application/rss+xml" href="{feed_url}" />')
     if page.json_ld:
         # "<" is escaped so no text inside the data can close the script element.
         data = json.dumps(page.json_ld, ensure_ascii=False).replace("<", "\\u003c")
@@ -380,6 +384,7 @@ def profile_page(db: Session, username: str) -> Page | None:
         body="".join(parts),
         og_type="profile",
         image=avatar,
+        feed=f"/u/{quote(user.username)}/rss.xml",
         json_ld={
             "@context": "https://schema.org",
             "@type": "ProfilePage",
@@ -407,4 +412,5 @@ def tag_page(db: Session, slug: str) -> Page:
         description=f"منشورات موسومة بـ #{slug} على ArabDev، بأقلام مطوّرين عرب.",
         path=path,
         body=body,
+        feed=f"/tags/{quote(slug)}/rss.xml",
     )

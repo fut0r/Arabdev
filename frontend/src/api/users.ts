@@ -9,6 +9,7 @@ import type {
   Reply,
   SignedInSession,
   TokenResponse,
+  TwoFactorSetup,
   UserCard,
   UserSettings,
 } from '@/types/api';
@@ -86,4 +87,18 @@ export const usersApi = {
       .then((r) => r.data),
   follow: (userId: number) => api.post<FollowState>(`/users/${userId}/follow`).then((r) => r.data),
   unfollow: (userId: number) => api.delete<FollowState>(`/users/${userId}/follow`).then((r) => r.data),
+
+  block: (userId: number) => api.post(`/users/${userId}/block`),
+  unblock: (userId: number) => api.delete(`/users/${userId}/block`),
+  blocked: (page: number) => api.get<Page<UserCard>>('/users/me/blocked', { params: { page } }).then((r) => r.data),
+
+  twoFactorSetup: (password: string) =>
+    api.post<TwoFactorSetup>('/users/me/two-factor/setup', { password }).then((r) => r.data),
+  twoFactorEnable: (code: string) =>
+    api.post<{ recovery_codes: string[] }>('/users/me/two-factor/enable', { code }).then((r) => r.data.recovery_codes),
+  twoFactorDisable: (password: string, code: string) => api.post('/users/me/two-factor/disable', { password, code }),
+  newRecoveryCodes: (password: string) =>
+    api
+      .post<{ recovery_codes: string[] }>('/users/me/two-factor/recovery-codes', { password })
+      .then((r) => r.data.recovery_codes),
 };

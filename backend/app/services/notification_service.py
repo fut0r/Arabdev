@@ -6,7 +6,7 @@ from app.models import Follow, Notification, User
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.notification import NotificationOut
-from app.services import presenters
+from app.services import block_service, presenters
 from app.utils.pagination import PageParams, paginate_scalars
 from app.utils.text import extract_mentions
 
@@ -47,6 +47,8 @@ def notify(
         return
     recipient = users_repo.get_by_id(db, recipient_id)
     if recipient is None or not recipient.is_active or not _wants(db, recipient, actor_id, kind):
+        return
+    if block_service.between(db, recipient_id, actor_id):
         return
     if kind in ("like", "follow", "repost"):
         # Toggling a like on and off should not stack up duplicate notifications.

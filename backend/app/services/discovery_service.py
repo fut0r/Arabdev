@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.core.cache import cache_get, cache_set
 from app.core.errors import NotFound
-from app.models import Interest, User
+from app.models import Interest, Post, User
 from app.repositories import posts as posts_repo
 from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
@@ -16,7 +16,7 @@ from app.schemas.common import Page
 from app.schemas.misc import SearchOut, TagDetail
 from app.schemas.post import TagStat
 from app.schemas.user import InterestOut
-from app.services import presenters
+from app.services import block_service, presenters
 from app.utils.pagination import PageParams, count_rows, paginate_scalars
 from app.utils.time import utcnow
 
@@ -43,10 +43,14 @@ def search(db: Session, query: str, kind: SearchType, params: PageParams, viewer
     per_type = params if kind != "all" else PageParams(page=1, limit=PREVIEW_SIZE)
 
     if kind in ("all", "posts") and query:
-        items, total = paginate_scalars(db, posts_repo.search_stmt(query), per_type)
+        stmt = posts_repo.search_stmt(query)
+        hidden = block_service.not_blocked_by(viewer_id, Post.author_id)
+        items, total = paginate_scalars(db, stmt if hidden is None else stmt.where(hidden), per_type)
         result.posts = Page.build(presenters.post_outs(db, items, viewer_id), per_type.page, per_type.limit, total)
     if kind in ("all", "users") and user_query:
-        items, total = paginate_scalars(db, users_repo.search_stmt(user_query), per_type)
+        stmt = users_repo.search_stmt(user_query)
+        hidden = block_service.not_blocked_by(viewer_id, User.id)
+        items, total = paginate_scalars(db, stmt if hidden is None else stmt.where(hidden), per_type)
         result.users = Page.build(presenters.user_cards(db, items, viewer_id), per_type.page, per_type.limit, total)
     if kind in ("all", "tags") and tag_query:
         result.tags = _tag_page(db, tags_repo.search_stats_stmt(tag_query), per_type)

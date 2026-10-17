@@ -7,7 +7,7 @@ from app.models import Comment, Post, User
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentCreate, CommentOut, ReplyOut
 from app.schemas.common import Page
-from app.services import notification_service, presenters
+from app.services import block_service, notification_service, presenters
 from app.services.post_service import get_visible_post_or_404, recount
 from app.utils.pagination import PageParams, paginate_scalars
 
@@ -15,6 +15,9 @@ from app.utils.pagination import PageParams, paginate_scalars
 def list_for_post(db: Session, post_id: int, viewer: User | None, params: PageParams) -> Page[CommentOut]:
     post = get_visible_post_or_404(db, post_id, viewer)
     stmt = select(Comment).where(Comment.post_id == post.id).order_by(Comment.created_at.asc(), Comment.id.asc())
+    hidden = block_service.not_blocked_by(viewer.id if viewer else None, Comment.author_id)
+    if hidden is not None:
+        stmt = stmt.where(hidden)
     items, total = paginate_scalars(db, stmt, params)
     viewer_id = viewer.id if viewer else None
     outs = [presenters.comment_out(c, viewer_id, post.author_id) for c in items]
@@ -34,11 +37,13 @@ def list_replies_by_user(db: Session, username: str, viewer: User | None, params
 def create(db: Session, author: User, post_id: int, data: CommentCreate) -> CommentOut:
     ensure_can_publish(author)
     post = get_visible_post_or_404(db, post_id, author)
+    block_service.ensure_can_interact(db, author.id, post.author_id)
     parent: Comment | None = None
     if data.parent_id is not None:
         parent = db.get(Comment, data.parent_id)
         if parent is None or parent.post_id != post.id:
             raise UnprocessableEntity("The comment you're replying to no longer exists", "parent_invalid")
+        block_service.ensure_can_interact(db, author.id, parent.author_id)
 
     comment = Comment(
         post_id=post.id, author_id=author.id, parent_id=parent.id if parent else None, content=data.content

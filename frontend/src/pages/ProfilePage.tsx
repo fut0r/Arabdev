@@ -31,7 +31,9 @@ import { Pagination } from '@/components/Pagination';
 import { CommentText } from '@/features/comments/Comments';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { PagedPosts } from '@/features/posts/PagedPosts';
+import { BlockedNotice } from '@/features/users/BlockControls';
 import { FollowButton } from '@/features/users/FollowButton';
+import { ProfileMenu } from '@/features/users/ProfileMenu';
 import { interestName } from '@/features/users/UserCard';
 import { usePageParam } from '@/hooks';
 import { useSeo, summarise } from '@/utils/seo';
@@ -91,12 +93,17 @@ function ProfileHeader({ profile }: { profile: Profile }) {
               {t('profile.editProfile')}
             </Button>
           ) : (
-            <FollowButton
-              userId={profile.id}
-              username={profile.username}
-              following={profile.is_following}
-              size="medium"
-            />
+            <Stack direction="row" spacing={1}>
+              {!profile.blocked && (
+                <FollowButton
+                  userId={profile.id}
+                  username={profile.username}
+                  following={profile.is_following}
+                  size="medium"
+                />
+              )}
+              <ProfileMenu profile={profile} />
+            </Stack>
           )}
         </Box>
       </Stack>
@@ -342,19 +349,44 @@ export default function ProfilePage() {
   return (
     <Surface>
       <ProfileHeader profile={query.data} />
+      {query.data.blocked ? (
+        <BlockedNotice id={query.data.id} username={query.data.username} />
+      ) : (
+        <ProfileTabs
+          profile={query.data}
+          tab={tab}
+          onChange={(value) => setParams(value === 'posts' ? {} : { tab: value })}
+        />
+      )}
+    </Surface>
+  );
+}
+
+function ProfileTabs({
+  profile,
+  tab,
+  onChange,
+}: {
+  profile: Profile;
+  tab: ProfileTab;
+  onChange: (tab: ProfileTab) => void;
+}) {
+  const { t } = useTranslation();
+  return (
+    <>
       <Tabs
         value={tab}
-        onChange={(_, value: ProfileTab) => setParams(value === 'posts' ? {} : { tab: value })}
+        onChange={(_, value: ProfileTab) => onChange(value)}
         variant="fullWidth"
         sx={{ borderTop: 1, borderBottom: 1, borderColor: 'divider' }}
       >
         <Tab value="posts" label={t('profile.posts')} />
         <Tab value="replies" label={t('profile.replies')} />
-        {query.data.is_me && <Tab value="saved" label={t('profile.bookmarks')} />}
+        {profile.is_me && <Tab value="saved" label={t('profile.bookmarks')} />}
       </Tabs>
-      {tab === 'posts' && <PostsTab profile={query.data} />}
-      {tab === 'replies' && <RepliesTab username={query.data.username} />}
+      {tab === 'posts' && <PostsTab profile={profile} />}
+      {tab === 'replies' && <RepliesTab username={profile.username} />}
       {tab === 'saved' && <SavedTab />}
-    </Surface>
+    </>
   );
 }

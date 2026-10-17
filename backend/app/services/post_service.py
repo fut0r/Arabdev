@@ -1,6 +1,6 @@
 from typing import Literal
 
-from sqlalchemy import func, or_, select, update
+from sqlalchemy import and_, func, or_, select, update
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound, UnprocessableEntity
@@ -11,7 +11,7 @@ from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.post import DraftOut, DraftWrite, PostCreate, PostOut, PostUpdate
-from app.services import media_service, notification_service, presenters, ranking
+from app.services import block_service, media_service, notification_service, presenters, ranking
 from app.utils.html import html_to_text, sanitize_post_html
 from app.utils.pagination import PageParams, paginate_scalars
 from app.utils.time import utcnow
@@ -46,8 +46,17 @@ def get_post(db: Session, post_id: int, viewer: User | None) -> PostOut:
     return presenters.post_outs(db, [post], viewer.id if viewer else None)[0]
 
 
+def _without_blocked(stmt, viewer: User | None):
+    hidden = block_service.not_blocked_by(viewer.id if viewer else None, Post.author_id)
+    return stmt if hidden is None else stmt.where(hidden)
+
+
+def _blocked_ids(db: Session, viewer: User | None) -> set[int]:
+    return set(db.scalars(block_service.blocked_by(viewer.id))) if viewer else set()
+
+
 def _page_of_posts(db: Session, stmt, params: PageParams, viewer: User | None) -> Page[PostOut]:
-    items, total = paginate_scalars(db, stmt, params)
+    items, total = paginate_scalars(db, _without_blocked(stmt, viewer), params)
     outs = presenters.post_outs(db, items, viewer.id if viewer else None)
     return Page.build(outs, params.page, params.limit, total)
 
@@ -84,18 +93,23 @@ def feed(db: Session, viewer: User | None, tab: FeedTab, params: PageParams, tag
         return _page_of_posts(db, posts_repo.latest_stmt(), params, viewer)
     if tab == "following":
         followed = select(Follow.followee_id).where(Follow.follower_id == viewer.id)
+        # Someone you follow may repost a post by someone you blocked: leave those out too.
+        blocked_posts = select(Post.id).where(Post.author_id.in_(block_service.blocked_by(viewer.id)))
         return _activity_page(
             db,
             or_(Post.author_id == viewer.id, Post.author_id.in_(followed)),
-            or_(Repost.user_id == viewer.id, Repost.user_id.in_(followed)),
+            and_(or_(Repost.user_id == viewer.id, Repost.user_id.in_(followed)), Repost.post_id.not_in(blocked_posts)),
             params,
             viewer,
         )
-    return _page_of_ranked(db, ranking.for_you(db, viewer), params, viewer)
+    blocked = _blocked_ids(db, viewer)
+    ranked = [post for post in ranking.for_you(db, viewer) if post.author_id not in blocked]
+    return _page_of_ranked(db, ranked, params, viewer)
 
 
 def trending(db: Session, viewer: User | None, params: PageParams, days: int = 7) -> Page[PostOut]:
-    ranked = ranking.trending(db, days)
+    blocked = _blocked_ids(db, viewer)
+    ranked = [post for post in ranking.trending(db, days) if post.author_id not in blocked]
     if ranked:
         return _page_of_ranked(db, ranked, params, viewer)
     # A quiet week: fall back to the all-time ranking rather than an empty page.
@@ -106,6 +120,8 @@ def user_activity(db: Session, username: str, viewer: User | None, params: PageP
     user = users_repo.get_by_username(db, username)
     if user is None or not user.is_active:
         raise NotFound("This account doesn't exist", "user_not_found")
+    if viewer is not None and block_service.has_blocked(db, viewer.id, user.id):
+        return Page.build([], params.page, params.limit, 0)
     return _activity_page(db, Post.author_id == user.id, Repost.user_id == user.id, params, viewer)
 
 

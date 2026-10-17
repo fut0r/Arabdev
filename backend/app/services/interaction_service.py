@@ -9,7 +9,7 @@ from app.core.permissions import ensure_can_publish
 from app.models import Bookmark, Like, Post, Repost, User
 from app.repositories import posts as posts_repo
 from app.schemas.post import PostCounters
-from app.services import notification_service
+from app.services import block_service, notification_service
 from app.services.post_service import get_post_or_404, get_visible_post_or_404
 
 
@@ -85,6 +85,7 @@ def repost(db: Session, user: User, post_id: int) -> PostCounters:
     post = get_visible_post_or_404(db, post_id, user)
     if post.author_id == user.id:
         raise BadRequest("You can't repost your own post", "cannot_repost_own")
+    block_service.ensure_can_interact(db, user.id, post.author_id)
     if _add(db, Repost, user, post, "reposts_count"):
         notification_service.notify(db, recipient_id=post.author_id, actor_id=user.id, kind="repost", post_id=post.id)
     db.commit()

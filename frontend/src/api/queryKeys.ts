@@ -28,6 +28,7 @@ export const queryKeys = {
   moderationCases: (status: 'open' | 'resolved', page: number) => ['moderation', 'cases', status, page] as const,
   moderationCase: (reportId: number) => ['moderation', 'case', reportId] as const,
   restricted: ['moderation', 'restricted'] as const,
+  blocked: (page: number) => ['blocked', page] as const,
 };
 
 /** Query roots whose data contains posts (either Page<Post> or Post). */

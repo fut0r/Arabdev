@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.errors import BadRequest, Conflict, Forbidden, NotFound, UnprocessableEntity
 from app.core.permissions import is_restricted
 from app.core.security import verify_password
-from app.models import Bookmark, Comment, Draft, Follow, Interest, Like, Post, Report, Repost, User
+from app.models import Block, Bookmark, Comment, Draft, Follow, Interest, Like, Post, Report, Repost, User
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.user import (
@@ -19,6 +19,7 @@ from app.schemas.user import (
     UserCard,
 )
 from app.services import (
+    block_service,
     email_service,
     media_service,
     notification_service,
@@ -270,6 +271,12 @@ def export_account(db: Session, user: User) -> dict:
             }
             for report in db.scalars(select(Report).where(Report.reporter_id == user.id).order_by(Report.created_at))
         ],
+        "two_factor_enabled": user.totp_enabled_at is not None,
+        "blocked": list(
+            db.scalars(
+                select(User.username).join(Block, Block.blocked_id == User.id).where(Block.blocker_id == user.id)
+            )
+        ),
         "restriction": {
             "restricted_until": user.restricted_until.isoformat(),
             "reason": user.restriction_reason,
@@ -285,6 +292,7 @@ def follow(db: Session, viewer: User, target_id: int) -> FollowState:
     target = users_repo.get_by_id(db, target_id)
     if target is None or not target.is_active:
         raise NotFound("This account doesn't exist", "user_not_found")
+    block_service.ensure_can_interact(db, viewer.id, target_id)
     exists = db.get(Follow, (viewer.id, target_id))
     if exists is None:
         db.add(Follow(follower_id=viewer.id, followee_id=target_id))

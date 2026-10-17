@@ -19,6 +19,8 @@ dependencies = [
     "pillow>=11.0",
     "nh3>=0.2.18",
     "redis>=5.2",
+    "cryptography>=43",
+    "segno>=1.6",
 ]
 
 [project.optional-dependencies]
@@ -54,7 +56,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S311"]  # asserts and fake secrets are what tests are made of
+"tests/**" = ["S101", "S105", "S106", "S311", "S314"]  # asserts, fake secrets, parsing our own XML
 # Prose: post bodies and email sentences read better unbroken than wrapped at 120 columns.
 "app/demo_data.py" = ["E501"]
 "app/seed_data.py" = ["E501"]

@@ -38,6 +38,15 @@ export interface Profile extends UserCard {
   posts_count: number;
   is_me: boolean;
   follow_lists_visible: boolean;
+  /** You have blocked this account. */
+  blocked: boolean;
+}
+
+export interface TwoFactorSetup {
+  secret: string;
+  otpauth_uri: string;
+  /** An SVG data URI. */
+  qr_code: string;
 }
 
 export type ThemeMode = 'light' | 'dark' | 'system';
@@ -77,6 +86,8 @@ export interface Me {
   /** Set while the moderators have stopped this account from publishing. */
   restricted_until: string | null;
   restriction_reason: string | null;
+  two_factor_enabled: boolean;
+  recovery_codes_left: number;
   created_at: string;
   followers_count: number;
   following_count: number;
@@ -95,7 +106,7 @@ export interface Challenge {
   challenge_id: string;
   /** Partly hidden, e.g. l***a@example.com */
   email: string;
-  purpose: 'register' | 'login' | 'email_change' | 'password_change';
+  purpose: 'register' | 'login' | 'login_2fa' | 'email_change' | 'password_change';
   expires_in: number;
   resend_in: number;
 }

@@ -17,7 +17,7 @@ from app.schemas.auth import (
 )
 from app.schemas.common import MessageOut
 from app.schemas.verification import ChallengeIn, ChallengeOut, VerifyCodeIn
-from app.services import auth_service, presenters, turnstile_service, verification_service
+from app.services import auth_service, presenters, turnstile_service, two_factor_service, verification_service
 from app.services.auth_service import IssuedTokens
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -104,6 +104,10 @@ def register(data: RegisterIn, db: DbSession, request: Request, response: Respon
 )
 def login(data: LoginIn, db: DbSession, request: Request, response: Response) -> AuthResultOut:
     user = auth_service.authenticate(db, data.email, data.password)
+    # An authenticator app replaces the emailed code: it is the stronger of the two.
+    if two_factor_service.is_enabled(user):
+        challenge = auth_service.start_two_factor_login(db, user, remember=data.remember_me, ip=client_ip(request))
+        return AuthResultOut(status="verification_required", challenge=challenge_out(challenge))
     if auth_service.login_needs_code(db, user):
         challenge = auth_service.start_login(db, user, remember=data.remember_me, ip=client_ip(request))
         return AuthResultOut(status="verification_required", challenge=challenge_out(challenge))
@@ -130,10 +134,12 @@ def verify(data: VerifyCodeIn, db: DbSession, request: Request, response: Respon
     if purpose == "register":
         user = auth_service.complete_registration(db, data.challenge_id, data.code)
         remember = True
+    elif purpose == "login_2fa":
+        user, remember = auth_service.complete_two_factor_login(db, data.challenge_id, data.code)
     else:
         user, remember = auth_service.complete_login(db, data.challenge_id, data.code)
     issued = auth_service.issue_tokens(db, user, remember=remember, user_agent=request.headers.get("user-agent"))
-    if purpose == "login":
+    if purpose in ("login", "login_2fa"):
         auth_service.notify_security(db, user, "new_sign_in", detail=_device_line(request))
     return token_response(db, response, issued)
 

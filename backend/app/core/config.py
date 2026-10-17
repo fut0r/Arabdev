@@ -99,6 +99,10 @@ class Settings(BaseSettings):
     email_codes_enabled: bool | None = None
 
     # Cloudflare Turnstile. Both keys must be present for the checks to run.
+    # Refuse new passwords found in public breaches (services/password_check.py). Only five
+    # characters of the password's hash leave the server.
+    pwned_passwords_enabled: bool = True
+
     turnstile_site_key: str | None = None
     turnstile_secret_key: str | None = None
     turnstile_verify_url: str = "https://challenges.cloudflare.com/turnstile/v0/siteverify"

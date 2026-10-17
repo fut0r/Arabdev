@@ -33,6 +33,12 @@ class User(Base):
     # Set by the moderators: until then the account can read but not post, comment or repost.
     restricted_until: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
     restriction_reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    # Two-factor sign-in with an authenticator app (services/two_factor_service.py). The secret
+    # is stored encrypted; it is "pending" until the first code confirms the app has it.
+    totp_secret: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    totp_enabled_at: Mapped[datetime | None] = mapped_column(UTCDateTime, nullable=True)
+    # The last 30-second step a code was accepted for, so a code cannot be used twice.
+    totp_last_step: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
     profile: Mapped["Profile"] = relationship(
         back_populates="user", uselist=False, cascade="all, delete-orphan", lazy="joined"

@@ -380,6 +380,54 @@ _ALERT_COPY: dict[str, dict[Language, dict[str, str]]] = {
             "line": "This address is no longer attached to your ArabDev account; sign in with the new one.",
         },
     },
+    "two_factor_enabled": {
+        "ar": {
+            "subject": "فُعّل التحقق بخطوتين في حسابك",
+            "title": "التحقق بخطوتين مفعّل",
+            "line": "صار تسجيل الدخول إلى حسابك يطلب رمزًا من تطبيق المصادقة. احفظ رموز الاسترداد في مكان آمن.",
+        },
+        "en": {
+            "subject": "Two-step sign-in is on for your ArabDev account",
+            "title": "Two-step sign-in is on",
+            "line": "Signing in to your account now asks for a code from your authenticator app. Keep your recovery codes somewhere safe.",
+        },
+    },
+    "two_factor_disabled": {
+        "ar": {
+            "subject": "أُوقف التحقق بخطوتين في حسابك",
+            "title": "التحقق بخطوتين متوقف",
+            "line": "لم يعد تسجيل الدخول إلى حسابك يطلب رمزًا من تطبيق المصادقة، وأُلغيت رموز الاسترداد.",
+        },
+        "en": {
+            "subject": "Two-step sign-in is off for your ArabDev account",
+            "title": "Two-step sign-in is off",
+            "line": "Signing in no longer asks for a code from your authenticator app, and your recovery codes no longer work.",
+        },
+    },
+    "recovery_code_used": {
+        "ar": {
+            "subject": "استُخدم رمز استرداد لتسجيل الدخول",
+            "title": "استُخدم رمز استرداد",
+            "line": "سُجّل الدخول إلى حسابك للتو برمز استرداد. بقي لديك {detail} من الرموز.",
+        },
+        "en": {
+            "subject": "A recovery code was used on your ArabDev account",
+            "title": "Recovery code used",
+            "line": "Someone just signed in to your account with a recovery code. You have {detail} left.",
+        },
+    },
+    "recovery_codes_regenerated": {
+        "ar": {
+            "subject": "رموز استرداد جديدة لحسابك",
+            "title": "رموز استرداد جديدة",
+            "line": "أُنشئت رموز استرداد جديدة لحسابك، ولم تعد الرموز القديمة تعمل.",
+        },
+        "en": {
+            "subject": "New recovery codes for your ArabDev account",
+            "title": "New recovery codes",
+            "line": "New recovery codes were made for your account, and the old ones no longer work.",
+        },
+    },
     "new_sign_in": {
         "ar": {
             "subject": "تسجيل دخول جديد إلى حسابك",
@@ -403,7 +451,11 @@ def send_security_alert(email: str, kind: str, language: Language = "ar", detail
         if language == "ar"
         else f"If this wasn't you, write to {settings.support_email} straight away."
     )
-    lines = [copy["line"]] + ([detail] if detail else []) + [closing]
+    # Some alerts put the detail inside their sentence; the rest list it on its own line.
+    if "{detail}" in copy["line"]:
+        lines = [copy["line"].format(detail=detail or ""), closing]
+    else:
+        lines = [copy["line"]] + ([detail] if detail else []) + [closing]
     footer = _footer(language)
     send(
         OutgoingEmail(

@@ -46,6 +46,8 @@ class ProfileOut(UserCard):
     posts_count: int = 0
     is_me: bool = False
     follow_lists_visible: bool = True
+    # The viewer has blocked this account (only ever true for the blocker).
+    blocked: bool = False
 
 
 Feed = Literal["for_you", "following", "latest"]
@@ -103,6 +105,8 @@ class MeOut(BaseModel):
     # While set, the account can read but not post, comment or repost.
     restricted_until: datetime | None = None
     restriction_reason: str | None = None
+    two_factor_enabled: bool = False
+    recovery_codes_left: int = 0
     created_at: datetime
     followers_count: int = 0
     following_count: int = 0
