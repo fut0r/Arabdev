@@ -3,6 +3,7 @@
 python -m app.cli seed            # interests + house ads (safe to run repeatedly)
 python -m app.cli seed --demo     # ...plus fictional developers and posts for local development
 python -m app.cli make-admin USERNAME
+python -m app.cli indexnow        # send every page in the sitemap to Bing, Yandex and the others
 """
 
 import argparse
@@ -13,6 +14,7 @@ from datetime import timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import SessionLocal
 from app.core.security import hash_password
 from app.models import Ad, Comment, Follow, Interest, Like, Post, Repost, User
@@ -127,6 +129,18 @@ def make_admin(db: Session, username: str) -> None:
     print(f"{user.username} is now an administrator.")
 
 
+def submit_everything(db: Session) -> None:
+    from app.api.seo import sitemap_entries
+    from app.services import indexnow
+
+    if not settings.indexnow_active:
+        sys.exit("IndexNow is off here. Set INDEXNOW_ENABLED=true (it is on by default in production).")
+    paths = [path for path, *_ in sitemap_entries(db)]
+    if not indexnow.submit(paths):
+        sys.exit("IndexNow did not accept the list; see the log above.")
+    print(f"Sent {len(paths)} addresses. The key file must be live at {settings.frontend_url}/{indexnow.key()}.txt")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(prog="python -m app.cli")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -135,6 +149,7 @@ def main() -> None:
     admin = sub.add_parser("make-admin", help="Grant administrator rights")
     admin.add_argument("username")
     sub.add_parser("purge-tokens", help="Delete ended sign-in sessions and old password reset links")
+    sub.add_parser("indexnow", help="Send every page in the sitemap to the IndexNow search engines")
     args = parser.parse_args()
 
     with SessionLocal() as db:
@@ -148,6 +163,8 @@ def main() -> None:
         elif args.command == "purge-tokens":
             sessions, resets = purge_expired_tokens(db)
             print(f"Deleted {sessions} ended sessions and {resets} old password reset links.")
+        elif args.command == "indexnow":
+            submit_everything(db)
 
 
 if __name__ == "__main__":

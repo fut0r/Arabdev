@@ -22,6 +22,14 @@
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
         { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" }
       ]
+    },
+    {
+      "source": "/(dashboard|login|forgot-password|reset-password|create|drafts|notifications|bookmarks|profile/edit|settings|admin|search)(/.*)?",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+    },
+    {
+      "source": "/posts/:id([0-9]+)/edit",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     }
   ],
   "redirects": [
@@ -33,6 +41,7 @@
     { "source": "/api/(.*)", "destination": "/api/index" },
     { "source": "/media/(.*)", "destination": "/api/index" },
     { "source": "/sitemap.xml", "destination": "/api/index" },
+    { "source": "/:key([0-9a-f]{32}).txt", "destination": "/api/index" },
     { "source": "/rss.xml", "destination": "/api/index" },
     { "source": "/u/:username/rss.xml", "destination": "/api/index" },
     { "source": "/tags/:slug/rss.xml", "destination": "/api/index" },

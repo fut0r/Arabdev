@@ -98,11 +98,15 @@ class Settings(BaseSettings):
     # SMTP is configured, so a missing mail provider cannot lock everyone out.
     email_codes_enabled: bool | None = None
 
-    # Cloudflare Turnstile. Both keys must be present for the checks to run.
     # Refuse new passwords found in public breaches (services/password_check.py). Only five
     # characters of the password's hash leave the server.
     pwned_passwords_enabled: bool = True
 
+    # Tell Bing, Yandex and the other IndexNow engines when a post is published, edited or
+    # deleted (services/indexnow.py). Leave unset to do it in production only.
+    indexnow_enabled: bool | None = None
+
+    # Cloudflare Turnstile. Both keys must be present for the checks to run.
     turnstile_site_key: str | None = None
     turnstile_secret_key: str | None = None
     turnstile_verify_url: str = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
@@ -182,6 +186,12 @@ class Settings(BaseSettings):
     @property
     def turnstile_configured(self) -> bool:
         return bool(self.turnstile_site_key and self.turnstile_secret_key)
+
+    @property
+    def indexnow_active(self) -> bool:
+        if self.indexnow_enabled is not None:
+            return self.indexnow_enabled
+        return self.environment == "production"
 
     @property
     def email_codes_required(self) -> bool:

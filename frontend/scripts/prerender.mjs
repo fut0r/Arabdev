@@ -139,7 +139,10 @@ const [arabic] = languages;
 // Every address without a page of its own gets this untouched shell (see vercel.json and
 // nginx.conf), so only the homepage carries the homepage's text.
 writeFileSync(resolve(dist, 'app.html'), shell);
-writeFileSync(resolve(dist, 'index.html'), withBody(withAddress(shell, `${SITE_URL}/`), everyLanguage(home)));
+writeFileSync(
+  resolve(dist, 'index.html'),
+  page(shell, '/', arabic.t.home.metaTitle, arabic.t.home.lead, everyLanguage(home)),
+);
 
 for (const [name, build] of [
   ['about', about],

@@ -2,20 +2,23 @@
 
 A sitemap is the only practical way for a single-page app to tell a crawler which posts,
 profiles and tags exist, so this builds one from the database on request and caches it at
-the edge for an hour.
+the edge for an hour. The same list is what `python -m app.cli indexnow` sends to the IndexNow
+engines, and /<key>.txt is the key file that protocol asks for (services/indexnow.py).
 """
 
 from xml.sax.saxutils import escape
 
 from fastapi import APIRouter, Response
+from fastapi.responses import PlainTextResponse
 from sqlalchemy import desc, func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.deps import DbSession
+from app.core.errors import NotFound
 from app.models import Post, Tag, User, UserSettings, post_tags
 from app.repositories.posts import visible
-from app.utils.time import utcnow
+from app.services import indexnow
 
 router = APIRouter(include_in_schema=False)
 
@@ -26,16 +29,54 @@ MAX_PROFILES = 2000
 MAX_TAGS = 500
 
 # Paths exactly as the pages name themselves in their canonical link, so the two agree.
-STATIC_PAGES: list[tuple[str, str, str]] = [
-    ("/", "daily", "1.0"),
-    ("/explore", "hourly", "0.9"),
+# The homepage and Explore change whenever someone posts; the rest only when we edit them.
+LIVE_PAGES: list[tuple[str, str, str]] = [("/", "daily", "1.0"), ("/explore", "hourly", "0.9")]
+FIXED_PAGES: list[tuple[str, str, str]] = [
     ("/about", "monthly", "0.6"),
     ("/contact", "monthly", "0.5"),
     ("/register", "monthly", "0.5"),
 ]
 
+# (path, last modified as YYYY-MM-DD or None, change frequency, priority)
+Entry = tuple[str, str | None, str, str]
 
-def _url(path: str, lastmod: str | None = None, changefreq: str = "weekly", priority: str = "0.6") -> str:
+
+def sitemap_entries(db: Session) -> list[Entry]:
+    # A post's date is when it was written or last edited. updated_at also moves with every
+    # like and comment, and a lastmod that changes daily is one search engines learn to ignore.
+    changed = func.coalesce(Post.edited_at, Post.created_at)
+    # Only what a visitor can open: not posts hidden for review or by suspended accounts.
+    posts = db.execute(select(Post.id, changed).where(visible()).order_by(desc(Post.created_at)).limit(MAX_POSTS)).all()
+    newest = max((when for _, when in posts), default=None)
+    newest_day = newest.date().isoformat() if newest else None
+
+    entries: list[Entry] = [(path, newest_day, freq, priority) for path, freq, priority in LIVE_PAGES]
+    entries += [(path, None, freq, priority) for path, freq, priority in FIXED_PAGES]
+    entries += [(f"/posts/{post_id}", when.date().isoformat(), "weekly", "0.8") for post_id, when in posts]
+
+    # Only accounts that asked to be findable, exactly as the privacy settings promise.
+    profiles = db.scalars(
+        select(User.username)
+        .join(UserSettings, UserSettings.user_id == User.id)
+        .where(User.is_active.is_(True), UserSettings.discoverable.is_(True))
+        .order_by(desc(User.created_at))
+        .limit(MAX_PROFILES)
+    )
+    entries += [(f"/u/{username}", None, "weekly", "0.5") for username in profiles]
+
+    # Busiest tags first: those are the pages worth crawling often.
+    tags = db.scalars(
+        select(Tag.slug)
+        .join(post_tags, post_tags.c.tag_id == Tag.id)
+        .group_by(Tag.id)
+        .order_by(desc(func.count(post_tags.c.post_id)))
+        .limit(MAX_TAGS)
+    )
+    entries += [(f"/tags/{slug}", None, "daily", "0.4") for slug in tags]
+    return entries
+
+
+def _url(path: str, lastmod: str | None, changefreq: str, priority: str) -> str:
     base = settings.frontend_url.rstrip("/")
     parts = [f"<loc>{escape(base + path)}</loc>"]
     if lastmod:
@@ -46,36 +87,7 @@ def _url(path: str, lastmod: str | None = None, changefreq: str = "weekly", prio
 
 
 def build_sitemap(db: Session) -> str:
-    today = utcnow().date().isoformat()
-    urls = [_url(path, today, changefreq, priority) for path, changefreq, priority in STATIC_PAGES]
-
-    # Only what a visitor can open: not posts hidden for review or by suspended accounts.
-    posts = db.execute(
-        select(Post.id, Post.updated_at).where(visible()).order_by(desc(Post.created_at)).limit(MAX_POSTS)
-    ).all()
-    urls += [_url(f"/posts/{post_id}", updated_at.date().isoformat(), "weekly", "0.8") for post_id, updated_at in posts]
-
-    # Only accounts that asked to be findable, exactly as the privacy settings promise.
-    profiles = db.scalars(
-        select(User.username)
-        .join(UserSettings, UserSettings.user_id == User.id)
-        .where(User.is_active.is_(True), UserSettings.discoverable.is_(True))
-        .order_by(desc(User.created_at))
-        .limit(MAX_PROFILES)
-    )
-    urls += [_url(f"/u/{username}", None, "weekly", "0.5") for username in profiles]
-
-    # Busiest tags first: those are the pages worth crawling often.
-    tags = db.scalars(
-        select(Tag.slug)
-        .join(post_tags, post_tags.c.tag_id == Tag.id)
-        .group_by(Tag.id)
-        .order_by(desc(func.count(post_tags.c.post_id)))
-        .limit(MAX_TAGS)
-    )
-    urls += [_url(f"/tags/{slug}", None, "daily", "0.4") for slug in tags]
-
-    body = "".join(urls)
+    body = "".join(_url(*entry) for entry in sitemap_entries(db))
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{body}</urlset>'
 
 
@@ -87,3 +99,11 @@ def sitemap(db: DbSession) -> Response:
         media_type="application/xml",
         headers={"Cache-Control": "public, max-age=3600, s-maxage=3600"},
     )
+
+
+# IndexNow's proof of ownership: the key, as plain text, at the root of the site.
+@router.api_route("/{name}.txt", methods=["GET", "HEAD"])
+def indexnow_key(name: str) -> PlainTextResponse:
+    if not indexnow.is_key(name):
+        raise NotFound("Not found", "not_found")
+    return PlainTextResponse(indexnow.key(), headers={"Cache-Control": "public, max-age=86400"})

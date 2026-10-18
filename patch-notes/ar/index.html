@@ -44,6 +44,7 @@
 <nav class="nav" aria-label="الإصدارات">
   <h2 class="nav-heading">الإصدارات</h2>
   <ul class="nav-list">
+    <li><a class="nav-link" href="#v1-3-1"><span>1.3.1</span><span class="count">18 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-3-0"><span>1.3.0</span><span class="count">17 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-1"><span>1.2.1</span><span class="count">5 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-0"><span>1.2.0</span><span class="count">29 سبتمبر 2026</span></a></li>
@@ -72,10 +73,39 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release surface" id="v1-3-1" aria-labelledby="v1-3-1-title">
+  <header class="release-header">
+    <h2 id="v1-3-1-title">ArabDev 1.3.1</h2>
+    <span class="chip primary">الأحدث</span>
+    <time datetime="2026-10-18">18 أكتوبر 2026</time>
+  </header>
+<div class="prose">
+  <p class="release-summary" data-hide-when-filtered>
+    كانت Google محرّك البحث الوحيد الذي يعرف صفحات ArabDev. أما Bing، ومعه DuckDuckGo وYahoo وEcosia، فلم يجد إلا عنوانًا واحدًا، وكان شاشة تسجيل دخول. صار ArabDev يُبلغ هذه المحرّكات بالمنشورات فور نشرها، ويمنعها من إدراج الصفحات التي لا معنى لها إلا بعد تسجيل الدخول.
+  </p>
+
+  <section class="area" id="v131-search" aria-labelledby="v131-search-title">
+    <h3 id="v131-search-title">محرّكات البحث غير Google<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">عند نشر منشور أو تعديله أو حذفه، يُرسل عنوانه فورًا عبر IndexNow إلى Bing وYandex وSeznam وNaver وYep. ونتائج Bing تظهر أيضًا في DuckDuckGo وYahoo وEcosia.</span></li>
+      <li data-type="fixed"><span class="tag fixed">إصلاح</span><span class="text">صارت صفحات المستخدمين المسجّلين، مثل <span dir="ltr">/dashboard</span> و<span dir="ltr">/login</span>، تطلب من محرّكات البحث ألا تدرجها. فقد كان Bing يعرض <span dir="ltr">/dashboard</span>، الذي يأخذ الزائر إلى شاشة تسجيل الدخول، بدل الصفحة الرئيسية.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">تعطي خريطة الموقع كل منشور تاريخ كتابته أو آخر تعديل له. وكانت تعطي كل الصفحات تاريخ اليوم نفسه، لأن الإعجابات والتعليقات كانت تحرّكه، والمحرّكات تتعلّم تجاهل تاريخ يتغيّر دائمًا.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">صار عنوان الصفحة الرئيسية ووصفها مكتوبين في الصفحة نفسها، فترى المحرّكات التي لا تشغّل JavaScript ما يراه الجميع.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v131-developer" aria-labelledby="v131-developer-title">
+    <h3 id="v131-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يرسل <code>app/services/indexnow.py</code> العناوين بعد الرد، فلا ينتظر النشر شيئًا، ويُسجَّل الفشل فقط. ويُقدَّم ملف المفتاح على <code>/&lt;key&gt;.txt</code>، والمفتاح مشتق من <code>SECRET_KEY</code>، فلا شيء جديد يحتاج إلى ضبط.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">إعداد جديد <code>INDEXNOW_ENABLED</code> (مفعّل في الإنتاج ومتوقف في غيره) وأمر <code>python -m app.cli indexnow</code> الذي يرسل كل عناوين خريطة الموقع. ويوجّه <code>vercel.json</code> و<code>nginx.conf</code> ملف المفتاح ويضيفان <code>X-Robots-Tag: noindex</code> إلى صفحات المستخدمين المسجّلين. وللخادم 117 اختبارًا.</span></li>
+    </ul>
+  </section>
+</div>
+</article>
+
 <article class="release surface" id="v1-3-0" aria-labelledby="v1-3-0-title">
   <header class="release-header">
     <h2 id="v1-3-0-title">ArabDev 1.3.0</h2>
-    <span class="chip primary">الأحدث</span>
     <time datetime="2026-10-17">17 أكتوبر 2026</time>
   </header>
 <div class="prose">

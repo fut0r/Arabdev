@@ -1,13 +1,13 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query, Response, status
+from fastapi import APIRouter, BackgroundTasks, Depends, Query, Response, status
 
 from app.core.deps import CurrentUser, DbSession, OptionalUser
 from app.core.rate_limit import rate_limit
 from app.schemas.comment import CommentCreate, CommentOut
 from app.schemas.common import Page
 from app.schemas.post import PostCounters, PostCreate, PostOut, PostUpdate
-from app.services import comment_service, interaction_service, post_service, turnstile_service
+from app.services import comment_service, indexnow, interaction_service, post_service, turnstile_service
 from app.services.post_service import FeedTab
 from app.utils.pagination import PageParams, page_params
 
@@ -60,18 +60,27 @@ def get_post(post_id: int, db: DbSession, viewer: OptionalUser) -> PostOut:
         Depends(turnstile_service.guard("publish_post")),
     ],
 )
-def create_post(data: PostCreate, db: DbSession, user: CurrentUser) -> PostOut:
-    return post_service.create_post(db, user, data)
+def create_post(data: PostCreate, db: DbSession, user: CurrentUser, background: BackgroundTasks) -> PostOut:
+    post = post_service.create_post(db, user, data)
+    # After the response: search engines hear about the post without the author waiting.
+    background.add_task(indexnow.submit, indexnow.post_paths(post.id, user, db, (t.slug for t in post.tags)))
+    return post
 
 
 @router.put("/{post_id}", response_model=PostOut, summary="Edit your post")
-def update_post(post_id: int, data: PostUpdate, db: DbSession, user: CurrentUser) -> PostOut:
-    return post_service.update_post(db, user, post_id, data)
+def update_post(
+    post_id: int, data: PostUpdate, db: DbSession, user: CurrentUser, background: BackgroundTasks
+) -> PostOut:
+    post = post_service.update_post(db, user, post_id, data)
+    background.add_task(indexnow.submit, indexnow.post_paths(post.id, user, db, (t.slug for t in post.tags)))
+    return post
 
 
 @router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete your post")
-def delete_post(post_id: int, db: DbSession, user: CurrentUser) -> Response:
+def delete_post(post_id: int, db: DbSession, user: CurrentUser, background: BackgroundTasks) -> Response:
     post_service.delete_post(db, user, post_id)
+    # The address now answers 404, which is how the engines learn to drop it.
+    background.add_task(indexnow.submit, indexnow.post_paths(post_id, user, db))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
