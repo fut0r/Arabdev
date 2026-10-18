@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/public/favicon.svg" width="96" height="96" alt="ArabDev logo">
+  <img src="Screenshot 2026-10-17 193020.png" width="780" height="264" alt="ArabDev logo">
 </p>
 
 <h1 align="center">ArabDev</h1>
