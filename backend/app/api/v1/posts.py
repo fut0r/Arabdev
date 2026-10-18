@@ -8,6 +8,7 @@ from app.schemas.comment import CommentCreate, CommentOut
 from app.schemas.common import Page
 from app.schemas.post import PostCounters, PostCreate, PostOut, PostUpdate
 from app.services import comment_service, indexnow, interaction_service, post_service, turnstile_service
+from app.services.human_check import RequireHuman
 from app.services.post_service import FeedTab
 from app.utils.pagination import PageParams, page_params
 
@@ -67,7 +68,7 @@ def create_post(data: PostCreate, db: DbSession, user: CurrentUser, background: 
     return post
 
 
-@router.put("/{post_id}", response_model=PostOut, summary="Edit your post")
+@router.put("/{post_id}", response_model=PostOut, summary="Edit your post", dependencies=[RequireHuman])
 def update_post(
     post_id: int, data: PostUpdate, db: DbSession, user: CurrentUser, background: BackgroundTasks
 ) -> PostOut:
@@ -76,7 +77,9 @@ def update_post(
     return post
 
 
-@router.delete("/{post_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete your post")
+@router.delete(
+    "/{post_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete your post", dependencies=[RequireHuman]
+)
 def delete_post(post_id: int, db: DbSession, user: CurrentUser, background: BackgroundTasks) -> Response:
     post_service.delete_post(db, user, post_id)
     # The address now answers 404, which is how the engines learn to drop it.
@@ -89,32 +92,32 @@ def delete_post(post_id: int, db: DbSession, user: CurrentUser, background: Back
 _interaction_limit = [Depends(rate_limit("interaction", limit=300, window=3600))]
 
 
-@interactions.post("/{post_id}/like", response_model=PostCounters, dependencies=_interaction_limit)
+@interactions.post("/{post_id}/like", response_model=PostCounters, dependencies=[RequireHuman, *_interaction_limit])
 def like(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.like(db, user, post_id)
 
 
-@interactions.delete("/{post_id}/like", response_model=PostCounters)
+@interactions.delete("/{post_id}/like", response_model=PostCounters, dependencies=[RequireHuman])
 def unlike(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.unlike(db, user, post_id)
 
 
-@interactions.post("/{post_id}/bookmark", response_model=PostCounters, dependencies=_interaction_limit)
+@interactions.post("/{post_id}/bookmark", response_model=PostCounters, dependencies=[RequireHuman, *_interaction_limit])
 def bookmark(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.bookmark(db, user, post_id)
 
 
-@interactions.delete("/{post_id}/bookmark", response_model=PostCounters)
+@interactions.delete("/{post_id}/bookmark", response_model=PostCounters, dependencies=[RequireHuman])
 def unbookmark(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.unbookmark(db, user, post_id)
 
 
-@interactions.post("/{post_id}/repost", response_model=PostCounters, dependencies=_interaction_limit)
+@interactions.post("/{post_id}/repost", response_model=PostCounters, dependencies=[RequireHuman, *_interaction_limit])
 def repost(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.repost(db, user, post_id)
 
 
-@interactions.delete("/{post_id}/repost", response_model=PostCounters)
+@interactions.delete("/{post_id}/repost", response_model=PostCounters, dependencies=[RequireHuman])
 def unrepost(post_id: int, db: DbSession, user: CurrentUser) -> PostCounters:
     return interaction_service.unrepost(db, user, post_id)
 
@@ -145,6 +148,7 @@ def create_comment(post_id: int, data: CommentCreate, db: DbSession, user: Curre
     "/comments/{comment_id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a comment (its author or the post's author)",
+    dependencies=[RequireHuman],
 )
 def delete_comment(comment_id: int, db: DbSession, user: CurrentUser) -> Response:
     comment_service.delete(db, user, comment_id)

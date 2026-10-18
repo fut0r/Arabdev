@@ -21,6 +21,7 @@ from app.schemas.report import (
     RestrictedAccount,
 )
 from app.services import report_service
+from app.services.human_check import RequireHuman
 from app.utils.pagination import PageParams, page_params
 
 reports = APIRouter(prefix="/posts", tags=["Moderation"])
@@ -38,7 +39,7 @@ Pagination = Annotated[PageParams, Depends(page_params)]
         "Reporting the same post twice does nothing. Once enough different people report a post it is hidden "
         "until a moderator decides."
     ),
-    dependencies=[Depends(rate_limit("report", limit=10, window=3600))],
+    dependencies=[RequireHuman, Depends(rate_limit("report", limit=10, window=3600))],
 )
 def report_post(post_id: int, data: ReportCreate, db: DbSession, user: CurrentUser) -> ReportAck:
     return report_service.create(db, user, post_id, data)

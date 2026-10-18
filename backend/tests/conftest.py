@@ -4,6 +4,7 @@ Set TEST_DATABASE_URL (e.g. sqlite:///./test.db) to inspect the data in a file i
 """
 
 import io
+import itertools
 import os
 import tempfile
 
@@ -102,8 +103,12 @@ def make_user(client):
 
 @pytest.fixture
 def make_post(client):
-    def _make(account: Account, content: str = "<p>Hello ArabDev</p>", **extra) -> dict:
-        payload = {"content_html": content, **extra}
+    # Each post gets its own text unless a test chooses one: the same text twice in a day is
+    # refused as spam (services/spam_guard.py).
+    numbers = itertools.count(1)
+
+    def _make(account: Account, content: str | None = None, **extra) -> dict:
+        payload = {"content_html": content or f"<p>Hello ArabDev, post {next(numbers)}</p>", **extra}
         response = client.post(f"{API}/posts", json=payload, headers=account.headers)
         assert response.status_code == 201, response.text
         return response.json()

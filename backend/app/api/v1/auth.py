@@ -17,7 +17,14 @@ from app.schemas.auth import (
 )
 from app.schemas.common import MessageOut
 from app.schemas.verification import ChallengeIn, ChallengeOut, VerifyCodeIn
-from app.services import auth_service, presenters, turnstile_service, two_factor_service, verification_service
+from app.services import (
+    auth_service,
+    presenters,
+    spam_guard,
+    turnstile_service,
+    two_factor_service,
+    verification_service,
+)
 from app.services.auth_service import IssuedTokens
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -84,6 +91,7 @@ def public_config() -> PublicConfigOut:
     ],
 )
 def register(data: RegisterIn, db: DbSession, request: Request, response: Response) -> AuthResultOut:
+    spam_guard.ensure_no_honeypot(data.homepage, form="register")
     if settings.email_codes_required:
         challenge = auth_service.start_registration(db, data, language=data.language, ip=client_ip(request))
         return AuthResultOut(status="verification_required", challenge=challenge_out(challenge))

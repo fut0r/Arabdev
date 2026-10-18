@@ -408,9 +408,11 @@
   </p>
   <p>
     Forms that bots target (sign-in, sign-up, password reset, account changes, publishing and commenting)
-    are protected by Cloudflare Turnstile. It runs a check in your browser and gives us a one-time pass,
-    which we verify with Cloudflare together with your IP address. Turnstile does not tell us who you are,
-    and we do not store its result.
+    are protected by Cloudflare Turnstile, and while you are signed in a Turnstile check also runs in the
+    background about once every 30 minutes to cover the other things you change. Each check gives us a
+    one-time pass, which we verify with Cloudflare together with your IP address. Turnstile does not tell us
+    who you are, and we do not store its result: the 30-minute pass we hand back is a signed token that
+    stays in the page's memory and is not saved on our side.
   </p>
 
   <h3 id="automatic-ads">Ad counts</h3>
@@ -737,7 +739,7 @@
   <p>
     Two third parties run code in your browser and may store something of their own: Google, for the ads
     (frequency capping and fraud prevention; see <a href="#advertising">Advertising</a>), and Cloudflare
-    Turnstile, for the check that tells a person from a script on the sign-in, sign-up and posting forms.
+    Turnstile, for the check that tells a person from a script, on forms and, while you are signed in, in the background.
     Where the law requires consent for those, Google and Cloudflare ask for it themselves and record your
     answer; ArabDev does not show a banner of its own, and nothing on this site depends on you accepting
     one. Blocking them costs you nothing but the ads.
@@ -829,7 +831,8 @@
   <ul>
     <li>In production, all traffic is encrypted with HTTPS.</li>
     <li>Sensitive actions are rate limited to stop automated attacks. The counters are shared between all of ArabDev's servers, and the address they count is the one our own hosting recorded, which a visitor cannot forge.</li>
-    <li>Cloudflare Turnstile checks that a real browser is behind every sign-in, sign-up, reset, account change, post and comment.</li>
+    <li>Cloudflare Turnstile checks that a real browser is behind every sign-in, sign-up, reset, account change, post and comment, and, through a pass renewed in the background every 30 minutes, behind everything else a signed-in account changes.</li>
+    <li>Sign-ups and email changes to temporary inbox services are refused, a sign-up form filled in by a bot is turned away, and new accounts have limits on posting and links during their first day.</li>
     <li>Every page is sent with security headers that force HTTPS (HSTS), stop other sites from framing ArabDev, block plugins and forms that post elsewhere, stop browsers from misinterpreting files, and switch off camera, microphone, location and payment access.</li>
     <li>Production refuses to start with a missing or published placeholder signing key.</li>
     <li>Access to servers and the database is limited to the people who operate ArabDev, and only for maintenance, security and legal obligations.</li>
@@ -1173,6 +1176,7 @@
     <table>
       <thead><tr><th scope="col">Version</th><th scope="col">Date</th><th scope="col">Summary</th></tr></thead>
       <tbody>
+        <tr><td>1.7</td><td>18 October 2026</td><td>Says that the Turnstile check also runs in the background while you are signed in, and describes the new protections against spam accounts.</td></tr>
         <tr><td>1.6</td><td>18 October 2026</td><td>Says that the addresses of new, edited and deleted posts are sent to search engines through IndexNow.</td></tr>
         <tr><td>1.5</td><td>17 October 2026</td><td>Covers the authenticator app and its recovery codes, blocking, the check of new passwords against leaked ones, RSS feeds, and where ads appear.</td></tr>
         <tr><td>1.4</td><td>5 October 2026</td><td>Explains that public pages are sent with their text in the page and kept by our hosting for a few minutes, so an edited or deleted post can remain visible at its address for up to about ten minutes.</td></tr>
@@ -1263,7 +1267,7 @@
   <section class="surface">
     <h2 class="surface-heading">Details</h2>
     <dl class="facts">
-    <div><dt>Version</dt><dd>1.6</dd></div>
+    <div><dt>Version</dt><dd>1.7</dd></div>
     <div><dt>In effect since</dt><dd>19 Sep 2026</dd></div>
     <div><dt>Last updated</dt><dd>18 Oct 2026</dd></div>
     <div><dt>Covers</dt><dd><span dir="ltr">arabdev.site</span></dd></div>

@@ -25,7 +25,10 @@ Setup takes about five minutes; the [README](README.md#run-it-locally) has the s
 2. **Right to left is the default.** Use logical CSS (`marginInlineStart`, `insetInlineEnd`,
    `textAlign: 'start'`) rather than left and right, and check your change in Arabic.
 3. **The server decides.** Permissions, limits and validation live in the backend services. The
-   frontend can hide a button, but the API must refuse the action too.
+   frontend can hide a button, but the API must refuse the action too. A new route that changes
+   something gets `dependencies=[RequireHuman]` (`app/services/human_check.py`) or a Turnstile
+   guard of its own, so scripts can't use it, and anything people publish goes through
+   `app/services/spam_guard.py`.
 4. **Tests for behaviour.** A backend change comes with a test in `backend/tests/` that would fail
    without it.
 5. **Docs stay true.** If you change how something works for people, update the matching article

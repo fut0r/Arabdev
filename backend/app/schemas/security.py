@@ -3,6 +3,13 @@
 from pydantic import BaseModel, Field
 
 
+class HumanPassOut(BaseModel):
+    """Sent back in the X-ArabDev-Human header with requests that change something."""
+
+    token: str
+    expires_in: int
+
+
 class PasswordConfirm(BaseModel):
     password: str = Field(min_length=1, max_length=128)
 

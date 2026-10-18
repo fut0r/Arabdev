@@ -867,6 +867,12 @@
     "two_factor_already_enabled": "The authenticator app is already on.",
     "two_factor_not_enabled": "Turn on the authenticator app first.",
     "two_factor_setup_missing": "Please start the setup again.",
-    "code_resend_unavailable": "This code comes from your authenticator app, so there's nothing to resend."
+    "code_resend_unavailable": "This code comes from your authenticator app, so there's nothing to resend.",
+    "human_check_required": "We couldn't confirm you're not a robot. Check your connection and try again.",
+    "too_many_links": "New accounts can add up to 2 links during their first day.",
+    "duplicate_post": "You already posted this.",
+    "duplicate_comment": "You already wrote this comment.",
+    "email_disposable": "Use an email address you'll keep. Temporary inboxes can't be used.",
+    "request_rejected": "We couldn't complete this. Please try again."
   }
 }

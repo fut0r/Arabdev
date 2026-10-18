@@ -8,6 +8,8 @@ export interface RegisterPayload {
   password: string;
   password_confirm: string;
   language: 'ar' | 'en';
+  /** The hidden trap field: always empty when a person signs up. */
+  homepage?: string;
 }
 
 export const authApi = {

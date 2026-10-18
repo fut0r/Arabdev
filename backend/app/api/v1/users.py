@@ -12,6 +12,7 @@ from app.schemas.comment import ReplyOut
 from app.schemas.common import MessageOut, Page
 from app.schemas.post import PostOut
 from app.schemas.security import (
+    HumanPassOut,
     PasswordConfirm,
     RecoveryCodesOut,
     TwoFactorCodeIn,
@@ -46,6 +47,8 @@ from app.services import (
     two_factor_service,
     user_service,
 )
+from app.services import human_check as human_check_service
+from app.services.human_check import RequireHuman
 from app.utils.pagination import PageParams, page_params
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -55,17 +58,40 @@ Pagination = Annotated[PageParams, Depends(page_params)]
 # ------------------------------------------------------------ the signed-in user
 
 
+@router.post(
+    "/me/human-check",
+    response_model=HumanPassOut,
+    summary="Trade a Turnstile token for a 30-minute human pass",
+    description=(
+        "Likes, follows, reposts, reports, uploads, drafts and profile edits need the pass in the "
+        "X-ArabDev-Human header when Turnstile is configured. Without it they answer 403 human_check_required."
+    ),
+    dependencies=[
+        Depends(rate_limit("human_check", limit=60, window=3600)),
+        Depends(turnstile_service.guard("human_check")),
+    ],
+)
+def human_check(user: CurrentUser) -> HumanPassOut:
+    token, expires_in = human_check_service.issue(user)
+    return HumanPassOut(token=token, expires_in=expires_in)
+
+
 @router.get("/me", response_model=MeOut, summary="The signed-in account")
 def me(db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user)
 
 
-@router.patch("/me/profile", response_model=MeOut, summary="Update display name, bio, location and website")
+@router.patch(
+    "/me/profile",
+    response_model=MeOut,
+    summary="Update display name, bio, location and website",
+    dependencies=[RequireHuman],
+)
 def update_profile(data: ProfileUpdate, db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user_service.update_profile(db, user, data))
 
 
-@router.patch("/me/username", response_model=MeOut, summary="Change username")
+@router.patch("/me/username", response_model=MeOut, summary="Change username", dependencies=[RequireHuman])
 def update_username(data: UsernameUpdate, db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user_service.update_username(db, user, data.username))
 
@@ -199,14 +225,19 @@ def blocked_accounts(db: DbSession, user: CurrentUser, params: Pagination) -> Pa
     "/{user_id}/block",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Block an account (also ends follows in both directions)",
-    dependencies=[Depends(rate_limit("block", limit=60, window=3600))],
+    dependencies=[RequireHuman, Depends(rate_limit("block", limit=60, window=3600))],
 )
 def block_user(user_id: int, db: DbSession, user: CurrentUser) -> Response:
     block_service.block(db, user, user_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-@router.delete("/{user_id}/block", status_code=status.HTTP_204_NO_CONTENT, summary="Unblock an account")
+@router.delete(
+    "/{user_id}/block",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Unblock an account",
+    dependencies=[RequireHuman],
+)
 def unblock_user(user_id: int, db: DbSession, user: CurrentUser) -> Response:
     block_service.unblock(db, user, user_id)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
@@ -254,7 +285,7 @@ def export_account(db: DbSession, user: CurrentUser) -> Response:
     )
 
 
-@router.put("/me/interests", response_model=MeOut, summary="Replace the interests list")
+@router.put("/me/interests", response_model=MeOut, summary="Replace the interests list", dependencies=[RequireHuman])
 def update_interests(data: InterestsUpdate, db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user_service.update_interests(db, user, data.interest_ids))
 
@@ -278,14 +309,14 @@ def complete_onboarding(db: DbSession, user: CurrentUser) -> MeOut:
     "/me/avatar",
     response_model=MeOut,
     summary="Upload a profile picture (JPEG/PNG/WebP/GIF, max 5 MB)",
-    dependencies=[Depends(rate_limit("upload", limit=30, window=600))],
+    dependencies=[RequireHuman, Depends(rate_limit("upload", limit=30, window=600))],
 )
 async def upload_avatar(db: DbSession, user: CurrentUser, file: UploadFile = File(...)) -> MeOut:
     raw = await media_service.read_upload(file)
     return presenters.me_out(db, user_service.set_avatar(db, user, raw))
 
 
-@router.delete("/me/avatar", response_model=MeOut, summary="Remove the profile picture")
+@router.delete("/me/avatar", response_model=MeOut, summary="Remove the profile picture", dependencies=[RequireHuman])
 def remove_avatar(db: DbSession, user: CurrentUser) -> MeOut:
     return presenters.me_out(db, user_service.remove_avatar(db, user))
 
@@ -346,12 +377,12 @@ def following(username: str, db: DbSession, viewer: OptionalUser, params: Pagina
     "/{user_id}/follow",
     response_model=FollowState,
     summary="Follow a user",
-    dependencies=[Depends(rate_limit("follow", limit=120, window=3600))],
+    dependencies=[RequireHuman, Depends(rate_limit("follow", limit=120, window=3600))],
 )
 def follow(user_id: int, db: DbSession, user: CurrentUser) -> FollowState:
     return user_service.follow(db, user, user_id)
 
 
-@router.delete("/{user_id}/follow", response_model=FollowState, summary="Unfollow a user")
+@router.delete("/{user_id}/follow", response_model=FollowState, summary="Unfollow a user", dependencies=[RequireHuman])
 def unfollow(user_id: int, db: DbSession, user: CurrentUser) -> FollowState:
     return user_service.unfollow(db, user, user_id)

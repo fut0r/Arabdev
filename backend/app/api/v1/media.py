@@ -8,6 +8,7 @@ from app.core.rate_limit import rate_limit
 from app.models import Media
 from app.schemas.misc import MediaOut
 from app.services import media_service, presenters
+from app.services.human_check import RequireHuman
 
 router = APIRouter(prefix="/media", tags=["Media"])
 
@@ -18,7 +19,7 @@ router = APIRouter(prefix="/media", tags=["Media"])
     status_code=status.HTTP_201_CREATED,
     summary="Upload an image to attach to a post",
     description="Accepts JPEG, PNG, WebP or GIF up to 5 MB. Images are validated and re-encoded to WebP.",
-    dependencies=[Depends(rate_limit("upload", limit=30, window=600))],
+    dependencies=[RequireHuman, Depends(rate_limit("upload", limit=30, window=600))],
 )
 async def upload(
     db: DbSession,
@@ -32,7 +33,12 @@ async def upload(
     return presenters.media_out(media)
 
 
-@router.delete("/{media_id}", status_code=status.HTTP_204_NO_CONTENT, summary="Delete an unused upload")
+@router.delete(
+    "/{media_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete an unused upload",
+    dependencies=[RequireHuman],
+)
 def delete(media_id: int, db: DbSession, user: CurrentUser) -> Response:
     media = db.get(Media, media_id)
     if media is None or media.owner_id != user.id:

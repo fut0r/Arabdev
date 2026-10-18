@@ -11,7 +11,7 @@ from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.post import DraftOut, DraftWrite, PostCreate, PostOut, PostUpdate
-from app.services import block_service, media_service, notification_service, presenters, ranking
+from app.services import block_service, media_service, notification_service, presenters, ranking, spam_guard
 from app.utils.html import html_to_text, sanitize_post_html
 from app.utils.pagination import PageParams, paginate_scalars
 from app.utils.time import utcnow
@@ -149,6 +149,7 @@ def _attach_image(db: Session, author: User, media_id: int | None) -> int | None
 def create_post(db: Session, author: User, data: PostCreate) -> PostOut:
     ensure_can_publish(author)
     content_html, content_text = _prepare_content(data.content_html)
+    spam_guard.check_new_post(db, author, html=content_html, text=content_text, link_url=data.link_url)
     post = Post(
         author_id=author.id,
         title=data.title,

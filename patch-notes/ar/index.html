@@ -44,6 +44,7 @@
 <nav class="nav" aria-label="الإصدارات">
   <h2 class="nav-heading">الإصدارات</h2>
   <ul class="nav-list">
+    <li><a class="nav-link" href="#v1-3-2"><span>1.3.2</span><span class="count">18 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-3-1"><span>1.3.1</span><span class="count">18 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-3-0"><span>1.3.0</span><span class="count">17 أكتوبر 2026</span></a></li>
     <li><a class="nav-link" href="#v1-2-1"><span>1.2.1</span><span class="count">5 أكتوبر 2026</span></a></li>
@@ -73,10 +74,56 @@
 <p class="filter-status" data-filter-status hidden></p>
 <div class="no-results" data-no-results hidden>لا توجد تغييرات تطابق عوامل التصفية. جرّب كلمة أخرى، أو اعرض كل التغييرات.</div>
 
+<article class="release surface" id="v1-3-2" aria-labelledby="v1-3-2-title">
+  <header class="release-header">
+    <h2 id="v1-3-2-title">ArabDev 1.3.2</h2>
+    <span class="chip primary">الأحدث</span>
+    <time datetime="2026-10-18">18 أكتوبر 2026</time>
+  </header>
+<div class="prose">
+  <p class="release-summary" data-hide-when-filtered>
+    كان الروبوت حتى الآن يحتاج إلى متصفح حقيقي لتسجيل الدخول والنشر والتعليق فقط. أما الآن فيحتاج إليه لكل ما يمكن للحساب تغييره، وعلى الحسابات الجديدة حدود تجعل الرسائل المزعجة بطيئة وسهلة الاكتشاف. ولا شيء يتغيّر للناس: الفحص الإضافي يجري في الخلفية.
+  </p>
+
+  <section class="area" id="v132-human" aria-labelledby="v132-human-title">
+    <h3 id="v132-human-title">فحص خلف كل إجراء<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">صار الإعجاب والحفظ وإعادة النشر والمتابعة والحظر والإبلاغ ورفع الصور والمسوّدات والتعديل والحذف وتغييرات الملف الشخصي تحتاج إلى فحص Turnstile أيضًا. يجري في الخلفية نحو مرة كل 30 دقيقة فلا يراه الناس، ولا يستطيع برنامج يملك جلسة مسروقة أو أنشأها روبوت فعل أيٍّ من ذلك.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">يُستبدل الفحص بتصريح موقّع يعمل لحساب واحد فقط، ومدته 30 دقيقة، ويُلغيه تسجيل الخروج من كل الأجهزة أو تغيير كلمة المرور. ولا يصلح لتسجيل الدخول.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">عندما تنتهي مدة التصريح يحصل التطبيق على تصريح جديد ويعيد الطلب وحده، فلا يفشل إعجاب أو متابعة بسببه.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v132-spam" aria-labelledby="v132-spam-title">
+    <h3 id="v132-spam-title">الرسائل المزعجة والبرمجيات الخبيثة<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">في يومه الأول يستطيع الحساب نشر 5 منشورات و20 تعليقًا في الساعة، وإضافة رابطين على الأكثر إلى المنشور أو التعليق أو النبذة.</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">لا تستطيع الحسابات الجديدة وضع روابط مباشرة إلى برامج للتنزيل (<code>.exe</code> و<code>.apk</code> و<code>.msi</code> وأمثالها) أو إلى عناوين IP مجرّدة، وهي الطرق المعتادة لتمرير البرمجيات الخبيثة. أما الروابط إلى صفحة مشروع أو إصداراته فما زالت تعمل.</span></li>
+      <li data-type="new"><span class="tag new">جديد</span><span class="text">يُرفض نشر المنشور نفسه مرتين خلال يوم، وكذلك التعليق نفسه إلا إن كان قصيرًا مثل «شكرًا!».</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">يُرفض التسجيل وتغيير البريد إلى صناديق بريد مؤقتة (Mailinator و10 Minute Mail وGuerrilla Mail وYOPmail ونحو 90 خدمة أخرى).</span></li>
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">في نموذج التسجيل حقل لا يراه الناس. والروبوتات التي تملأ كل الحقول تملؤه أيضًا، فتُرد.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v132-hardening" aria-labelledby="v132-hardening-title">
+    <h3 id="v132-hardening-title">التحصين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="security"><span class="tag security">أمان</span><span class="text">تُرسل ردود الواجهة البرمجية والصور المرفوعة مع Content-Security-Policy لا يسمح لها بتحميل أو تشغيل أي شيء، ومع Cross-Origin-Resource-Policy، فلا يمكن تحويلها إلى صفحات أو جلبها إلى مواقع أخرى.</span></li>
+      <li data-type="improved"><span class="tag improved">تحسين</span><span class="text">فُحص حقن SQL: كل استعلام لقاعدة البيانات يمر عبر SQLAlchemy بمعاملات مقيّدة، وأنماط البحث مُهرَّبة. وترسل اختبارات جديدة محاولات حقن إلى البحث وتسجيل الدخول والملفات الشخصية وخلاصات الوسوم، وتتأكد أن البيانات لم تُمس.</span></li>
+    </ul>
+  </section>
+  <section class="area" id="v132-developer" aria-labelledby="v132-developer-title">
+    <h3 id="v132-developer-title">للمطوّرين<span class="area-count"></span></h3>
+    <ul class="changes">
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يُصدر <code>app/services/human_check.py</code> التصريح ويوفّر <code>RequireHuman</code>، المستخدم الآن على 24 مسارًا؛ وعلى أي مسار جديد يغيّر شيئًا أن يستخدمه أو فحص Turnstile خاصًا به. نقطة نهاية جديدة <code>POST /api/v1/users/me/human-check</code> وترويسة <code>X-ArabDev-Human</code>، ويُتخطّى الفحص دون مفاتيح Turnstile.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">يضم <code>app/services/spam_guard.py</code> حدود الحسابات الجديدة وفحص التكرار وقائمة نطاقات البريد المؤقت والحقل الفخ. رموز أخطاء جديدة: <code>human_check_required</code> و<code>too_many_links</code> و<code>risky_link</code> و<code>duplicate_post</code> و<code>duplicate_comment</code> و<code>email_disposable</code> و<code>request_rejected</code>.</span></li>
+      <li data-type="developer"><span class="tag developer">للمطوّرين</span><span class="text">صار مساعد الاختبارات <code>make_post</code> يكتب نصًا مختلفًا لكل منشور، لأن المنشورات المتطابقة صارت تُرفض. وللخادم 137 اختبارًا.</span></li>
+    </ul>
+  </section>
+</div>
+</article>
+
 <article class="release surface" id="v1-3-1" aria-labelledby="v1-3-1-title">
   <header class="release-header">
     <h2 id="v1-3-1-title">ArabDev 1.3.1</h2>
-    <span class="chip primary">الأحدث</span>
     <time datetime="2026-10-18">18 أكتوبر 2026</time>
   </header>
 <div class="prose">

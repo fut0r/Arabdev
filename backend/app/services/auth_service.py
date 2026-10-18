@@ -21,7 +21,7 @@ from app.core.security import (
 from app.models import PasswordResetToken, RefreshToken, User
 from app.repositories import users as users_repo
 from app.schemas.auth import AvailabilityOut, FieldAvailability, RegisterIn
-from app.services import email_service, two_factor_service, verification_service
+from app.services import email_service, spam_guard, two_factor_service, verification_service
 from app.services.password_check import ensure_not_breached
 from app.services.verification_service import Challenge
 from app.utils.time import utcnow
@@ -57,6 +57,7 @@ class IssuedTokens:
 
 
 def _check_new_account(db: Session, username: str, email: str) -> None:
+    spam_guard.ensure_real_inbox(email)
     if users_repo.username_taken(db, username):
         raise Conflict("Username is already taken", "username_taken", field="username")
     if users_repo.email_taken(db, email):

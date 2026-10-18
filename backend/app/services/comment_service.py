@@ -7,7 +7,7 @@ from app.models import Comment, Post, User
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentCreate, CommentOut, ReplyOut
 from app.schemas.common import Page
-from app.services import block_service, notification_service, presenters
+from app.services import block_service, notification_service, presenters, spam_guard
 from app.services.post_service import get_visible_post_or_404, recount
 from app.utils.pagination import PageParams, paginate_scalars
 
@@ -38,6 +38,7 @@ def create(db: Session, author: User, post_id: int, data: CommentCreate) -> Comm
     ensure_can_publish(author)
     post = get_visible_post_or_404(db, post_id, author)
     block_service.ensure_can_interact(db, author.id, post.author_id)
+    spam_guard.check_new_comment(db, author, data.content)
     parent: Comment | None = None
     if data.parent_id is not None:
         parent = db.get(Comment, data.parent_id)

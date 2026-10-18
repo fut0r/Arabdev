@@ -33,6 +33,7 @@ interface RegisterValues {
   email: string;
   password: string;
   password_confirm: string;
+  homepage: string;
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -57,7 +58,7 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting },
   } = useForm<RegisterValues>({
     mode: 'onTouched',
-    defaultValues: { username: '', email: '', password: '', password_confirm: '' },
+    defaultValues: { username: '', email: '', password: '', password_confirm: '', homepage: '' },
   });
 
   const password = watch('password');
@@ -87,6 +88,7 @@ export default function RegisterPage() {
           password: values.password,
           password_confirm: values.password_confirm,
           language,
+          homepage: values.homepage,
         },
         token,
       );
@@ -134,6 +136,17 @@ export default function RegisterPage() {
       </Typography>
 
       <Box component="form" noValidate onSubmit={onSubmit}>
+        {/* A trap for bots that fill in every field: people never see it or tab into it, and the
+            server refuses a sign-up that has it filled in (backend/app/services/spam_guard.py). */}
+        <Box
+          aria-hidden
+          sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clipPath: 'inset(50%)', opacity: 0 }}
+        >
+          <label>
+            Homepage
+            <input type="text" tabIndex={-1} autoComplete="off" {...register('homepage')} />
+          </label>
+        </Box>
         <Stack spacing={2.25}>
           {serverError && <Alert severity="error">{serverError}</Alert>}
           <TextField

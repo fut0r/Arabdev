@@ -6,6 +6,7 @@ import { Navigate, Outlet, ScrollRestoration, useLocation } from 'react-router';
 import { LoadingState } from '@/components/LoadingState';
 import { Logo } from '@/components/Logo';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
+import { HumanCheck } from '@/features/security/HumanCheck';
 import { HOME_PATH } from '@/site';
 
 function Splash() {
@@ -35,6 +36,7 @@ export function RootRoute() {
     <AuthProvider>
       <ScrollRestoration />
       <SessionGate />
+      <HumanCheck />
     </AuthProvider>
   );
 }

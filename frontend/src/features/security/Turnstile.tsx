@@ -22,8 +22,12 @@ export function usePublicConfig() {
 interface UseTurnstileOptions {
   /** Names the protected action, checked against the token on the server. */
   action: string;
-  /** 'visible' draws the widget in the form; 'invisible' solves it in the background. */
-  mode?: 'visible' | 'invisible';
+  /**
+   * 'visible' draws the widget in the form when it has to ask something; 'invisible' solves it
+   * in the background, showing the widget while it works; 'hidden' solves it in the background
+   * and shows nothing unless Cloudflare needs the visitor to click.
+   */
+  mode?: 'visible' | 'invisible' | 'hidden';
 }
 
 export interface TurnstileHandle {
@@ -50,7 +54,8 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
   const { data: config } = usePublicConfig();
   const { language } = usePreferences();
   const { mode: themeMode, systemMode } = useColorScheme();
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  // State, not a ref: the widget is drawn once its slot exists, even if that is after the first render.
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
   const apiRef = useRef<TurnstileApi | null>(null);
   const widgetRef = useRef<string | null>(null);
   const tokenRef = useRef<string | null>(null);
@@ -66,9 +71,8 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
   }, []);
 
   useEffect(() => {
-    if (!siteKey || !containerRef.current) return;
+    if (!siteKey || !container) return;
     let cancelled = false;
-    const container = containerRef.current;
 
     void loadTurnstile()
       .then((api) => {
@@ -83,7 +87,7 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
             size: 'flexible',
             // Invisible widgets wait to be asked; visible ones only appear when the
             // visitor actually has to do something.
-            execution: mode === 'invisible' ? 'execute' : 'render',
+            execution: mode === 'visible' ? 'render' : 'execute',
             appearance: mode === 'invisible' ? 'execute' : 'interaction-only',
             'refresh-expired': 'auto',
             callback: (token) => {
@@ -116,7 +120,7 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
       }
     };
     // Re-rendering on theme or language change keeps the widget matching the page.
-  }, [siteKey, action, dark, language, mode, settle]);
+  }, [siteKey, container, action, dark, language, mode, settle]);
 
   const reset = useCallback(() => {
     tokenRef.current = null;
@@ -153,9 +157,7 @@ export function useTurnstile({ action, mode = 'visible' }: UseTurnstileOptions):
     return waiting;
   }, [siteKey]);
 
-  const attach = useCallback((element: HTMLDivElement | null) => {
-    containerRef.current = element;
-  }, []);
+  const attach = useCallback((element: HTMLDivElement | null) => setContainer(element), []);
 
   return { attach, getToken, reset, enabled: Boolean(siteKey), error };
 }

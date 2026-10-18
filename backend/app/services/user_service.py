@@ -25,6 +25,7 @@ from app.services import (
     notification_service,
     post_service,
     presenters,
+    spam_guard,
     verification_service,
 )
 from app.services.storage import get_storage
@@ -43,6 +44,7 @@ def get_by_username_or_404(db: Session, username: str) -> User:
 
 
 def update_profile(db: Session, user: User, data: ProfileUpdate) -> User:
+    spam_guard.check_links(user, spam_guard.links_in(text=data.bio or "", extra=(data.website or "",)), "bio")
     profile = user.profile
     profile.display_name = data.display_name
     profile.bio = data.bio
@@ -71,6 +73,7 @@ def _check_email_change(db: Session, user: User, email: str, current_password: s
         raise UnprocessableEntity("Current password is incorrect", "current_password_invalid", field="current_password")
     if email == user.email:
         raise UnprocessableEntity("That is already your email address", "email_unchanged", field="email")
+    spam_guard.ensure_real_inbox(email)
     if users_repo.email_taken(db, email, exclude_id=user.id):
         raise Conflict("An account with this email already exists", "email_taken", field="email")
 

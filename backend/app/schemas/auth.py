@@ -15,6 +15,8 @@ class RegisterIn(BaseModel):
     password_confirm: str
     # Interface language at sign-up, stored as the account's initial preference.
     language: Literal["ar", "en"] = "ar"
+    # A trap: the sign-up form hides this field from people, so only bots fill it in.
+    homepage: str | None = Field(default=None, max_length=200)
 
     _username = field_validator("username")(normalize_username)
     _strength = field_validator("password")(validate_password_strength)

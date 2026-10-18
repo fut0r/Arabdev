@@ -112,6 +112,14 @@ def create_app() -> FastAPI:
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
         response.headers.setdefault("Permissions-Policy", "geolocation=(), microphone=(), camera=(), payment=()")
+        # JSON and uploaded images are data, never pages: even if a browser were tricked into
+        # rendering one, it may load nothing, run nothing and sit in no frame.
+        content_type = response.headers.get("content-type", "")
+        if content_type.startswith(("application/json", "image/")):
+            response.headers.setdefault(
+                "Content-Security-Policy", "default-src 'none'; frame-ancestors 'none'; sandbox"
+            )
+            response.headers.setdefault("Cross-Origin-Resource-Policy", "same-site")
         if settings.cookie_secure:
             response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
         return response
@@ -128,6 +136,7 @@ def create_app() -> FastAPI:
             "X-ArabDev-Client",
             "Accept-Language",
             "X-Turnstile-Token",
+            "X-ArabDev-Human",
         ],
         expose_headers=["Retry-After"],
     )
