@@ -11,6 +11,23 @@ from app.utils.time import utcnow
 from tests.conftest import API, PASSWORD
 
 
+def replace_refresh_cookie(client, value):
+    """Swap the refresh cookie instead of adding a second one with the same name.
+
+    ``Cookies.set`` defaults to an empty domain, which does not replace the cookie the
+    server set for the test host. The request would then carry two refresh cookies and
+    the server could read either one, making reuse tests pass or fail at random.
+    """
+    name = settings.refresh_cookie_name
+    path = f"{API}/auth"
+    domain = next((cookie.domain for cookie in client.cookies.jar if cookie.name == name), None)
+    if domain is None:
+        # Logout has just removed the cookie, so rebuild the host-only domain the jar used.
+        host = client.base_url.host
+        domain = host if "." in host else f"{host}.local"
+    client.cookies.set(name, value, domain=domain, path=path)
+
+
 def register_payload(**overrides):
     payload = {
         "username": "omar_dev",
@@ -114,9 +131,9 @@ def test_refresh_rotates_and_detects_reuse(client, make_user, monkeypatch):
     assert second_cookie and second_cookie != first_cookie
 
     # Replaying the old token revokes the whole session family, including the new token.
-    client.cookies.set(settings.refresh_cookie_name, first_cookie, path=f"{API}/auth")
+    replace_refresh_cookie(client, first_cookie)
     assert client.post(f"{API}/auth/refresh").status_code == 401
-    client.cookies.set(settings.refresh_cookie_name, second_cookie, path=f"{API}/auth")
+    replace_refresh_cookie(client, second_cookie)
     assert client.post(f"{API}/auth/refresh").status_code == 401
 
 
@@ -124,7 +141,7 @@ def test_concurrent_refresh_from_two_tabs_is_not_treated_as_theft(client, make_u
     make_user("layla")
     shared_cookie = client.cookies.get(settings.refresh_cookie_name)
     assert client.post(f"{API}/auth/refresh").status_code == 200  # tab 1
-    client.cookies.set(settings.refresh_cookie_name, shared_cookie, path=f"{API}/auth")
+    replace_refresh_cookie(client, shared_cookie)
     assert client.post(f"{API}/auth/refresh").status_code == 200  # tab 2, same old cookie, moments later
 
 
@@ -139,7 +156,7 @@ def test_logout_revokes_refresh_token(client, make_user):
     make_user("layla")
     cookie = client.cookies.get(settings.refresh_cookie_name)
     assert client.post(f"{API}/auth/logout").status_code == 204
-    client.cookies.set(settings.refresh_cookie_name, cookie, path=f"{API}/auth")
+    replace_refresh_cookie(client, cookie)
     assert client.post(f"{API}/auth/refresh").status_code == 401
 
 

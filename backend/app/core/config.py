@@ -122,7 +122,6 @@ class Settings(BaseSettings):
     # This many open reports from different people hide a post until a moderator decides.
     report_auto_hide_threshold: int = 3
     report_trusted_age_days: int = 7
-    report_trusted_age_days: int = 7
     # Resolved reports are deleted after this many days.
     report_retention_days: int = 365
 
