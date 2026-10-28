@@ -121,12 +121,23 @@ class Settings(BaseSettings):
     moderation_email: str | None = None
     # This many open reports from different people hide a post until a moderator decides.
     report_auto_hide_threshold: int = 3
+    report_trusted_age_days: int = 7
+    report_trusted_age_days: int = 7
     # Resolved reports are deleted after this many days.
     report_retention_days: int = 365
 
     # "local" writes files under media_root; "database" keeps them in the media table, for
     # hosts without a persistent disk such as Vercel.
-    storage_backend: Literal["local", "database"] = "local"
+    storage_backend: Literal["local", "database", "s3"] = "local"
+    s3_endpoint_url: str | None = None
+    s3_region: str = "auto"
+    s3_bucket: str | None = None
+    s3_public_url: str | None = None
+    s3_access_key_id: str | None = None
+    s3_secret_access_key: str | None = None
+    weekly_digest_enabled: bool = False
+    github_client_id: str | None = None
+    github_client_secret: str | None = None
     media_root: Path = BASE_DIR / "media"
     media_url: str = "/media"
     max_upload_bytes: int = 5 * 1024 * 1024
@@ -173,6 +184,22 @@ class Settings(BaseSettings):
     def _check_production_secret(self) -> "Settings":
         if self.environment == "production" and self.secret_key.lower() in _PLACEHOLDER_SECRETS:
             raise ValueError("SECRET_KEY must be set in production")
+        return self
+
+    @property
+    def github_configured(self) -> bool:
+        return bool(self.github_client_id and self.github_client_secret)
+
+    @model_validator(mode="after")
+    def _check_storage(self) -> "Settings":
+        if self.storage_backend == "s3" and not all(
+            (self.s3_bucket, self.s3_public_url, self.s3_access_key_id, self.s3_secret_access_key)
+        ):
+            raise ValueError("S3 storage requires bucket, public URL and credentials")
+        if self.s3_public_url and not self.s3_public_url.startswith("https://"):
+            raise ValueError("S3_PUBLIC_URL must use HTTPS")
+        if self.s3_endpoint_url and not self.s3_endpoint_url.startswith("https://"):
+            raise ValueError("S3_ENDPOINT_URL must use HTTPS")
         return self
 
     @property

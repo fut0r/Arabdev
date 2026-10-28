@@ -29,6 +29,8 @@ import { useNotify } from '@/components/Notifier';
 import { TurnstileWidget, useTurnstile } from '@/features/security/Turnstile';
 import { Pagination } from '@/components/Pagination';
 import { useAuth } from '@/features/auth/AuthProvider';
+import { communityApi } from '@/api/community';
+import type { Post } from '@/types/api';
 import type { Comment } from '@/types/api';
 
 const MAX_LENGTH = 2000;
@@ -70,7 +72,13 @@ function CommentItem({
   parent,
   onReply,
   onDelete,
+  accepted,
+  onAccept,
+  accepting,
 }: {
+  accepted: boolean;
+  accepting: boolean;
+  onAccept?: () => void;
   comment: Comment;
   parent: Comment | undefined;
   onReply: (comment: Comment) => void;
@@ -104,6 +112,7 @@ function CommentItem({
             · <RelativeTime iso={comment.created_at} />
           </Typography>
         </Stack>
+        {accepted && <Chip color="success" size="small" label={t('community.solved')} />}
         {parent && (
           <Typography variant="caption" color="text.secondary" component="p">
             {t('comments.replyingTo', { username: parent.author.username })}
@@ -122,6 +131,11 @@ function CommentItem({
               sx={{ color: 'text.secondary' }}
             >
               {t('comments.reply')}
+            </Button>
+          )}
+          {onAccept && (
+            <Button disabled={accepting} onClick={onAccept}>
+              {t(accepted ? 'community.unaccept' : 'community.accept')}
             </Button>
           )}
           {comment.can_delete && (
@@ -235,7 +249,9 @@ export const CommentComposer = forwardRef<HTMLTextAreaElement, ComposerProps>(fu
 });
 
 /** Discussion under a post: composer, then comments oldest-first, 20 per page. */
-export function CommentsSection({ postId, commentsCount }: { postId: number; commentsCount: number }) {
+export function CommentsSection({ post }: { post: Post }) {
+  const { id: postId, comments_count: commentsCount } = post;
+  const { user } = useAuth();
   const { t } = useTranslation();
   const notify = useNotify();
   const queryClient = useQueryClient();
@@ -266,6 +282,16 @@ export function CommentsSection({ postId, commentsCount }: { postId: number; com
     const total = (query.data?.total ?? 0) + 1;
     setPage(Math.max(1, Math.ceil(total / 20)));
   };
+
+  const acceptance = useMutation({
+    mutationFn: (commentId: number) =>
+      communityApi.acceptAnswer(postId, post.accepted_comment_id === commentId ? null : commentId),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: queryKeys.post(postId) });
+      void queryClient.invalidateQueries({ queryKey: ['browse'] });
+    },
+    onError: (e) => notify(errorMessage(e, t), 'error'),
+  });
 
   const byId = new Map((query.data?.items ?? []).map((comment) => [comment.id, comment]));
 
@@ -304,6 +330,13 @@ export function CommentsSection({ postId, commentsCount }: { postId: number; com
                 {index > 0 && <Divider component="li" role="presentation" />}
                 <CommentItem
                   comment={comment}
+                  accepted={post.accepted_comment_id === comment.id}
+                  accepting={acceptance.isPending}
+                  onAccept={
+                    post.kind === 'question' && user?.id === post.author.id
+                      ? () => acceptance.mutate(comment.id)
+                      : undefined
+                  }
                   parent={comment.parent_id ? byId.get(comment.parent_id) : undefined}
                   onReply={(target) => {
                     setReplyTo(target);

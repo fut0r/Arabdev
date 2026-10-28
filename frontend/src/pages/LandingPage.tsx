@@ -1,3 +1,5 @@
+import { discoveryApi } from '@/api/misc';
+import { communityApi } from '@/api/community';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import CodeIcon from '@mui/icons-material/Code';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
@@ -37,7 +39,6 @@ import { headingFont } from '@/theme/typography';
 import { useSeo } from '@/utils/seo';
 
 const LATEST_COUNT = 3;
-const TOPICS = ['JavaScript', 'Python', 'Rust', 'React', 'FastAPI', 'Go', 'DevOps', 'Linux', 'AI', 'UI/UX'];
 
 /** The same width and side padding as the app, so the homepage lines up with the dashboard. */
 function Container({ children }: { children: ReactNode }) {
@@ -136,7 +137,12 @@ function LatestPosts() {
     queryFn: () => postsApi.feed({ tab: 'latest', page: 1 }),
     staleTime: 60_000,
   });
-  const posts = data?.items.slice(0, LATEST_COUNT) ?? [];
+  const featured = useQuery({
+    queryKey: ['browse', { sort: 'featured', page: 1 }],
+    queryFn: () => communityApi.browse({ sort: 'featured', page: 1 }),
+  });
+  const hasFeatured = Boolean(featured.data?.items.length);
+  const posts = (hasFeatured ? featured.data?.items : data?.items)?.slice(0, LATEST_COUNT) ?? [];
 
   return (
     <Container>
@@ -152,7 +158,7 @@ function LatestPosts() {
           <Surface component="section" aria-labelledby="latest-title">
             <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between', px: 2, py: 1.75 }}>
               <Typography id="latest-title" variant="h5" component="h2">
-                {t('home.latestTitle')}
+                {t(hasFeatured ? 'community.featured' : 'home.latestTitle')}
               </Typography>
               <Link component={RouterLink} to="/explore" variant="body2" sx={{ fontWeight: 700 }}>
                 {t('home.latestAll')}
@@ -183,6 +189,7 @@ function LatestPosts() {
 /** Dark, like the panel beside the sign-in form. */
 function Features() {
   const { t } = useTranslation();
+  const topics = useQuery({ queryKey: queryKeys.popularTags, queryFn: () => discoveryApi.popularTags() });
   const features = [
     { icon: <CodeIcon />, key: 'f1' },
     { icon: <ViewAgendaOutlinedIcon />, key: 'f2' },
@@ -200,7 +207,7 @@ function Features() {
         color: '#F2F2F0',
         borderTop: '4px solid',
         borderColor: 'primary.main',
-        py: { xs: 6, md: 8 },
+        py: { xs: 4, md: 5 },
         mt: { xs: 5, md: 7 },
       }}
     >
@@ -264,26 +271,29 @@ function Features() {
           {t('landing.topicsLabel')}
         </Typography>
         <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1 }} dir="ltr">
-          {TOPICS.map((topic) => (
-            <Box
-              key={topic}
-              component={RouterLink}
-              to={`/tags/${encodeURIComponent(topic.toLowerCase().replace(/[^a-z0-9]+/g, '-'))}`}
-              sx={{
-                px: 1.25,
-                py: 0.5,
-                borderRadius: 1.5,
-                border: '1px solid #2F2F33',
-                color: '#D6D6D2',
-                fontSize: '0.8125rem',
-                fontWeight: 500,
-                textDecoration: 'none',
-                '&:hover': { borderColor: '#55555C', color: '#FFFFFF' },
-              }}
-            >
-              {topic}
-            </Box>
-          ))}
+          {(topics.data ?? [])
+            .filter((topic) => topic.posts_count > 0)
+            .slice(0, 10)
+            .map((topic) => (
+              <Box
+                key={topic.slug}
+                component={RouterLink}
+                to={`/tags/${encodeURIComponent(topic.slug)}`}
+                sx={{
+                  px: 1.25,
+                  py: 0.5,
+                  borderRadius: 1.5,
+                  border: '1px solid #2F2F33',
+                  color: '#D6D6D2',
+                  fontSize: '0.8125rem',
+                  fontWeight: 500,
+                  textDecoration: 'none',
+                  '&:hover': { borderColor: '#55555C', color: '#FFFFFF' },
+                }}
+              >
+                {topic.name}
+              </Box>
+            ))}
         </Stack>
       </Container>
     </Box>

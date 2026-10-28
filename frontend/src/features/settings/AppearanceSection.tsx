@@ -1,3 +1,4 @@
+import { AppearancePanel } from '@/features/preferences/AppearancePanel';
 import Divider from '@mui/material/Divider';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
@@ -5,7 +6,6 @@ import RadioGroup from '@mui/material/RadioGroup';
 import { useTranslation } from 'react-i18next';
 
 import { useCurrentUser } from '@/features/auth/AuthProvider';
-import { LanguageToggle, ThemeModeToggle } from '@/features/preferences/AppearanceControls';
 import type { UserSettings } from '@/types/api';
 
 import { SettingsGroup, SettingSwitch, useSettingsUpdater } from './SettingsControls';
@@ -16,13 +16,7 @@ export function AppearanceSection() {
   const update = useSettingsUpdater();
   return (
     <>
-      <SettingsGroup title={t('settings.theme')} description={t('settings.themeHelp')}>
-        <ThemeModeToggle size="medium" />
-      </SettingsGroup>
-      <Divider />
-      <SettingsGroup title={t('settings.language')} description={t('settings.languageHelp')}>
-        <LanguageToggle size="medium" />
-      </SettingsGroup>
+      <AppearancePanel />
       <Divider />
       <SettingsGroup title={t('settings.defaultFeed')} description={t('settings.defaultFeedHelp')}>
         <RadioGroup

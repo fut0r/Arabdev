@@ -44,6 +44,7 @@
 <nav class="nav" aria-label="Wiki articles">
   <h2 class="nav-heading">Start here</h2>
   <ul class="nav-list">
+    <li><a class="nav-link" href="#release-14">What is new in 1.4</a></li>
     <li><a class="nav-link" href="#main-page">Main page</a></li>
     <li><a class="nav-link" href="#getting-started">Getting started</a></li>
     <li><a class="nav-link" href="#faq">Frequently asked questions</a></li>
@@ -93,6 +94,7 @@
 <main class="main" id="content" tabindex="-1">
 
 <!-- ================================================================== MAIN PAGE -->
+<article class="wiki-article surface" id="release-14" data-title="What is new in 1.4"><h1>What is new in 1.4</h1><div class="prose"><p>Open Make it yours from the palette icon, including as a guest. Choose an accent, Tajawal, Alexandria or your device font, text size 14–20, and a plain, dotted, grid or gradient background. Choose compact cards and a wider reader too. Choices persist locally and sync with your account.</p><p>Explore separates latest posts, trending and editorial picks. Trending has explicit week, month or all-time ranges. Filter by type, language and unanswered questions. Projects and Developers have their own pages. Followed topics improve For you.</p><p>Publish an article, question, project or note. Projects can include repository and demo URLs; organize posts into numbered series from My series. Drafts autosave after a pause, with a local recovery per account and document. A conflict between tabs stops saving: copy your edits or keep recovery and reload to compare. Editing a published post never publishes automatically.</p><p>Use the table of contents, copy highlighted code, and open full images. Question authors can accept an answer. Organize bookmarks into collections with private notes; deleting a collection keeps saved posts. Account exports include this data.</p><p>GitHub sign-in appears when configured by the operator. Matching email addresses never link accounts automatically: sign in normally, then link GitHub in Security settings after confirming your password. Two-factor verification still applies. New GitHub accounts receive a generated username and can set a password through email password reset.</p><p>The weekly digest is opt-in and disabled by default for operators. When enabled, subscribe in Notifications; each message includes an unsubscribe confirmation link. Auto-hide counts reports from verified accounts at least seven days old that are not restricted, excluding accounts with three dismissed reports in 90 days. Every report remains available for review.</p></div></article>
 <article class="wiki-article surface" id="main-page" data-title="Main page">
 <header class="page-header">
 <h1 class="page-title">ArabDev Wiki</h1>
@@ -436,7 +438,7 @@
 <h2 id="writing-posts-drafts">Drafts</h2>
 <ul>
   <li><strong>Save draft</strong> stores everything, including the title, body, tags, image and link, without publishing.</li>
-  <li>After the first save, the address changes to the draft's own address (<code>/drafts/12</code>), so you can bookmark it or reload safely. Later saves update the same draft.</li>
+  <li>Drafts autosave after a short pause. The editor address stays stable; open the saved item from Drafts to get its permanent address. Reload offers local recovery if available. Later saves update the same draft.</li>
   <li>All your drafts are listed under <strong>Drafts</strong> in the account menu, most recently edited first, with a short excerpt and their tags.</li>
   <li>Publishing from a draft turns it into a post and removes the draft.</li>
   <li>Drafts are private. Nobody else can see or open them.</li>
@@ -762,7 +764,7 @@
 <p>Explore is open to everyone, signed in or not. It contains:</p>
 <ul>
   <li>A <strong>search</strong> box. See <a href="#search">Search</a>.</li>
-  <li><strong>Trending this week</strong>: posts from the last 7 days ranked by how fast they are gathering reactions, not only by their totals. A post's reactions (likes, twice its comments and three times its reposts) are divided by its age, so a new post that is taking off can pass an older one with more likes. The week's posts nobody has reacted to yet follow, newest first. If nobody reacted to anything that week, the all-time ranking is shown. Trending posts are paginated, 20 per page.</li>
+  <li><strong>Trending</strong>: choose a week, month or all-time range. Explore ranks posts in that range by weighted engagement (likes, twice the comments and three times the reposts), with newest posts breaking ties. An empty range stays empty. Results are paginated, 20 per page.</li>
   <li><strong>Popular tags</strong> and <strong>developers to follow</strong>. On large screens these live in the side column; on smaller screens they appear at the top of Explore.</li>
 </ul>
 </div>
@@ -1260,7 +1262,7 @@
   <li>The author gets an email saying the post was reported and why. It never says who reported it.</li>
   <li>The ArabDev team gets an email with the details and a link to review the report.</li>
   <li>Reporting the same post again changes nothing; each person counts once.</li>
-  <li>When three different people have reported a post, it is hidden from everyone except its author and the moderators until the team decides. The author is told by email and sees a notice on the post.</li>
+  <li>When three eligible accounts (verified, at least seven days old, unrestricted, and with fewer than three dismissed reports in 90 days) have reported a post, it is hidden from everyone except its author and the moderators until the team decides. The author is told by email and sees a notice on the post.</li>
   <li>When the team decides, the author and everyone who reported the post receive an email with the outcome.</li>
 </ul>
 <p>Each account can send up to 20 reports a day. Reports are for guideline problems, not disagreements: if you simply disagree with a post, reply to it or scroll past.</p>

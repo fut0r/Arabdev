@@ -27,7 +27,7 @@ from sqlalchemy.orm import Session
 
 from app.core.config import BASE_DIR, settings
 from app.core.errors import NotFound
-from app.models import Comment, Post, User
+from app.models import Comment, Post, Series, User
 from app.repositories import posts as posts_repo
 from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
@@ -325,6 +325,7 @@ def post_page(db: Session, post_id: int) -> Page:
             "url": _absolute(path),
             "keywords": ", ".join(tag.name for tag in post.tags),
             "commentCount": post.comments_count,
+            "inLanguage": ["ar", "en"] if post.language == "mul" else post.language,
             "interactionStatistic": {
                 "@type": "InteractionCounter",
                 "interactionType": "https://schema.org/LikeAction",
@@ -413,4 +414,40 @@ def tag_page(db: Session, slug: str) -> Page:
         path=path,
         body=body,
         feed=f"/tags/{quote(slug)}/rss.xml",
+    )
+
+
+def projects_page(db: Session) -> Page:
+    posts = list(db.scalars(posts_repo.latest_stmt().where(Post.kind == "project").limit(LIST_SIZE)).unique())
+    return Page(
+        title="معرض المشاريع · Projects",
+        description="مشاريع المجتمع وروابط تجربتها. Community projects.",
+        path="/projects",
+        body="<h1>معرض المشاريع · Projects</h1>" + _post_list(posts) + _more_links(),
+    )
+
+
+def series_page(db: Session, series_id: int) -> Page:
+    row = db.get(Series, series_id)
+    if row is None:
+        return not_found(f"/series/{series_id}")
+    author = db.get(User, row.author_id)
+    if not author or not author.is_active:
+        return not_found(f"/series/{series_id}")
+    posts = list(
+        db.scalars(
+            posts_repo.latest_stmt()
+            .where(Post.series_id == row.id)
+            .order_by(None)
+            .order_by(Post.series_order, Post.id)
+            .limit(LIST_SIZE)
+        ).unique()
+    )
+    return Page(
+        title=row.title,
+        description=row.description or row.title,
+        path=f"/series/{row.id}",
+        body=f'<h1 dir="auto">{escape(row.title)}</h1><p>{escape(row.description or "")}</p>'
+        + _post_list(posts)
+        + _more_links(),
     )

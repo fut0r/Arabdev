@@ -69,8 +69,51 @@ class DatabaseStorage:
         return f"{self.base_url}/{key}"
 
 
+class S3Storage:
+    """New objects have an s3/ marker; existing database/local URLs remain valid."""
+
+    in_database = False
+
+    def __init__(self) -> None:
+        import boto3
+        from botocore.config import Config
+
+        self.client = boto3.client(
+            "s3",
+            endpoint_url=settings.s3_endpoint_url,
+            region_name=settings.s3_region,
+            aws_access_key_id=settings.s3_access_key_id,
+            aws_secret_access_key=settings.s3_secret_access_key,
+            config=Config(connect_timeout=5, read_timeout=15, retries={"max_attempts": 2}),
+        )
+
+    def save(self, key: str, data: bytes, content_type: str) -> None:
+        if not key.startswith("s3/"):
+            raise ValueError("S3 uploads require an s3/ storage key")
+        self.client.put_object(
+            Bucket=settings.s3_bucket,
+            Key=key[3:],
+            Body=data,
+            ContentType=content_type,
+            CacheControl="public, max-age=31536000, immutable",
+        )
+
+    def delete(self, key: str) -> None:
+        if key.startswith("s3/"):
+            self.client.delete_object(Bucket=settings.s3_bucket, Key=key[3:])
+        else:
+            LocalStorage(settings.media_root, settings.media_url).delete(key)
+
+    def url(self, key: str) -> str:
+        if key.startswith("s3/"):
+            return f"{(settings.s3_public_url or '').rstrip('/')}/{key[3:]}"
+        return f"{settings.media_url.rstrip('/')}/{key}"
+
+
 @lru_cache
 def get_storage() -> StorageBackend:
+    if settings.storage_backend == "s3":
+        return S3Storage()
     if settings.storage_backend == "database":
         return DatabaseStorage(settings.media_url)
     return LocalStorage(settings.media_root, settings.media_url)

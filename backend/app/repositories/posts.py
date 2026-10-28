@@ -1,11 +1,12 @@
 from collections.abc import Iterable
 from datetime import datetime
 
-from sqlalchemy import ColumnElement, Select, and_, func, or_, select, union_all
+from sqlalchemy import ColumnElement, Select, and_, case, func, or_, select, union_all
 from sqlalchemy.orm import Session
 
 from app.models import Bookmark, Like, Post, Repost, Tag, User, post_tags
 from app.utils.pagination import PageParams
+from app.utils.search import normalize_search
 from app.utils.text import escape_like
 
 
@@ -30,7 +31,7 @@ def latest_stmt() -> Select:
 
 
 def trending_stmt(since: datetime | None) -> Select:
-    """All-time totals: the fallback when nothing gathered attention this week."""
+    """Weighted engagement totals within an optional explicit date range."""
     score = Post.likes_count + Post.comments_count * 2 + Post.reposts_count * 3
     stmt = select(Post).where(visible()).order_by(score.desc(), Post.created_at.desc(), Post.id.desc())
     if since is not None:
@@ -59,13 +60,25 @@ def bookmarks_stmt(user_id: int) -> Select:
 
 def search_stmt(query: str) -> Select:
     pattern = f"%{escape_like(query)}%"
+    normalized = normalize_search(query)
+    normalized_pattern = f"%{escape_like(normalized)}%"
+    title_match = Post.search_title.ilike(normalized_pattern, escape="\\")
     return (
         select(Post)
         .where(
-            or_(Post.title.ilike(pattern, escape="\\"), Post.content_text.ilike(pattern, escape="\\")),
+            or_(
+                title_match,
+                Post.search_text.ilike(normalized_pattern, escape="\\"),
+                Post.title.ilike(pattern, escape="\\"),
+                Post.content_text.ilike(pattern, escape="\\"),
+            ),
             visible(),
         )
-        .order_by(Post.created_at.desc(), Post.id.desc())
+        .order_by(
+            case((Post.search_title == normalized, 3), (title_match, 2), else_=1).desc(),
+            Post.created_at.desc(),
+            Post.id.desc(),
+        )
     )
 
 

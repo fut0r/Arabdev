@@ -8,7 +8,23 @@ from sqlalchemy.orm import Session
 from app.core.errors import BadRequest, Conflict, Forbidden, NotFound, UnprocessableEntity
 from app.core.permissions import is_restricted
 from app.core.security import verify_password
-from app.models import Block, Bookmark, Comment, Draft, Follow, Interest, Like, Post, Report, Repost, User
+from app.models import (
+    Block,
+    Bookmark,
+    BookmarkCollection,
+    Comment,
+    Draft,
+    Follow,
+    Interest,
+    Like,
+    Post,
+    Report,
+    Repost,
+    Series,
+    Tag,
+    TagFollow,
+    User,
+)
 from app.repositories import users as users_repo
 from app.schemas.common import Page
 from app.schemas.user import (
@@ -228,6 +244,10 @@ def export_account(db: Session, user: User) -> dict:
         "posts": [
             {
                 "id": post.id,
+                **{
+                    key: getattr(post, key)
+                    for key in ("kind", "language", "repository_url", "demo_url", "series_id", "series_order")
+                },
                 "title": post.title,
                 "content_html": post.content_html,
                 "tags": [tag.name for tag in post.tags],
@@ -240,6 +260,18 @@ def export_account(db: Session, user: User) -> dict:
         "drafts": [
             {
                 "id": draft.id,
+                **{
+                    key: getattr(draft, key)
+                    for key in (
+                        "kind",
+                        "language",
+                        "repository_url",
+                        "demo_url",
+                        "series_id",
+                        "series_order",
+                        "revision",
+                    )
+                },
                 "title": draft.title,
                 "content_html": draft.content_html,
                 "updated_at": draft.updated_at.isoformat(),
@@ -255,6 +287,19 @@ def export_account(db: Session, user: User) -> dict:
             }
             for comment in comments
         ],
+        "collections": [
+            {"id": row.id, "name": row.name}
+            for row in db.scalars(select(BookmarkCollection).where(BookmarkCollection.user_id == user.id))
+        ],
+        "bookmarks": [
+            {"post_id": row.post_id, "collection_id": row.collection_id, "note": row.note}
+            for row in db.scalars(select(Bookmark).where(Bookmark.user_id == user.id))
+        ],
+        "series": [
+            {"id": row.id, "title": row.title, "description": row.description}
+            for row in db.scalars(select(Series).where(Series.author_id == user.id))
+        ],
+        "followed_tags": list(db.scalars(select(Tag.slug).join(TagFollow).where(TagFollow.user_id == user.id))),
         "bookmarked_post_ids": list(db.scalars(select(Bookmark.post_id).where(Bookmark.user_id == user.id))),
         "liked_post_ids": list(db.scalars(select(Like.post_id).where(Like.user_id == user.id))),
         "following": list(

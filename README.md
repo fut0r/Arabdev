@@ -263,3 +263,12 @@ ArabDev is free software, released under the
 [GNU General Public License v3.0](LICENSE) or later.
 
 Developed by Zyad Mohamed · <https://github.com/fut0r/Arabdev>
+
+
+## ArabDev 1.4
+
+Personal appearance (colors, fonts, size, backgrounds and reading width), explicit discovery filters, developers and projects, question answers, series, followed topics, private reading collections, autosave/recovery, and accessible article tools. Optional GitHub sign-in, weekly digests and S3 media remain disabled until configured.
+
+تخصيص الألوان والخطوط والخلفيات، استكشاف أوضح، دليل المطورين والمشاريع، الأسئلة المحلولة والسلاسل، متابعة الوسوم، مجموعات قراءة خاصة، حفظ تلقائي واستعادة الكتابة وأدوات قراءة محسنة. تكاملات GitHub والنشرة والتخزين الخارجي تحتاج إعدادًا منفصلًا.
+
+See [deployment and optional services](DEPLOYMENT-1.4.md), [release verification](RELEASE-1.4.md), and the [community launch plan](COMMUNITY-LAUNCH.md).

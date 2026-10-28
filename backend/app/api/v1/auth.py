@@ -73,6 +73,8 @@ def public_config() -> PublicConfigOut:
     return PublicConfigOut(
         turnstile_site_key=settings.turnstile_site_key if settings.turnstile_configured else None,
         email_codes=settings.email_codes_required,
+        github_enabled=settings.github_configured,
+        weekly_digest_enabled=settings.weekly_digest_enabled,
     )
 
 

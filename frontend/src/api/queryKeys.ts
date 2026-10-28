@@ -35,6 +35,7 @@ export const queryKeys = {
 export const POST_QUERY_ROOTS = [
   'feed',
   'trending',
+  'browse',
   'post',
   'tag-posts',
   'user-posts',
@@ -44,4 +45,12 @@ export const POST_QUERY_ROOTS = [
 ];
 
 /** Query roots whose data contains user cards with follow state. */
-export const USER_QUERY_ROOTS = ['profile', 'followers', 'following', 'recommended', 'search', 'search-preview'];
+export const USER_QUERY_ROOTS = [
+  'developers',
+  'profile',
+  'followers',
+  'following',
+  'recommended',
+  'search',
+  'search-preview',
+];

@@ -1,3 +1,4 @@
+import { GitHubButton } from '@/features/auth/GitHubButton';
 import ComputerOutlinedIcon from '@mui/icons-material/ComputerOutlined';
 import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 import PhoneIphoneOutlinedIcon from '@mui/icons-material/PhoneIphoneOutlined';
@@ -182,6 +183,7 @@ export function SecuritySection() {
   const update = useSettingsUpdater();
   return (
     <>
+      <GitHubButton link />
       <SettingsGroup title={t('settings.signInSecurity')} description={t('settings.signInSecurityHelp')}>
         <TwoFactorSettings />
         <Divider />

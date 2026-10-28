@@ -1,3 +1,5 @@
+import { useQuery } from '@tanstack/react-query';
+import { authApi } from '@/api/auth';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -12,6 +14,7 @@ export function NotificationsSection() {
   const { t } = useTranslation();
   const { settings } = useCurrentUser();
   const update = useSettingsUpdater();
+  const config = useQuery({ queryKey: ['public-config'], queryFn: authApi.config });
   const items: { key: keyof UserSettings; label: string }[] = [
     { key: 'notify_likes', label: t('settings.notifyLikes') },
     { key: 'notify_comments', label: t('settings.notifyComments') },
@@ -48,6 +51,14 @@ export function NotificationsSection() {
           checked={settings.email_product_updates}
           onChange={(value) => void update({ email_product_updates: value })}
         />
+        {(config.data?.weekly_digest_enabled || settings.email_weekly_digest) && (
+          <SettingSwitch
+            label={t('community.digest')}
+            help={t('community.digestHelp')}
+            checked={settings.email_weekly_digest}
+            onChange={(value) => void update({ email_weekly_digest: value })}
+          />
+        )}
         <Alert severity="info" variant="outlined" sx={{ mt: 2 }}>
           {t('settings.noMarketing')}
         </Alert>

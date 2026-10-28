@@ -6,6 +6,7 @@ import pytest
 from sqlalchemy import update
 
 from app.core.config import settings
+from app.core.database import SessionLocal
 from app.models import Post, Report, User
 from app.services import email_service, report_service
 from app.utils.time import utcnow
@@ -19,6 +20,11 @@ def moderator(make_user, monkeypatch):
 
 
 def report(client, account, post_id, reason="spam", details=None):
+    with SessionLocal() as session:
+        user = session.get(User, account.id)
+        user.created_at = utcnow() - timedelta(days=30)
+        user.email_verified_at = utcnow() - timedelta(days=30)
+        session.commit()
     return client.post(
         f"{API}/posts/{post_id}/report", json={"reason": reason, "details": details}, headers=account.headers
     )

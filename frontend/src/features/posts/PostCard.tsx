@@ -28,7 +28,9 @@ import type { Post } from '@/types/api';
 import { hostnameOf } from '@/utils/format';
 
 import { PostActions } from './PostActions';
-import { PostContent } from './PostContent';
+import { usePreferences } from '@/features/preferences/PreferencesProvider';
+import { BookmarkEditor } from './BookmarkEditor';
+import { Button, Chip, Dialog, DialogActions } from '@mui/material';
 import { useDeletePost } from './usePostMutations';
 
 export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => void }) {
@@ -158,29 +160,52 @@ export function PostMenu({ post, onDeleted }: { post: Post; onDeleted?: () => vo
 
 export function PostImage({ post, maxHeight = 460 }: { post: Post; maxHeight?: number }) {
   const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
   if (!post.image) return null;
   return (
-    <Box
-      component="img"
-      src={post.image.url}
-      alt={post.title ? `${t('post.attachedImage')}: ${post.title}` : t('post.attachedImage')}
-      width={post.image.width}
-      height={post.image.height}
-      loading="lazy"
-      decoding="async"
-      sx={{
-        display: 'block',
-        width: '100%',
-        height: 'auto',
-        maxHeight,
-        objectFit: 'cover',
-        borderRadius: 2,
-        border: 1,
-        borderColor: 'divider',
-        mt: 1.5,
-        bgcolor: 'surface.sunken',
-      }}
-    />
+    <>
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(true);
+        }}
+        aria-label={t('community.openImage')}
+        sx={{ display: 'block', p: 0, width: '100%' }}
+      >
+        <Box
+          component="img"
+          src={post.image.url}
+          alt={post.title ? `${t('post.attachedImage')}: ${post.title}` : t('post.attachedImage')}
+          width={post.image.width}
+          height={post.image.height}
+          loading="lazy"
+          decoding="async"
+          sx={{
+            display: 'block',
+            width: '100%',
+            height: 'auto',
+            maxHeight,
+            objectFit: 'cover',
+            borderRadius: 2,
+            border: 1,
+            borderColor: 'divider',
+            mt: 1.5,
+            bgcolor: 'surface.sunken',
+          }}
+        />
+      </Button>
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="xl" onClick={(e) => e.stopPropagation()}>
+        <Box
+          component="img"
+          src={post.image.url}
+          alt={post.title ?? t('post.attachedImage')}
+          sx={{ maxWidth: '100%', maxHeight: '85vh', objectFit: 'contain' }}
+        />
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>{t('community.close')}</Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 }
 
@@ -301,14 +326,13 @@ export function PostByline({ post, size = 'feed' }: { post: Post; size?: 'feed' 
   );
 }
 
-const FEED_CLAMP = 300;
-
 /** A post in a list. Compact: title and a clamped preview; the full post is one click away. */
 export function PostCard({ post }: { post: Post }) {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [clamped, setClamped] = useState(false);
+  const { appearance } = usePreferences();
+  const [organizing, setOrganizing] = useState(false);
   const url = `/posts/${post.id}`;
 
   const openPost = (event: MouseEvent) => {
@@ -324,7 +348,7 @@ export function PostCard({ post }: { post: Post }) {
       onClick={openPost}
       sx={{
         px: 2,
-        pt: post.reposted_by ? 1.25 : 2,
+        pt: appearance.density === 'compact' ? 1 : 2,
         pb: 1.25,
         cursor: 'pointer',
         transition: 'background-color 120ms',
@@ -369,17 +393,34 @@ export function PostCard({ post }: { post: Post }) {
             </Link>
           </Typography>
 
-          <PostContent html={post.content_html} clampHeight={FEED_CLAMP} onOverflowChange={setClamped} />
-          {clamped && (
-            <Link component={RouterLink} to={url} variant="body2" sx={{ display: 'inline-block', mt: 0.5 }}>
-              {t('common.readMore')}
-            </Link>
-          )}
-
-          <PostImage post={post} />
-          {post.link_url && <PostLink url={post.link_url} />}
+          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1, my: 1 }}>
+            <Chip size="small" label={t(`community.${post.kind}`)} />
+            {post.accepted_comment_id && <Chip size="small" color="success" label={t('community.solved')} />}
+            <Typography variant="caption" color="text.secondary">
+              {t('post.readTime', { count: post.reading_minutes })}
+            </Typography>
+          </Stack>
+          <Typography dir="auto" sx={{ my: 1, lineHeight: 1.8 }}>
+            {post.excerpt?.slice(0, appearance.density === 'compact' ? 140 : 280)}
+            {post.excerpt?.length > (appearance.density === 'compact' ? 140 : 280) ? '…' : ''}
+          </Typography>
+          <Link component={RouterLink} to={url} variant="body2">
+            {t('common.readMore')}
+          </Link>
+          {appearance.density !== 'compact' && <PostImage post={post} maxHeight={180} />}
           <PostTags post={post} />
           <PostActions post={post} />
+          {post.bookmarked && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                setOrganizing(true);
+              }}
+            >
+              {t('community.organize')}
+            </Button>
+          )}
+          {organizing && <BookmarkEditor post={post} onClose={() => setOrganizing(false)} />}
         </Box>
       </Stack>
     </Box>

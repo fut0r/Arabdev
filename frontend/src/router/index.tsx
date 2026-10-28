@@ -6,11 +6,16 @@ import { HOME_PATH } from '@/site';
 
 import { GuestOnly, RequireAuth, RootRoute } from './guards';
 
+const GitHubCallbackPage = lazy(() => import('@/pages/auth/GitHubCallbackPage'));
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
 const RegisterPage = lazy(() => import('@/pages/auth/RegisterPage'));
 const ForgotPasswordPage = lazy(() => import('@/pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('@/pages/auth/ResetPasswordPage'));
 const HomePage = lazy(() => import('@/pages/HomePage'));
+const AppearancePage = lazy(() => import('@/pages/AppearancePage'));
+const DevelopersPage = lazy(() => import('@/pages/DevelopersPage'));
+const MySeriesPage = lazy(() => import('@/pages/MySeriesPage'));
+const SeriesPage = lazy(() => import('@/pages/SeriesPage'));
 const ExplorePage = lazy(() => import('@/pages/ExplorePage'));
 const SearchPage = lazy(() => import('@/pages/SearchPage'));
 const TagPage = lazy(() => import('@/pages/TagPage'));
@@ -58,6 +63,7 @@ export const router = createBrowserRouter([
           </GuestOnly>
         ),
       },
+      { path: '/auth/github/callback', element: <GitHubCallbackPage /> },
       { path: '/forgot-password', element: <ForgotPasswordPage /> },
       { path: '/reset-password', element: <ResetPasswordPage /> },
       {
@@ -72,11 +78,23 @@ export const router = createBrowserRouter([
             ),
           },
           { path: 'explore', element: <ExplorePage /> },
+          { path: 'projects', element: <ExplorePage projects /> },
+          { path: 'developers', element: <DevelopersPage /> },
+          {
+            path: 'my-series',
+            element: (
+              <RequireAuth>
+                <MySeriesPage />
+              </RequireAuth>
+            ),
+          },
+          { path: 'series/:seriesId', element: <SeriesPage /> },
+          { path: 'appearance', element: <AppearancePage />, handle: wide },
           { path: 'about', element: <AboutPage /> },
           { path: 'contact', element: <ContactPage /> },
           { path: 'search', element: <SearchPage /> },
           { path: 'tags/:slug', element: <TagPage /> },
-          { path: 'posts/:postId', element: <PostPage /> },
+          { path: 'posts/:postId', element: <PostPage />, handle: wide },
           {
             path: 'posts/:postId/edit',
             element: (

@@ -1,3 +1,9 @@
+import { Button, Chip, Link } from '@mui/material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { communityApi } from '@/api/community';
+import { useNotify } from '@/components/Notifier';
+import { BookmarkEditor } from '@/features/posts/BookmarkEditor';
+import { useState } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
@@ -26,7 +32,7 @@ import { CommentsSection } from '@/features/comments/Comments';
 import { usePreferences } from '@/features/preferences/PreferencesProvider';
 import { PostActions } from '@/features/posts/PostActions';
 import { PostByline, PostImage, PostLink, PostMenu, PostTags } from '@/features/posts/PostCard';
-import { PostContent } from '@/features/posts/PostContent';
+import { ArticleReader } from '@/features/posts/ArticleReader';
 import { FollowButton } from '@/features/users/FollowButton';
 import { useSeo, summarise } from '@/utils/seo';
 import { headingFont } from '@/theme/typography';
@@ -48,7 +54,7 @@ function AuthorFollowButton({ userId, username }: { userId: number; username: st
 
 export default function PostPage() {
   const { t } = useTranslation();
-  const { direction } = usePreferences();
+  const { direction, appearance } = usePreferences();
   const navigate = useNavigate();
   const postId = Number(useParams().postId);
   const query = useQuery({
@@ -57,13 +63,25 @@ export default function PostPage() {
     enabled: Number.isInteger(postId),
   });
   const post = query.data;
+  const { user } = useAuth();
+  const client = useQueryClient();
+  const notify = useNotify();
+  const [organizing, setOrganizing] = useState(false);
+  const feature = useMutation({
+    mutationFn: () => communityApi.feature(postId, !post?.featured),
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: queryKeys.post(postId) });
+      void client.invalidateQueries({ queryKey: ['browse'] });
+    },
+    onError: (e) => notify(errorMessage(e, t), 'error'),
+  });
   const plainText = post ? post.content_html.replace(/<[^>]*>/g, ' ') : '';
   useSeo({
     title: post?.title ?? (post ? t('post.by', { name: post.author.display_name }) : null),
     description: post ? summarise(plainText) : null,
     canonical: `/posts/${postId}`,
     type: 'article',
-    image: post?.image?.url ? `${SITE_URL}${post.image.url}` : null,
+    image: post?.image?.url ? new URL(post.image.url, SITE_URL).href : null,
     publishedAt: post?.created_at,
     authorName: post?.author.display_name,
     jsonLd: post
@@ -83,7 +101,7 @@ export default function PostPage() {
             interactionType: 'https://schema.org/LikeAction',
             userInteractionCount: post.likes_count,
           },
-          inLanguage: 'ar',
+          inLanguage: post.language === 'mul' ? ['ar', 'en'] : post.language,
         }
       : null,
   });
@@ -91,7 +109,11 @@ export default function PostPage() {
   const back = () => (window.history.length > 1 ? navigate(-1) : navigate(HOME_PATH));
 
   return (
-    <Surface component="article" aria-labelledby="post-title">
+    <Surface
+      component="article"
+      aria-labelledby="post-title"
+      sx={{ maxWidth: appearance.reading_width === 'wide' ? 1080 : 800, mx: 'auto' }}
+    >
       <Stack
         direction="row"
         spacing={1}
@@ -169,7 +191,26 @@ export default function PostPage() {
               {post.title || t('post.by', { name: post.author.display_name })}
             </Typography>
 
-            <PostContent html={post.content_html} />
+            <Stack direction="row" sx={{ gap: 1, flexWrap: 'wrap', mb: 2 }}>
+              <Chip label={t(`community.${post.kind}`)} />
+              {post.accepted_comment_id && <Chip color="success" label={t('community.solved')} />}
+              {post.featured && <Chip label={t('community.featured')} />}
+            </Stack>
+            {post.series_id && (
+              <Link component={RouterLink} to={`/series/${post.series_id}`} sx={{ display: 'block', mb: 2 }}>
+                {post.series_title} · {t('community.part')} {post.series_order}
+              </Link>
+            )}
+            <ArticleReader html={post.content_html} />
+            {post.repository_url && <PostLink url={post.repository_url} />}
+            {post.demo_url && <PostLink url={post.demo_url} />}
+            {user?.is_admin && (
+              <Button loading={feature.isPending} onClick={() => feature.mutate()}>
+                {t(post.featured ? 'community.unfeature' : 'community.feature')}
+              </Button>
+            )}
+            {user && <Button onClick={() => setOrganizing(true)}>{t('community.organize')}</Button>}
+            {organizing && <BookmarkEditor post={post} onClose={() => setOrganizing(false)} />}
             <PostImage post={post} maxHeight={720} />
             {post.link_url && <PostLink url={post.link_url} />}
             <PostTags post={post} />
@@ -182,7 +223,7 @@ export default function PostPage() {
           </Box>
           <ArticleAd />
           <Divider />
-          <CommentsSection postId={post.id} commentsCount={post.comments_count} />
+          <CommentsSection post={post} />
         </>
       ) : null}
     </Surface>

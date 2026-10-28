@@ -4,10 +4,11 @@ Viewer-dependent fields (liked, is_following, ...) are loaded with one query per
 never one query per row.
 """
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.permissions import is_admin, is_restricted
-from app.models import Block, Comment, Draft, Media, Notification, Post, User
+from app.models import AcceptedAnswer, Block, Bookmark, Comment, Draft, Media, Notification, Post, Series, User
 from app.repositories import posts as posts_repo
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentOut, ReplyOut
@@ -15,9 +16,10 @@ from app.schemas.misc import MediaOut
 from app.schemas.notification import NotificationOut
 from app.schemas.post import DraftOut, ImageOut, PostOut, PostRef, TagOut
 from app.schemas.user import InterestOut, MeOut, ProfileOut, SettingsOut, UserCard, UserSummary
-from app.services import two_factor_service
+from app.services import block_service, two_factor_service
 from app.services.media_service import media_url
 from app.utils.html import excerpt, reading_minutes
+from app.utils.search import content_language
 
 
 def avatar_url(user: User) -> str | None:
@@ -120,6 +122,33 @@ def post_outs(
     reposted_by: dict[int, User] | None = None,
 ) -> list[PostOut]:
     liked, bookmarked, reposted = posts_repo.viewer_state(db, viewer_id, [post.id for post in posts])
+    ids = [post.id for post in posts]
+    accepted = (
+        dict(
+            db.execute(
+                select(AcceptedAnswer.post_id, AcceptedAnswer.comment_id)
+                .join(Comment, Comment.id == AcceptedAnswer.comment_id)
+                .join(User, User.id == Comment.author_id)
+                .where(AcceptedAnswer.post_id.in_(ids), User.is_active.is_(True))
+                .where(block_service.not_blocked_by(viewer_id, Comment.author_id) if viewer_id else True)
+            ).all()
+        )
+        if ids
+        else {}
+    )
+    series_titles = dict(
+        db.execute(
+            select(Series.id, Series.title).where(Series.id.in_({post.series_id for post in posts if post.series_id}))
+        ).all()
+    )
+    saved = (
+        {
+            row.post_id: row
+            for row in db.scalars(select(Bookmark).where(Bookmark.user_id == viewer_id, Bookmark.post_id.in_(ids)))
+        }
+        if viewer_id and ids
+        else {}
+    )
     reposted_by = reposted_by or {}
     result = []
     for post in posts:
@@ -129,6 +158,18 @@ def post_outs(
                 id=post.id,
                 title=post.title,
                 content_html=post.content_html,
+                excerpt=excerpt(post.content_text, 230),
+                kind=post.kind,
+                language=content_language(post.content_text, post.language),
+                repository_url=post.repository_url,
+                demo_url=post.demo_url,
+                series_id=post.series_id,
+                series_order=post.series_order,
+                series_title=series_titles.get(post.series_id),
+                accepted_comment_id=accepted.get(post.id) if post.kind == "question" else None,
+                featured=post.featured,
+                bookmark_collection_id=saved[post.id].collection_id if post.id in saved else None,
+                bookmark_note=saved[post.id].note if post.id in saved else None,
                 link_url=post.link_url,
                 image=image_out(post.image),
                 tags=[TagOut(slug=tag.slug, name=tag.name) for tag in post.tags],
@@ -194,6 +235,13 @@ def draft_out(draft: Draft) -> DraftOut:
         id=draft.id,
         title=draft.title,
         content_html=draft.content_html,
+        kind=draft.kind,
+        language=draft.language,
+        repository_url=draft.repository_url,
+        demo_url=draft.demo_url,
+        series_id=draft.series_id,
+        series_order=draft.series_order,
+        revision=draft.revision,
         link_url=draft.link_url,
         image=image_out(draft.image),
         tags=list(draft.tag_names or []),

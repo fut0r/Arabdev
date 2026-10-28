@@ -51,11 +51,23 @@ class ProfileOut(UserCard):
 
 
 Feed = Literal["for_you", "following", "latest"]
+AccentColor = Annotated[str, StringConstraints(pattern=r"^#[0-9a-fA-F]{6}$")]
+FontFamily = Literal["tajawal", "alexandria", "system"]
+Background = Literal["plain", "dots", "grid", "gradient"]
+Density = Literal["comfortable", "compact"]
+ReadingWidth = Literal["standard", "wide"]
 
 
 class SettingsOut(ORMModel):
     theme: Literal["light", "dark", "system"]
     language: Literal["ar", "en"]
+    accent_color: AccentColor
+    font_family: FontFamily
+    font_size: int
+    background: Background
+    density: Density
+    reading_width: ReadingWidth
+    email_weekly_digest: bool
     default_feed: Feed
     reduce_motion: bool
     discoverable: bool
@@ -72,6 +84,13 @@ class SettingsOut(ORMModel):
 
 
 class SettingsUpdate(BaseModel):
+    accent_color: AccentColor | None = None
+    font_family: FontFamily | None = None
+    font_size: Literal[14, 16, 18, 20] | None = None
+    background: Background | None = None
+    density: Density | None = None
+    reading_width: ReadingWidth | None = None
+    email_weekly_digest: bool | None = None
     theme: Literal["light", "dark", "system"] | None = None
     language: Literal["ar", "en"] | None = None
     default_feed: Feed | None = None

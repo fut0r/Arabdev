@@ -49,7 +49,7 @@ function Action({ icon, label, count, active, activeColor = 'accent.text', press
           alignItems: 'center',
           gap: 0.75,
           minWidth: 44,
-          height: 36,
+          height: 44,
           px: 1,
           borderRadius: 999,
           color: active ? activeColor : 'text.secondary',

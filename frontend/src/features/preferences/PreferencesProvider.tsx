@@ -8,6 +8,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 
 import i18n, { directionOf, LANGUAGE_STORAGE_KEY, readStoredLanguage, type Language } from '@/i18n';
 import { COLOR_MODE_STORAGE_KEY, createAppTheme } from '@/theme/theme';
+import { APPEARANCE_KEY, normalizeAppearance, readAppearance, type AppearancePreferences } from './appearance';
 
 /**
  * The single place where language, text direction and theme are wired together.
@@ -16,6 +17,8 @@ import { COLOR_MODE_STORAGE_KEY, createAppTheme } from '@/theme/theme';
  */
 
 interface PreferencesContextValue {
+  appearance: AppearancePreferences;
+  setAppearance: (patch: Partial<AppearancePreferences>) => void;
   language: Language;
   direction: 'rtl' | 'ltr';
   setLanguage: (language: Language) => void;
@@ -29,6 +32,25 @@ const caches: Record<'rtl' | 'ltr', EmotionCache> = {
 };
 
 export function PreferencesProvider({ children }: { children: ReactNode }) {
+  const [appearance, setAppearanceState] = useState(readAppearance);
+  const setAppearance = useCallback((patch: Partial<AppearancePreferences>) => {
+    setAppearanceState((current) => {
+      const next = normalizeAppearance({ ...current, ...patch });
+      try {
+        localStorage.setItem(APPEARANCE_KEY, JSON.stringify(next));
+      } catch {
+        /* Applies for this visit. */
+      }
+      return next;
+    });
+  }, []);
+  useEffect(() => {
+    const sync = (event: StorageEvent) => {
+      if (event.key === APPEARANCE_KEY) setAppearanceState(readAppearance());
+    };
+    window.addEventListener('storage', sync);
+    return () => window.removeEventListener('storage', sync);
+  }, []);
   const [language, setLanguageState] = useState<Language>(readStoredLanguage);
   const direction = directionOf(language);
 
@@ -47,8 +69,11 @@ export function PreferencesProvider({ children }: { children: ReactNode }) {
     if (i18n.language !== language) void i18n.changeLanguage(language);
   }, [language, direction]);
 
-  const theme = useMemo(() => createAppTheme(direction), [direction]);
-  const value = useMemo(() => ({ language, direction, setLanguage }), [language, direction, setLanguage]);
+  const theme = useMemo(() => createAppTheme(direction, appearance), [direction, appearance]);
+  const value = useMemo(
+    () => ({ language, direction, setLanguage, appearance, setAppearance }),
+    [language, direction, setLanguage, appearance, setAppearance],
+  );
 
   return (
     <PreferencesContext.Provider value={value}>

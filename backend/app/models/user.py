@@ -80,6 +80,12 @@ class UserSettings(Base):
     user_id: Mapped[int] = mapped_column(ID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     theme: Mapped[str] = mapped_column(String(10), default="system", server_default="system")
     language: Mapped[str] = mapped_column(String(5), default="ar", server_default="ar")
+    accent_color: Mapped[str] = mapped_column(String(7), default="#D0152B", server_default="#D0152B")
+    font_family: Mapped[str] = mapped_column(String(16), default="tajawal", server_default="tajawal")
+    font_size: Mapped[int] = mapped_column(Integer, default=16, server_default=text("16"))
+    background: Mapped[str] = mapped_column(String(16), default="plain", server_default="plain")
+    density: Mapped[str] = mapped_column(String(16), default="comfortable", server_default="comfortable")
+    reading_width: Mapped[str] = mapped_column(String(12), default="standard", server_default="standard")
 
     # Privacy
     discoverable: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true(), index=True)
@@ -96,6 +102,7 @@ class UserSettings(Base):
     # Email preferences
     email_security_alerts: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())
     email_product_updates: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
+    email_weekly_digest: Mapped[bool] = mapped_column(Boolean, default=False, server_default=false())
 
     # Notification preferences
     notify_likes: Mapped[bool] = mapped_column(Boolean, default=True, server_default=true())

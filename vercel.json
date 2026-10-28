@@ -14,44 +14,139 @@
     {
       "source": "/((?!api/|media/).*)",
       "headers": [
-        { "key": "Content-Security-Policy", "value": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests" },
-        { "key": "Strict-Transport-Security", "value": "max-age=63072000" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
-        { "key": "Cross-Origin-Opener-Policy", "value": "same-origin-allow-popups" }
+        {
+          "key": "Content-Security-Policy",
+          "value": "frame-ancestors 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
       ]
     },
     {
-      "source": "/(dashboard|login|forgot-password|reset-password|create|drafts|notifications|bookmarks|profile/edit|settings|admin|search)(/.*)?",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "source": "/(appearance|my-series|auth/github/callback|dashboard|login|forgot-password|reset-password|create|drafts|notifications|bookmarks|profile/edit|settings|admin|search)(/.*)?",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     },
     {
       "source": "/posts/:id([0-9]+)/edit",
-      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex"
+        }
+      ]
     }
   ],
   "redirects": [
-    { "source": "/wiki/:path*", "destination": "https://wiki.arabdev.site/:path*" },
-    { "source": "/privacy/:path*", "destination": "https://privacy.arabdev.site/:path*" },
-    { "source": "/patch-notes/:path*", "destination": "https://patch.arabdev.site/:path*" }
+    {
+      "source": "/wiki/:path*",
+      "destination": "https://wiki.arabdev.site/:path*"
+    },
+    {
+      "source": "/privacy/:path*",
+      "destination": "https://privacy.arabdev.site/:path*"
+    },
+    {
+      "source": "/patch-notes/:path*",
+      "destination": "https://patch.arabdev.site/:path*"
+    }
   ],
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index" },
-    { "source": "/media/(.*)", "destination": "/api/index" },
-    { "source": "/sitemap.xml", "destination": "/api/index" },
-    { "source": "/:key([0-9a-f]{32}).txt", "destination": "/api/index" },
-    { "source": "/rss.xml", "destination": "/api/index" },
-    { "source": "/u/:username/rss.xml", "destination": "/api/index" },
-    { "source": "/tags/:slug/rss.xml", "destination": "/api/index" },
-    { "source": "/posts/:id([0-9]+)", "destination": "/api/index" },
-    { "source": "/u/:username", "destination": "/api/index" },
-    { "source": "/tags/:slug", "destination": "/api/index" },
-    { "source": "/explore", "destination": "/api/index" },
-    { "source": "/about", "destination": "/about/index.html" },
-    { "source": "/contact", "destination": "/contact/index.html" },
-    { "source": "/(.*)", "destination": "/app.html" }
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/media/(.*)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/:key([0-9a-f]{32}).txt",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/rss.xml",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/u/:username/rss.xml",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/tags/:slug/rss.xml",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/posts/:id([0-9]+)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/u/:username",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/tags/:slug",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/projects",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/series/:id([0-9]+)",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/explore",
+      "destination": "/api/index"
+    },
+    {
+      "source": "/about",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact/index.html"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/app.html"
+    }
   ],
-  "crons": [{ "path": "/api/v1/internal/cron/purge-tokens", "schedule": "0 3 * * *" }]
+  "crons": [
+    {
+      "path": "/api/v1/internal/cron/purge-tokens",
+      "schedule": "0 3 * * *"
+    }
+  ]
 }

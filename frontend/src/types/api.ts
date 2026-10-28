@@ -1,4 +1,5 @@
 /** Shapes returned by the ArabDev REST API (/api/v1). */
+import type { AppearancePreferences } from '@/features/preferences/appearance';
 
 export interface Page<T> {
   items: T[];
@@ -52,7 +53,8 @@ export interface TwoFactorSetup {
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type MentionsFrom = 'everyone' | 'following' | 'none';
 
-export interface UserSettings {
+export interface UserSettings extends AppearancePreferences {
+  email_weekly_digest: boolean;
   theme: ThemeMode;
   language: 'ar' | 'en';
   default_feed: FeedTab;
@@ -132,6 +134,8 @@ export interface PasswordChangeResult {
 export interface PublicConfig {
   turnstile_site_key: string | null;
   email_codes: boolean;
+  github_enabled: boolean;
+  weekly_digest_enabled: boolean;
 }
 
 export interface SignedInSession {
@@ -169,7 +173,24 @@ export interface Image {
   height: number;
 }
 
-export interface Post {
+export type PostKind = 'article' | 'question' | 'project' | 'note';
+export type ContentLanguage = 'auto' | 'ar' | 'en' | 'mul';
+export interface ContentMetadata {
+  kind: PostKind;
+  language: ContentLanguage;
+  repository_url: string | null;
+  demo_url: string | null;
+  series_id: number | null;
+  series_order: number;
+}
+
+export interface Post extends ContentMetadata {
+  excerpt: string;
+  featured: boolean;
+  accepted_comment_id: number | null;
+  series_title: string | null;
+  bookmark_collection_id: number | null;
+  bookmark_note: string | null;
   id: number;
   title: string | null;
   content_html: string;
@@ -202,7 +223,8 @@ export interface PostCounters {
   reposts_count: number;
 }
 
-export interface PostInput {
+export interface PostInput extends Partial<ContentMetadata> {
+  expected_revision?: number;
   title: string | null;
   content_html: string;
   link_url: string | null;
@@ -211,7 +233,8 @@ export interface PostInput {
   draft_id?: number | null;
 }
 
-export interface Draft {
+export interface Draft extends ContentMetadata {
+  revision: number;
   id: number;
   title: string | null;
   content_html: string;
@@ -377,3 +400,17 @@ export interface ApiErrorBody {
 }
 
 export type FeedTab = 'for_you' | 'following' | 'latest';
+
+export interface BookmarkCollection {
+  id: number;
+  name: string;
+  posts_count: number;
+}
+export interface Series {
+  id: number;
+  title: string;
+  description: string | null;
+  author: UserSummary;
+  posts_count: number;
+  created_at: string;
+}

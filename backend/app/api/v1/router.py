@@ -1,12 +1,27 @@
 from fastapi import APIRouter
 from sqlalchemy import text
 
-from app.api.v1 import ads, auth, discovery, drafts, internal, media, moderation, notifications, posts, users
+from app.api.v1 import (
+    ads,
+    auth,
+    community,
+    digest,
+    discovery,
+    drafts,
+    github,
+    internal,
+    media,
+    moderation,
+    notifications,
+    posts,
+    users,
+)
 from app.core.config import settings
 from app.core.deps import DbSession
 from app.core.redis_client import get_redis
 
 api_router = APIRouter()
+api_router.include_router(community.router)
 api_router.include_router(auth.router)
 api_router.include_router(users.router)
 api_router.include_router(posts.router)
@@ -36,3 +51,8 @@ def health(db: DbSession) -> dict:
     else:
         redis_status = "ok" if get_redis() is not None else "unavailable"
     return {"status": "ok" if database == "ok" else "degraded", "database": database, "redis": redis_status}
+
+
+api_router.include_router(digest.router)
+
+api_router.include_router(github.router)

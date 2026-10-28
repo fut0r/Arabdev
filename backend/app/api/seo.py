@@ -16,7 +16,7 @@ from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.deps import DbSession
 from app.core.errors import NotFound
-from app.models import Post, Tag, User, UserSettings, post_tags
+from app.models import Post, Series, Tag, User, UserSettings, post_tags
 from app.repositories.posts import visible
 from app.services import indexnow
 
@@ -32,6 +32,8 @@ MAX_TAGS = 500
 # The homepage and Explore change whenever someone posts; the rest only when we edit them.
 LIVE_PAGES: list[tuple[str, str, str]] = [("/", "daily", "1.0"), ("/explore", "hourly", "0.9")]
 FIXED_PAGES: list[tuple[str, str, str]] = [
+    ("/projects", "daily", "0.7"),
+    ("/developers", "weekly", "0.6"),
     ("/about", "monthly", "0.6"),
     ("/contact", "monthly", "0.5"),
     ("/register", "monthly", "0.5"),
@@ -73,6 +75,12 @@ def sitemap_entries(db: Session) -> list[Entry]:
         .limit(MAX_TAGS)
     )
     entries += [(f"/tags/{slug}", None, "daily", "0.4") for slug in tags]
+    series_ids = db.scalars(
+        select(Series.id)
+        .where(Series.id.in_(select(Post.series_id).where(visible(), Post.series_id.is_not(None))))
+        .limit(500)
+    )
+    entries += [(f"/series/{series_id}", None, "weekly", "0.6") for series_id in series_ids]
     return entries
 
 

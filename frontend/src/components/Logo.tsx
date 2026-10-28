@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import { Link as RouterLink } from 'react-router';
 
 import { displayFont } from '@/theme/typography';
-import { HOME_PATH } from '@/site';
 
 interface LogoProps {
   size?: number;
@@ -12,7 +11,7 @@ interface LogoProps {
 }
 
 /** The ArabDev wordmark: one word in Anton, "Arab" in brand red, "Dev" in ink. */
-export function Logo({ size = 28, to = HOME_PATH, onDark = false }: LogoProps) {
+export function Logo({ size = 28, to = '/', onDark = false }: LogoProps) {
   const word = (
     <Box
       component="span"

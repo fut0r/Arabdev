@@ -15,7 +15,7 @@ from collections import OrderedDict
 from datetime import datetime, timedelta
 
 from sqlalchemy import delete, func, or_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, aliased
 
 from app.core import rate_limit
 from app.core.config import settings
@@ -104,7 +104,38 @@ def create(db: Session, reporter: User, post_id: int, data: ReportCreate) -> Rep
 
     author = post.author
     open_now = open_before + 1
-    newly_hidden = post.hidden_at is None and open_now >= settings.report_auto_hide_threshold and not is_admin(author)
+    previous_report = aliased(Report)
+    dismissed = (
+        select(func.count())
+        .select_from(previous_report)
+        .where(
+            previous_report.reporter_id == User.id,
+            previous_report.status == "dismissed",
+            previous_report.resolved_at >= utcnow() - timedelta(days=90),
+        )
+        .correlate(User)
+        .scalar_subquery()
+    )
+    trusted_count = (
+        db.scalar(
+            select(func.count())
+            .select_from(Report)
+            .join(User, User.id == Report.reporter_id)
+            .where(
+                Report.post_id == post.id,
+                Report.status == "open",
+                User.is_active.is_(True),
+                User.email_verified_at.is_not(None),
+                User.created_at <= utcnow() - timedelta(days=settings.report_trusted_age_days),
+                or_(User.restricted_until.is_(None), User.restricted_until <= utcnow()),
+                dismissed < 3,
+            )
+        )
+        or 0
+    )
+    newly_hidden = (
+        post.hidden_at is None and trusted_count >= settings.report_auto_hide_threshold and not is_admin(author)
+    )
     if newly_hidden:
         post.hidden_at = utcnow()
     db.commit()

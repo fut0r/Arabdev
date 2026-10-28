@@ -71,3 +71,13 @@ def profile(username: str, db: DbSession) -> HTMLResponse:
 @router.api_route("/tags/{slug}", methods=["GET", "HEAD"])
 def tag(slug: str, db: DbSession) -> HTMLResponse:
     return _respond(lambda: page_service.tag_page(db, slug))
+
+
+@router.api_route("/projects", methods=["GET", "HEAD"])
+def projects(db: DbSession) -> HTMLResponse:
+    return _respond(lambda: page_service.projects_page(db))
+
+
+@router.api_route("/series/{series_id}", methods=["GET", "HEAD"])
+def series(series_id: int, db: DbSession) -> HTMLResponse:
+    return _respond(lambda: page_service.series_page(db, series_id))

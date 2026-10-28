@@ -69,7 +69,8 @@ export const usersApi = {
   },
   removeAvatar: () => api.delete<Me>('/users/me/avatar').then((r) => r.data),
   deleteAccount: (password: string) => api.delete('/users/me', { data: { password } }),
-  bookmarks: (page: number) => api.get<Page<Post>>('/users/me/bookmarks', { params: { page } }).then((r) => r.data),
+  bookmarks: (page: number, collection_id?: number) =>
+    api.get<Page<Post>>('/users/me/bookmarks', { params: { page, collection_id } }).then((r) => r.data),
 
   recommended: (limit = 6) => api.get<UserCard[]>('/users/recommended', { params: { limit } }).then((r) => r.data),
   profile: (username: string) => api.get<Profile>(`/users/${encodeURIComponent(username)}`).then((r) => r.data),

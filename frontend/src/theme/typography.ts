@@ -1,9 +1,9 @@
 import type { TypographyVariantsOptions } from '@mui/material/styles';
 
 /** Body, navigation, buttons and forms. */
-export const bodyFont = '"Tajawal", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+export const bodyFont = 'var(--ad-font-body, "Tajawal"), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 /** Main, hero and section headings. */
-export const headingFont = '"Alexandria", "Tajawal", system-ui, sans-serif';
+export const headingFont = 'var(--ad-font-heading, "Alexandria"), "Tajawal", system-ui, sans-serif';
 /** The logo, large numbers and a few strong accents. */
 export const displayFont = '"Anton", Impact, "Arial Narrow", sans-serif';
 export const monoFont = '"JetBrains Mono", "Cascadia Code", Consolas, "SFMono-Regular", monospace';

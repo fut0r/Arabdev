@@ -88,7 +88,7 @@ async def lifespan(_app: FastAPI):
 def create_app() -> FastAPI:
     app = FastAPI(
         title="ArabDev API",
-        version="1.0.0",
+        version="1.4.0",
         description="REST API for ArabDev, a community for Arabic-speaking developers.",
         openapi_tags=OPENAPI_TAGS,
         contact={
@@ -156,6 +156,14 @@ def create_app() -> FastAPI:
         @app.api_route(f"{media_path}/{{key:path}}", methods=["GET", "HEAD"], include_in_schema=False)
         def media_file(key: str, db: DbSession) -> Response:
             media = media_service.load_file(db, key)
+            if media and media.data is None and settings.storage_backend == "s3":
+                from fastapi.responses import FileResponse
+
+                from app.services.storage import LocalStorage
+
+                legacy = LocalStorage(settings.media_root, settings.media_url)._path(key)
+                if not key.startswith("s3/") and legacy.is_file():
+                    return FileResponse(legacy, media_type=media.content_type)
             if media is None or media.data is None:
                 raise NotFound("Image not found", "media_not_found")
             # Keys are unique and files never change, so browsers and Vercel's CDN keep them.

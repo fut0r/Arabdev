@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -7,6 +8,22 @@ from app.utils.validators import clean_optional_text, normalize_http_url
 
 MAX_TAGS = 5
 MAX_CONTENT_HTML = 200_000
+PostKind = Literal["article", "question", "project", "note"]
+ContentLanguage = Literal["auto", "ar", "en", "mul"]
+
+
+class ContentMetadata(BaseModel):
+    kind: PostKind = "article"
+    language: ContentLanguage = "auto"
+    repository_url: str | None = None
+    demo_url: str | None = None
+    series_id: int | None = Field(default=None, gt=0)
+    series_order: int = Field(default=1, ge=1, le=999)
+
+    @field_validator("repository_url", "demo_url")
+    @classmethod
+    def _project_url(cls, value: str | None) -> str | None:
+        return normalize_http_url(value, max_length=500)
 
 
 class TagOut(BaseModel):
@@ -25,7 +42,13 @@ class ImageOut(BaseModel):
     height: int
 
 
-class PostOut(BaseModel):
+class PostOut(ContentMetadata):
+    excerpt: str = ""
+    featured: bool = False
+    accepted_comment_id: int | None = None
+    series_title: str | None = None
+    bookmark_collection_id: int | None = None
+    bookmark_note: str | None = None
     id: int
     title: str | None
     content_html: str
@@ -57,7 +80,7 @@ class PostRef(BaseModel):
     author_username: str
 
 
-class _PostFields(BaseModel):
+class _PostFields(ContentMetadata):
     title: str | None = Field(default=None, max_length=200)
     content_html: str = Field(default="", max_length=MAX_CONTENT_HTML)
     link_url: str | None = None
@@ -85,6 +108,7 @@ class _PostFields(BaseModel):
 class PostCreate(_PostFields):
     # When publishing from a draft, the draft is removed once the post is created.
     draft_id: int | None = None
+    expected_revision: int | None = Field(default=None, ge=1)
 
 
 class PostUpdate(_PostFields):
@@ -92,10 +116,11 @@ class PostUpdate(_PostFields):
 
 
 class DraftWrite(_PostFields):
-    pass
+    expected_revision: int | None = Field(default=None, ge=1)
 
 
-class DraftOut(BaseModel):
+class DraftOut(ContentMetadata):
+    revision: int = 1
     id: int
     title: str | None
     content_html: str

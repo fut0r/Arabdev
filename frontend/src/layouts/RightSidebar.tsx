@@ -37,7 +37,7 @@ export function RightSidebar() {
         <Surface>
           <SectionHeading
             action={
-              <Link component={RouterLink} to="/explore" variant="body2">
+              <Link component={RouterLink} to="/developers" variant="body2">
                 {t('sidebar.seeMore')}
               </Link>
             }

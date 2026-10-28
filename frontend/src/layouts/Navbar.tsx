@@ -1,3 +1,4 @@
+import PaletteOutlinedIcon from '@mui/icons-material/PaletteOutlined';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -48,6 +49,7 @@ function AccountMenu() {
 
   const links = [
     { to: '/profile/edit', label: t('profile.editProfile'), icon: <EditOutlinedIcon fontSize="small" /> },
+    { to: '/my-series', label: t('community.mySeries'), icon: <MenuBookOutlinedIcon fontSize="small" /> },
     { to: '/drafts', label: t('nav.drafts'), icon: <DescriptionOutlinedIcon fontSize="small" /> },
     { to: '/bookmarks', label: t('nav.bookmarks'), icon: <BookmarkBorderIcon fontSize="small" /> },
     { to: '/settings', label: t('nav.settings'), icon: <SettingsOutlinedIcon fontSize="small" /> },
@@ -205,7 +207,7 @@ export function Navbar() {
         }}
       >
         <Box sx={{ width: { lg: layout.navWidth }, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
-          <Logo size={28} />
+          <Logo size={28} to={user ? '/dashboard' : '/'} />
         </Box>
         <Box sx={{ flex: 1, maxWidth: 520, display: { xs: 'none', md: 'block' } }}>
           <SearchBar />
@@ -219,6 +221,9 @@ export function Navbar() {
             sx={{ display: { xs: 'inline-flex', md: 'none' } }}
           >
             <SearchIcon />
+          </IconButton>
+          <IconButton component={RouterLink} to="/appearance" aria-label={t('appearance.title')}>
+            <PaletteOutlinedIcon />
           </IconButton>
           {user ? <AccountMenu /> : <GuestActions />}
         </Stack>

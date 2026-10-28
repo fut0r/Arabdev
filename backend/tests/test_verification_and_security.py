@@ -300,7 +300,12 @@ def test_config_endpoint_publishes_only_the_site_key(client, monkeypatch):
     monkeypatch.setattr(settings, "turnstile_site_key", "0xSITE")
     monkeypatch.setattr(settings, "turnstile_secret_key", "0xSECRET")
     body = client.get(f"{API}/auth/config").json()
-    assert body == {"turnstile_site_key": "0xSITE", "email_codes": settings.email_codes_required}
+    assert body == {
+        "turnstile_site_key": "0xSITE",
+        "email_codes": settings.email_codes_required,
+        "github_enabled": False,
+        "weekly_digest_enabled": False,
+    }
 
 
 # ------------------------------------------------------------------ search engines

@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, Index
+from sqlalchemy import ForeignKey, Index, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -24,6 +24,10 @@ class Bookmark(Base):
 
     user_id: Mapped[int] = mapped_column(ID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
     post_id: Mapped[int] = mapped_column(ID, ForeignKey("posts.id", ondelete="CASCADE"), primary_key=True, index=True)
+    collection_id: Mapped[int | None] = mapped_column(
+        ID, ForeignKey("bookmark_collections.id", ondelete="SET NULL"), nullable=True, index=True
+    )
+    note: Mapped[str | None] = mapped_column(String(1000), nullable=True)
     created_at: Mapped[datetime] = mapped_column(UTCDateTime, default=utcnow)
 
 

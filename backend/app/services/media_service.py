@@ -110,6 +110,8 @@ def store_image(db: Session, owner: User, raw: bytes, kind: str) -> Media:
     now = utcnow()
     key = f"{kind}/{now:%Y/%m}/{uuid.uuid4().hex}.webp"
     storage = get_storage()
+    if settings.storage_backend == "s3":
+        key = "s3/" + key
     storage.save(key, processed.data, processed.content_type)
     media = Media(
         owner_id=owner.id,

@@ -1,11 +1,12 @@
+from datetime import timedelta
 from typing import Literal
 
-from sqlalchemy import and_, func, or_, select, update
+from sqlalchemy import and_, delete, func, or_, select, update
 from sqlalchemy.orm import Session
 
-from app.core.errors import Forbidden, NotFound, UnprocessableEntity
+from app.core.errors import Conflict, Forbidden, NotFound, UnprocessableEntity
 from app.core.permissions import ensure_can_publish, is_admin
-from app.models import Comment, Draft, Follow, Like, Post, Repost, User
+from app.models import Bookmark, Comment, Draft, Follow, Like, Post, Repost, Series, User
 from app.repositories import posts as posts_repo
 from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
@@ -14,6 +15,7 @@ from app.schemas.post import DraftOut, DraftWrite, PostCreate, PostOut, PostUpda
 from app.services import block_service, media_service, notification_service, presenters, ranking, spam_guard
 from app.utils.html import html_to_text, sanitize_post_html
 from app.utils.pagination import PageParams, paginate_scalars
+from app.utils.search import content_language, normalize_search
 from app.utils.time import utcnow
 
 FeedTab = Literal["for_you", "following", "latest"]
@@ -112,8 +114,8 @@ def trending(db: Session, viewer: User | None, params: PageParams, days: int = 7
     ranked = [post for post in ranking.trending(db, days) if post.author_id not in blocked]
     if ranked:
         return _page_of_ranked(db, ranked, params, viewer)
-    # A quiet week: fall back to the all-time ranking rather than an empty page.
-    return _page_of_posts(db, posts_repo.trending_stmt(None), params, viewer)
+    # Keep the selected date range even when no post has reactions yet.
+    return _page_of_posts(db, posts_repo.trending_stmt(utcnow() - timedelta(days=days)), params, viewer)
 
 
 def user_activity(db: Session, username: str, viewer: User | None, params: PageParams) -> Page[PostOut]:
@@ -125,8 +127,13 @@ def user_activity(db: Session, username: str, viewer: User | None, params: PageP
     return _activity_page(db, Post.author_id == user.id, Repost.user_id == user.id, params, viewer)
 
 
-def bookmarks(db: Session, viewer: User, params: PageParams) -> Page[PostOut]:
-    return _page_of_posts(db, posts_repo.bookmarks_stmt(viewer.id), params, viewer)
+def bookmarks(db: Session, viewer: User, params: PageParams, collection_id: int | None = None) -> Page[PostOut]:
+    stmt = posts_repo.bookmarks_stmt(viewer.id)
+    if collection_id is not None:
+        stmt = stmt.where(
+            Bookmark.collection_id == collection_id if collection_id else Bookmark.collection_id.is_(None)
+        )
+    return _page_of_posts(db, stmt, params, viewer)
 
 
 # ---------------------------------------------------------------- writing
@@ -146,6 +153,25 @@ def _attach_image(db: Session, author: User, media_id: int | None) -> int | None
     return media_service.get_owned_media(db, author, media_id, "post_image").id
 
 
+def _apply_metadata(db: Session, user: User, target: Post | Draft, data) -> None:
+    if data.series_id is not None:
+        series = db.get(Series, data.series_id)
+        if series is None or series.author_id != user.id:
+            raise Forbidden("Choose one of your own series", "series_not_owned")
+    for field in ("kind", "language", "repository_url", "demo_url", "series_id", "series_order"):
+        setattr(target, field, getattr(data, field))
+    if isinstance(target, Post):
+        spam_guard.check_links(
+            user,
+            spam_guard.links_in(
+                html=target.content_html,
+                text=target.content_text,
+                extra=(data.link_url or "", data.repository_url or "", data.demo_url or ""),
+            ),
+            "content_html",
+        )
+
+
 def create_post(db: Session, author: User, data: PostCreate) -> PostOut:
     ensure_can_publish(author)
     content_html, content_text = _prepare_content(data.content_html)
@@ -159,12 +185,25 @@ def create_post(db: Session, author: User, data: PostCreate) -> PostOut:
         image_media_id=_attach_image(db, author, data.image_media_id),
         tags=tags_repo.get_or_create(db, data.tags),
     )
+    _apply_metadata(db, author, post, data)
+    post.language = content_language(content_text, data.language)
+    post.search_title = normalize_search(post.title)
+    post.search_text = normalize_search(content_text)
     db.add(post)
     db.flush()
 
     if data.draft_id is not None:
         draft = db.get(Draft, data.draft_id)
-        if draft is not None and draft.author_id == author.id:
+        if data.expected_revision is not None:
+            removed = db.execute(
+                delete(Draft).where(
+                    Draft.id == data.draft_id, Draft.author_id == author.id, Draft.revision == data.expected_revision
+                )
+            )
+            if removed.rowcount != 1:
+                db.rollback()
+                raise Conflict("This draft changed elsewhere. Reload before publishing.", "draft_conflict")
+        elif draft is not None and draft.author_id == author.id:
             db.delete(draft)
 
     notification_service.notify_mentions(db, text=content_text, actor_id=author.id, post_id=post.id)
@@ -183,11 +222,15 @@ def update_post(db: Session, user: User, post_id: int, data: PostUpdate) -> Post
     _ensure_author(post, user)
     ensure_can_publish(user)
     content_html, content_text = _prepare_content(data.content_html)
+    post.search_title = normalize_search(data.title)
+    post.search_text = normalize_search(content_text)
     previous_image = post.image_media_id
 
     post.title = data.title
     post.content_html = content_html
     post.content_text = content_text
+    _apply_metadata(db, user, post, data)
+    post.language = content_language(content_text, data.language)
     post.link_url = data.link_url
     post.image_media_id = _attach_image(db, user, data.image_media_id)
     post.tags = tags_repo.get_or_create(db, data.tags)
@@ -256,6 +299,7 @@ def get_draft(db: Session, user: User, draft_id: int) -> DraftOut:
 
 
 def _apply_draft(db: Session, user: User, draft: Draft, data: DraftWrite) -> None:
+    _apply_metadata(db, user, draft, data)
     draft.title = data.title
     draft.content_html = sanitize_post_html(data.content_html)
     draft.link_url = data.link_url
@@ -274,6 +318,14 @@ def create_draft(db: Session, user: User, data: DraftWrite) -> DraftOut:
 
 def update_draft(db: Session, user: User, draft_id: int, data: DraftWrite) -> DraftOut:
     draft = _get_own_draft(db, user, draft_id)
+    # Compare-and-swap also protects against writes racing in two browser tabs.
+    expected = data.expected_revision if data.expected_revision is not None else draft.revision
+    changed = db.execute(
+        update(Draft).where(Draft.id == draft.id, Draft.revision == expected).values(revision=Draft.revision + 1)
+    )
+    if changed.rowcount != 1:
+        db.rollback()
+        raise Conflict("This draft changed elsewhere. Reload before replacing it.", "draft_conflict")
     _apply_draft(db, user, draft, data)
     draft.updated_at = utcnow()
     db.commit()

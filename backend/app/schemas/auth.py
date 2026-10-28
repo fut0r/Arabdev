@@ -73,6 +73,8 @@ class PublicConfigOut(BaseModel):
 
     turnstile_site_key: str | None = None
     email_codes: bool
+    github_enabled: bool = False
+    weekly_digest_enabled: bool = False
 
 
 class FieldAvailability(BaseModel):

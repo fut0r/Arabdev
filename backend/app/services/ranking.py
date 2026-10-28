@@ -34,7 +34,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models import Comment, Follow, Like, Post, Repost, Tag, User, post_tags, user_interests
+from app.models import Comment, Follow, Like, Post, Repost, Tag, TagFollow, User, post_tags, user_interests
 from app.repositories.posts import visible
 from app.utils.time import utcnow
 
@@ -136,6 +136,13 @@ def for_you(db: Session, viewer: User) -> list[Post]:
     ids = [post.id for post in posts]
 
     followed = set(db.scalars(select(Follow.followee_id).where(Follow.follower_id == viewer.id)))
+    topic_posts = set(
+        db.scalars(
+            select(post_tags.c.post_id)
+            .join(TagFollow, TagFollow.tag_id == post_tags.c.tag_id)
+            .where(TagFollow.user_id == viewer.id, post_tags.c.post_id.in_(ids))
+        )
+    )
     interest_matches = _counts(
         db,
         select(post_tags.c.post_id, func.count())
@@ -181,6 +188,8 @@ def for_you(db: Session, viewer: User) -> list[Post]:
         affinity = 1.0
         if post.author_id in followed:
             affinity += WEIGHT_FOLLOWED
+        if post.id in topic_posts:
+            affinity += WEIGHT_INTEREST * 2
         affinity += WEIGHT_INTEREST * min(interest_matches.get(post.id, 0), MAX_INTEREST_MATCHES)
         affinity += WEIGHT_AUTHOR_HISTORY * min(author_history.get(post.author_id, 0), MAX_AUTHOR_HISTORY)
         affinity += WEIGHT_SOCIAL * min(social.get(post.id, 0), MAX_SOCIAL)

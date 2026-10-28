@@ -1,6 +1,17 @@
 import { useColorScheme } from '@mui/material/styles';
 import { useQueryClient } from '@tanstack/react-query';
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
@@ -54,7 +65,7 @@ interface AuthContextValue {
   resendCode: (challengeId: string) => Promise<Challenge>;
   logout: () => Promise<void>;
   acceptTokens: (data: TokenResponse) => void;
-  setUser: (user: Me) => void;
+  setUser: Dispatch<SetStateAction<Me | null>>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -67,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const notify = useNotify();
   const { t } = useTranslation();
-  const { setLanguage } = usePreferences();
+  const { setLanguage, setAppearance } = usePreferences();
   const { setMode } = useColorScheme();
   const bootstrapped = useRef(false);
 
@@ -76,8 +87,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     (me: Me) => {
       setLanguage(me.settings.language);
       setMode(me.settings.theme);
+      setAppearance(me.settings);
     },
-    [setLanguage, setMode],
+    [setLanguage, setMode, setAppearance],
   );
 
   // "Reduce animation" is a single attribute the stylesheet keys off (see theme.ts).

@@ -150,7 +150,13 @@ def main() -> None:
     admin.add_argument("username")
     sub.add_parser("purge-tokens", help="Delete ended sign-in sessions and old password reset links")
     sub.add_parser("indexnow", help="Send every page in the sitemap to the IndexNow search engines")
+    sub.add_parser("migrate", help="Apply migrations and reference data before deployment")
     args = parser.parse_args()
+    if args.command == "migrate":
+        from app.core.bootstrap import prepare_database
+
+        prepare_database()
+        return
 
     with SessionLocal() as db:
         if args.command == "seed":

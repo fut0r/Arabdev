@@ -65,7 +65,7 @@ export function useNavItems(): NavItem[] {
   const items: NavItem[] = [
     {
       key: 'home',
-      to: HOME_PATH,
+      to: user ? HOME_PATH : '/',
       labelKey: 'nav.home',
       icon: <HomeOutlinedIcon />,
       activeIcon: <HomeIcon />,

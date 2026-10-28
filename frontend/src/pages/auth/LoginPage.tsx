@@ -1,3 +1,4 @@
+import { GitHubButton } from '@/features/auth/GitHubButton';
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -94,6 +95,7 @@ export default function LoginPage() {
         {t('auth.signInSubtitle')}
       </Typography>
 
+      <GitHubButton />
       <Box component="form" noValidate onSubmit={onSubmit}>
         <Stack spacing={2.25}>
           {serverError && (

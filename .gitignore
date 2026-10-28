@@ -36,3 +36,8 @@ Alexandria,Anton,Tajawal/
 
 # Original project brief (kept local)
 Readme.txt
+
+# Release verification caches and artifacts
+.cache/
+frontend/test-results/
+frontend/playwright-report/

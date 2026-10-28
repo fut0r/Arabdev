@@ -2,6 +2,7 @@
 
 from app.models.ad import Ad
 from app.models.comment import Comment
+from app.models.community import AcceptedAnswer, BookmarkCollection, DigestDelivery, GitHubIdentity, Series, TagFollow
 from app.models.interaction import Block, Bookmark, Follow, Like, Repost
 from app.models.interest import Interest, user_interests
 from app.models.media import Media
@@ -15,12 +16,16 @@ from app.models.user import Profile, User, UserSettings
 from app.models.verification import VerificationCode
 
 __all__ = [
+    "AcceptedAnswer",
     "Ad",
     "Block",
     "Bookmark",
+    "BookmarkCollection",
     "Comment",
+    "DigestDelivery",
     "Draft",
     "Follow",
+    "GitHubIdentity",
     "Interest",
     "Like",
     "Media",
@@ -32,7 +37,9 @@ __all__ = [
     "RefreshToken",
     "Report",
     "Repost",
+    "Series",
     "Tag",
+    "TagFollow",
     "User",
     "UserSettings",
     "VerificationCode",

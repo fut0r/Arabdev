@@ -1,6 +1,7 @@
-import { alpha, createTheme, type Theme } from '@mui/material/styles';
+import { alpha, createTheme, darken, lighten, getContrastRatio, type Theme } from '@mui/material/styles';
+import { DEFAULT_APPEARANCE, FONT_STACKS, type AppearancePreferences } from '@/features/preferences/appearance';
 
-import { brand, neutralDark, neutralLight, postTextColors } from './colors';
+import { neutralDark, neutralLight, postTextColors } from './colors';
 import { displayFont, headingFont, monoFont, typography } from './typography';
 import { layout, radii, shadowScale } from './tokens';
 
@@ -27,14 +28,28 @@ function buildShadows(): Theme['shadows'] {
   return shadows as Theme['shadows'];
 }
 
-export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
+export function createAppTheme(
+  direction: 'rtl' | 'ltr',
+  appearance: AppearancePreferences = DEFAULT_APPEARANCE,
+): Theme {
+  const accent = appearance.accent_color;
+  const contrastText = getContrastRatio(accent, '#FFFFFF') >= 4.5 ? '#FFFFFF' : '#000000';
+  const readable = (background: string, dark: boolean) => {
+    let color = accent;
+    for (let i = 0; i < 30 && getContrastRatio(color, background) < 4.5; i++)
+      color = dark ? lighten(color, 0.12) : darken(color, 0.12);
+    return color;
+  };
+  const lightText = readable(neutralLight.paper, false);
+  const darkText = readable(neutralDark.paper, true);
+  const font = FONT_STACKS[appearance.font_family];
   return createTheme({
     direction,
     cssVariables: { colorSchemeSelector: 'data-mui-color-scheme', cssVarPrefix: 'ad' },
     colorSchemes: {
       light: {
         palette: {
-          primary: { main: brand.red, dark: brand.redDark, light: '#E8475A', contrastText: '#FFFFFF' },
+          primary: { main: accent, dark: darken(accent, 0.2), light: lighten(accent, 0.2), contrastText },
           secondary: { main: '#1D1D1F', contrastText: '#FFFFFF' },
           error: { main: '#B42318' },
           success: { main: '#1E7B4A' },
@@ -47,17 +62,17 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
             disabled: '#A3A19D',
           },
           divider: neutralLight.border,
-          accent: { text: '#C8102E', subtle: alpha(brand.red, 0.07), hover: alpha(brand.red, 0.12) },
+          accent: { text: lightText, subtle: alpha(accent, 0.07), hover: alpha(accent, 0.12) },
           surface: { sunken: neutralLight.sunken, borderStrong: neutralLight.borderStrong },
         },
       },
       dark: {
         palette: {
           primary: {
-            main: brand.redDarkScheme,
-            dark: '#B81C2C',
-            light: brand.redTextDarkScheme,
-            contrastText: '#FFFFFF',
+            main: accent,
+            dark: darken(accent, 0.2),
+            light: darkText,
+            contrastText,
           },
           secondary: { main: '#F2F2F0', contrastText: '#141414' },
           error: { main: '#FF6B6B' },
@@ -72,9 +87,9 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
           },
           divider: neutralDark.border,
           accent: {
-            text: brand.redTextDarkScheme,
-            subtle: alpha(brand.redTextDarkScheme, 0.1),
-            hover: alpha(brand.redTextDarkScheme, 0.16),
+            text: darkText,
+            subtle: alpha(darkText, 0.1),
+            hover: alpha(darkText, 0.16),
           },
           surface: { sunken: neutralDark.sunken, borderStrong: neutralDark.borderStrong },
         },
@@ -93,7 +108,8 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
             '--ad-text-graphite': postTextColors.light.graphite,
             '--ad-text-muted': postTextColors.light.muted,
             '--ad-font-display': displayFont,
-            '--ad-font-heading': headingFont,
+            '--ad-font-body': font,
+            '--ad-font-heading': appearance.font_family === 'tajawal' ? FONT_STACKS.alexandria : font,
             '--ad-font-mono': monoFont,
           },
           '[data-mui-color-scheme="dark"]': {
@@ -103,12 +119,23 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
             '--ad-text-graphite': postTextColors.dark.graphite,
             '--ad-text-muted': postTextColors.dark.muted,
           },
-          html: { scrollPaddingTop: layout.appBarHeight + 16 },
+          html: { scrollPaddingTop: layout.appBarHeight + 16, fontSize: appearance.font_size },
           body: {
             backgroundColor: theme.vars.palette.background.default,
             WebkitFontSmoothing: 'antialiased',
             MozOsxFontSmoothing: 'grayscale',
             textRendering: 'optimizeLegibility',
+            backgroundImage:
+              appearance.background === 'dots'
+                ? `radial-gradient(${alpha(accent, 0.18)} 1px, transparent 1px)`
+                : appearance.background === 'grid'
+                  ? `linear-gradient(${alpha(accent, 0.08)} 1px, transparent 1px), linear-gradient(90deg, ${alpha(accent, 0.08)} 1px, transparent 1px)`
+                  : appearance.background === 'gradient'
+                    ? `radial-gradient(ellipse at top, ${alpha(accent, 0.14)}, transparent 70%)`
+                    : 'none',
+            backgroundSize:
+              appearance.background === 'dots' || appearance.background === 'grid' ? '24px 24px' : '100% 75vh',
+            backgroundRepeat: appearance.background === 'gradient' ? 'no-repeat' : 'repeat',
           },
           '::selection': { backgroundColor: theme.vars.palette.accent.hover },
           ':focus-visible': {
@@ -136,8 +163,8 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
       MuiButton: {
         defaultProps: { disableElevation: true },
         styleOverrides: {
-          root: { borderRadius: radii.md, paddingInline: 16, minHeight: 38 },
-          sizeSmall: { minHeight: 32, paddingInline: 12, fontSize: '0.875rem' },
+          root: { borderRadius: radii.md, paddingInline: 16, minHeight: 44 },
+          sizeSmall: { minHeight: 44, paddingInline: 12, fontSize: '0.875rem' },
           sizeLarge: { minHeight: 46, fontSize: '1rem' },
           outlined: ({ theme }) => ({ borderColor: theme.vars.palette.surface.borderStrong }),
           text: { paddingInline: 10 },
@@ -146,6 +173,8 @@ export function createAppTheme(direction: 'rtl' | 'ltr'): Theme {
       MuiIconButton: {
         styleOverrides: {
           root: ({ theme }) => ({
+            minWidth: 44,
+            minHeight: 44,
             '&:focus-visible': { outline: `2px solid ${theme.vars.palette.primary.main}`, outlineOffset: 1 },
           }),
         },

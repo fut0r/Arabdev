@@ -1,3 +1,9 @@
+import { Button } from '@mui/material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { communityApi } from '@/api/community';
+import { useAuth } from '@/features/auth/AuthProvider';
+import { useNotify } from '@/components/Notifier';
+import { errorMessage } from '@/api/errors';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import Box from '@mui/material/Box';
@@ -20,6 +26,23 @@ import { useSeo } from '@/utils/seo';
 export default function TagPage() {
   const { t } = useTranslation();
   const slug = (useParams().slug ?? '').toLowerCase();
+  const { user } = useAuth();
+  const client = useQueryClient();
+  const notify = useNotify();
+  const followed = useQuery({
+    queryKey: ['followed-tags'],
+    queryFn: communityApi.followedTags,
+    enabled: Boolean(user),
+  });
+  const following = followed.data?.some((tag) => tag.slug === slug) ?? false;
+  const toggle = useMutation({
+    mutationFn: () => communityApi.followTag(slug, !following),
+    onSuccess: () => {
+      void client.invalidateQueries({ queryKey: ['followed-tags'] });
+      void client.invalidateQueries({ queryKey: ['feed'] });
+    },
+    onError: (e) => notify(errorMessage(e, t), 'error'),
+  });
   const [page, setPage] = usePageParam();
   useSeo({
     title: `#${slug}`,
@@ -68,6 +91,11 @@ export default function TagPage() {
           )}
         </Box>
       </Stack>
+      {user && detail.data && (
+        <Button sx={{ m: 2 }} loading={toggle.isPending} disabled={!followed.data} onClick={() => toggle.mutate()}>
+          {t(following ? 'community.unfollowTag' : 'community.followTag')}
+        </Button>
+      )}
       <PagedPosts
         query={posts}
         page={page}

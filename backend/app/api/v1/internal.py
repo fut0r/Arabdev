@@ -26,4 +26,7 @@ def purge_tokens(db: DbSession, authorization: str | None = Header(default=None)
         raise Unauthorized("Not allowed", "cron_unauthorized")
     sessions, resets = purge_expired_tokens(db)
     reports = purge_resolved(db)
-    return {"sessions_deleted": sessions, "reset_links_deleted": resets, "reports_deleted": reports}
+    from app.services.digest_service import deliver_weekly
+
+    digest = deliver_weekly(db)
+    return {"digest": digest, "sessions_deleted": sessions, "reset_links_deleted": resets, "reports_deleted": reports}

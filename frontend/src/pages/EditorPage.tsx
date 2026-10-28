@@ -1,3 +1,6 @@
+import { Alert } from '@mui/material';
+import { ContentOptions, EMPTY_METADATA, metadataOf } from '@/features/editor/ContentOptions';
+import type { ContentMetadata } from '@/types/api';
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import Box from '@mui/material/Box';
@@ -9,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useBlocker, useNavigate, useParams } from 'react-router';
 
@@ -32,6 +35,8 @@ import type { Image, PostInput } from '@/types/api';
 import { isEditorEmpty } from '@/utils/html';
 
 interface Initial {
+  metadata: ContentMetadata;
+  revision?: number;
   title: string;
   html: string;
   tags: string[];
@@ -39,7 +44,7 @@ interface Initial {
   image: Image | null;
 }
 
-const BLANK: Initial = { title: '', html: '', tags: [], linkUrl: '', image: null };
+const BLANK: Initial = { metadata: EMPTY_METADATA, title: '', html: '', tags: [], linkUrl: '', image: null };
 
 /** One page for writing a new post, continuing a draft, or editing a published post. */
 export default function EditorPage() {
@@ -81,6 +86,7 @@ export default function EditorPage() {
   if (postQuery.data) {
     const post = postQuery.data;
     initial = {
+      metadata: metadataOf(post),
       title: post.title ?? '',
       html: post.content_html,
       tags: post.tags.map((tag) => tag.name),
@@ -90,6 +96,8 @@ export default function EditorPage() {
   } else if (draftQuery.data) {
     const draft = draftQuery.data;
     initial = {
+      metadata: metadataOf(draft),
+      revision: draft.revision,
       title: draft.title ?? '',
       html: draft.content_html,
       tags: draft.tags,
@@ -126,6 +134,34 @@ function EditorWorkspace({
   const editing = postId !== null;
   useSeo({ title: editing ? t('editor.editTitle') : t('editor.createTitle'), noindex: true });
 
+  const user = useCurrentUser();
+  const recoveryKey = `arabdev.editor.v1.${user.id}.${postId ? `post-${postId}` : draftId ? `draft-${draftId}` : 'new'}`;
+  const [recovery, setRecovery] = useState<Initial | null>(() => {
+    try {
+      const value = JSON.parse(localStorage.getItem(recoveryKey) ?? 'null');
+      if (
+        value &&
+        typeof value.title === 'string' &&
+        typeof value.html === 'string' &&
+        Array.isArray(value.tags) &&
+        typeof value.linkUrl === 'string' &&
+        value.metadata
+      )
+        return value;
+    } catch {
+      /* unavailable storage */
+    }
+    return null;
+  });
+  const [editorVersion, setEditorVersion] = useState(0);
+  const [editorInitial, setEditorInitial] = useState(initial.html);
+  const [metadata, setMetadata] = useState(initial.metadata);
+  const [revision, setRevision] = useState(initial.revision);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [storageError, setStorageError] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const saving = useRef(false);
+  const latest = useRef('');
   const [title, setTitle] = useState(initial.title);
   const [html, setHtml] = useState(initial.html);
   const [tags, setTags] = useState(initial.tags);
@@ -150,7 +186,7 @@ function EditorWorkspace({
     };
 
   const blocker = useBlocker(({ currentLocation, nextLocation }) => {
-    if (leaving.current || !dirty) return false;
+    if (leaving.current || (!dirty && busy !== 'publish')) return false;
     return currentLocation.pathname !== nextLocation.pathname;
   });
 
@@ -177,6 +213,12 @@ function EditorWorkspace({
     link_url: linkUrl.trim() || null,
     image_media_id: image?.id ?? null,
     tags,
+    kind: metadata.kind,
+    language: metadata.language,
+    repository_url: metadata.repository_url,
+    demo_url: metadata.demo_url,
+    series_id: metadata.series_id,
+    series_order: metadata.series_order,
   });
 
   const validLink = () => {
@@ -194,31 +236,82 @@ function EditorWorkspace({
     else notify(message, 'error');
   };
 
-  const saveDraft = async () => {
+  const snapshot = JSON.stringify({
+    title,
+    html,
+    tags,
+    linkUrl,
+    image,
+    metadata,
+    revision,
+    savedDraftId: currentDraftId,
+  });
+  useLayoutEffect(() => {
+    latest.current = snapshot;
+  }, [snapshot]);
+  useEffect(() => {
+    if (!dirty || recovery || leaving.current) return;
+    try {
+      localStorage.setItem(recoveryKey, snapshot);
+    } catch {
+      queueMicrotask(() => setStorageError(true));
+    }
+  }, [snapshot, dirty, recovery, recoveryKey]);
+
+  const saveDraft = async (automatic = false) => {
+    if (saving.current || leaving.current || recovery) return;
     if (!validLink()) return;
+    saving.current = true;
+    const savingSnapshot = latest.current;
+    setSaveError(null);
     setBusy('draft');
     try {
       const draft = currentDraftId
-        ? await draftsApi.update(currentDraftId, payload())
+        ? await draftsApi.update(currentDraftId, { ...payload(), expected_revision: revision })
         : await draftsApi.create(payload());
       uploadedThisSession.current.clear();
       setCurrentDraftId(draft.id);
-      setDirty(false);
+      setRevision(draft.revision);
+      const unchanged = latest.current === savingSnapshot;
+      if (unchanged) {
+        setDirty(false);
+        try {
+          localStorage.removeItem(recoveryKey);
+        } catch {
+          /* unavailable */
+        }
+      }
+      setSaved(true);
       queryClient.setQueryData(queryKeys.draft(draft.id), draft);
       void queryClient.invalidateQueries({ queryKey: ['drafts'] });
-      notify(t('editor.draftSaved'));
-      if (!currentDraftId) {
-        leaving.current = true;
-        navigate(`/drafts/${draft.id}`, { replace: true });
+      if (!automatic) notify(t('editor.draftSaved'));
+      try {
+        localStorage.setItem(
+          recoveryKey,
+          JSON.stringify({ ...JSON.parse(latest.current), savedDraftId: draft.id, revision: draft.revision }),
+        );
+      } catch {
+        /* local warning handled above */
       }
     } catch (error) {
-      handleServerError(error);
+      setSaveError(apiErrorBody(error)?.code === 'draft_conflict' ? t('editor.conflict') : errorMessage(error, t));
+      if (!automatic) handleServerError(error);
     } finally {
+      saving.current = false;
       setBusy(null);
     }
   };
 
+  useEffect(() => {
+    if (!dirty || editing || busy || saveError || recovery) return;
+    const timer = window.setTimeout(() => {
+      void saveDraft(true);
+    }, 2500);
+    return () => window.clearTimeout(timer);
+  });
+
   const publish = async () => {
+    if (saving.current || recovery || saveError) return;
     setContentError(null);
     if (isEditorEmpty(html)) {
       setContentError(t('errors.post_empty'));
@@ -229,15 +322,33 @@ function EditorWorkspace({
     try {
       const post = editing
         ? await postsApi.update(postId!, payload())
-        : await postsApi.create({ ...payload(), draft_id: currentDraftId }, await turnstile.getToken());
+        : await postsApi.create(
+            { ...payload(), draft_id: currentDraftId, expected_revision: revision },
+            await turnstile.getToken(),
+          );
       queryClient.setQueryData(queryKeys.post(post.id), post);
-      for (const root of ['feed', 'user-posts', 'drafts', 'tag-posts', 'popular-tags', 'profile', 'trending']) {
+      for (const root of [
+        'feed',
+        'user-posts',
+        'drafts',
+        'tag-posts',
+        'popular-tags',
+        'profile',
+        'trending',
+        'browse',
+      ]) {
         void queryClient.invalidateQueries({ queryKey: [root] });
       }
       notify(editing ? t('editor.updated') : t('editor.published'));
       leaving.current = true;
+      try {
+        localStorage.removeItem(recoveryKey);
+      } catch {
+        /* unavailable */
+      }
       navigate(`/posts/${post.id}`, { replace: true });
     } catch (error) {
+      if (apiErrorBody(error)?.code === 'draft_conflict') setSaveError(t('editor.conflict'));
       handleServerError(error);
       setBusy(null);
     } finally {
@@ -246,11 +357,13 @@ function EditorWorkspace({
   };
 
   const editorPane = (
-    <Stack spacing={2.5}>
+    <Stack spacing={2.5} inert={busy === 'publish' ? true : undefined}>
+      <ContentOptions value={metadata} onChange={touch(setMetadata)} />
       <PostEditor
+        key={editorVersion}
         title={title}
         onTitleChange={touch(setTitle)}
-        initialHtml={initial.html}
+        initialHtml={editorInitial}
         onHtmlChange={(value) => {
           setHtml(value);
           setDirty(true);
@@ -316,7 +429,7 @@ function EditorWorkspace({
               startIcon={<SaveOutlinedIcon />}
               onClick={() => void saveDraft()}
               loading={busy === 'draft'}
-              disabled={busy === 'publish'}
+              disabled={busy === 'publish' || Boolean(recovery) || Boolean(saveError)}
             >
               {t('editor.saveDraft')}
             </Button>
@@ -326,13 +439,105 @@ function EditorWorkspace({
             startIcon={<SendOutlinedIcon sx={{ transform: theme.direction === 'rtl' ? 'scaleX(-1)' : undefined }} />}
             onClick={() => void publish()}
             loading={busy === 'publish'}
-            disabled={busy === 'draft'}
+            disabled={busy === 'draft' || Boolean(recovery) || Boolean(saveError)}
           >
             {editing ? t('editor.update') : t('editor.publish')}
           </Button>
         </Stack>
       </Stack>
 
+      {recovery && (
+        <Alert
+          severity="warning"
+          sx={{ mb: 2 }}
+          action={
+            <Stack direction="row">
+              <Button
+                onClick={() => {
+                  setTitle(recovery.title);
+                  setHtml(recovery.html);
+                  setTags(recovery.tags);
+                  setLinkUrl(recovery.linkUrl);
+                  setImage(recovery.image);
+                  setMetadata(recovery.metadata);
+                  setEditorInitial(recovery.html);
+                  setEditorVersion((v) => v + 1);
+                  if (!draftId && !postId && 'savedDraftId' in recovery && typeof recovery.savedDraftId === 'number') {
+                    setCurrentDraftId(recovery.savedDraftId);
+                    setRevision(recovery.revision);
+                  }
+                  if (draftId && recovery.revision) setRevision(recovery.revision);
+                  setRecovery(null);
+                  setDirty(true);
+                }}
+              >
+                {t('editor.restore')}
+              </Button>
+              <Button
+                onClick={() => {
+                  try {
+                    localStorage.removeItem(recoveryKey);
+                  } catch {
+                    /* unavailable */
+                  }
+                  setRecovery(null);
+                }}
+              >
+                {t('editor.discardRecovery')}
+              </Button>
+            </Stack>
+          }
+        >
+          {t('editor.recoveryFound')}
+        </Alert>
+      )}
+      {storageError && (
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          {t('editor.storageFailed')}
+        </Alert>
+      )}
+      {saveError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {saveError}
+          <Button
+            onClick={() => {
+              setSaveError(null);
+              void saveDraft();
+            }}
+          >
+            {t('editor.retrySave')}
+          </Button>
+          <Button
+            disabled={busy !== null}
+            onClick={async () => {
+              if (!validLink()) return;
+              setBusy('draft');
+              try {
+                const copy = await draftsApi.create(payload());
+                queryClient.setQueryData(queryKeys.draft(copy.id), copy);
+                void queryClient.invalidateQueries({ queryKey: ['drafts'] });
+                leaving.current = true;
+                navigate(`/drafts/${copy.id}`, { replace: true });
+              } catch (error) {
+                handleServerError(error);
+              } finally {
+                setBusy(null);
+              }
+            }}
+          >
+            {t('editor.saveCopy')}
+          </Button>
+        </Alert>
+      )}
+      <Typography role="status" variant="caption" sx={{ display: 'block', mb: 2 }}>
+        {busy === 'draft'
+          ? t('editor.autosaving')
+          : saved && !dirty
+            ? t('editor.draftSaved')
+            : dirty
+              ? t('editor.localRecovery')
+              : ''}
+      </Typography>
       {/* Usually invisible: it only appears if Turnstile decides to ask something. */}
       <TurnstileWidget handle={turnstile} />
 

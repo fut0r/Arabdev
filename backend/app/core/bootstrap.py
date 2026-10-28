@@ -6,6 +6,7 @@ that start together wait for each other instead of racing.
 """
 
 import logging
+from time import monotonic
 
 from alembic.config import Config
 from sqlalchemy import create_engine, text
@@ -23,8 +24,8 @@ _MIGRATION_LOCK_ID = 7_274_331
 
 def prepare_database() -> None:
     from app.cli import seed_reference_data
-    from app.services.auth_service import purge_expired_tokens
-    from app.services.report_service import purge_resolved
+
+    started = monotonic()
 
     config = Config()  # configured in code, so alembic.ini is not needed at runtime
     config.set_main_option("script_location", str(BASE_DIR / "alembic"))
@@ -38,8 +39,6 @@ def prepare_database() -> None:
             command.upgrade(config, "head")
             with Session(bind=connection, join_transaction_mode="create_savepoint") as db:
                 seed_reference_data(db)
-                purge_expired_tokens(db)
-                purge_resolved(db)
     finally:
         engine.dispose()
-    logger.info("Database is up to date")
+    logger.info("Database is up to date (%.3fs)", monotonic() - started)

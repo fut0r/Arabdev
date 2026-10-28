@@ -13,6 +13,12 @@ export interface RegisterPayload {
 }
 
 export const authApi = {
+  githubStart: (language: string, password?: string) =>
+    api
+      .post<{ url: string }>('/auth/github/start', { language, link: password !== undefined, password })
+      .then((r) => r.data),
+  githubComplete: (code: string, state: string) =>
+    api.post<AuthResult>('/auth/github/complete', { code, state }, { skipAuthRefresh: true }).then((r) => r.data),
   /** The Turnstile site key and whether emailed codes are in use. Safe to cache. */
   config: () => api.get<PublicConfig>('/auth/config').then((r) => r.data),
 
