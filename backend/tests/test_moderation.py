@@ -7,16 +7,37 @@ from sqlalchemy import update
 
 from app.core.config import settings
 from app.core.database import SessionLocal
+from app.core.security import hash_password
 from app.models import Post, Report, User
-from app.services import email_service, report_service
+from app.repositories import users as users_repo
+from app.services import auth_service, email_service, report_service
 from app.utils.time import utcnow
-from tests.conftest import API, PASSWORD
+from tests.conftest import API, PASSWORD, Account
+
+
+def _direct_account(db, username: str) -> Account:
+    """Create an account directly in the database, bypassing /auth/register.
+
+    Registration now refuses any username listed in ADMIN_USERNAMES (that is the
+    anti-squatting fix), so a moderator who is meant to be an admin through that
+    very list cannot sign up through the public endpoint. Creating the row with
+    users_repo.create_user -- the same helper the CLI seed uses -- and issuing
+    tokens with auth_service.issue_tokens keeps the account otherwise identical
+    to a registered one, and is_admin() still comes only from ADMIN_USERNAMES
+    (is_admin stays False in the database).
+    """
+    user = users_repo.create_user(
+        db, username=username, email=f"{username}@example.com", hashed_password=hash_password(PASSWORD)
+    )
+    db.commit()
+    issued = auth_service.issue_tokens(db, user, remember=False)
+    return Account(id=user.id, username=user.username, email=user.email, token=issued.access_token)
 
 
 @pytest.fixture
-def moderator(make_user, monkeypatch):
+def moderator(db, monkeypatch):
     monkeypatch.setattr(settings, "admin_usernames", ["modteam"])
-    return make_user("modteam")
+    return _direct_account(db, "modteam")
 
 
 def report(client, account, post_id, reason="spam", details=None):
@@ -240,9 +261,10 @@ def test_suspending_signs_the_author_out_and_hides_their_posts(client, make_user
     )
 
 
-def test_moderators_cannot_be_restricted(client, make_user, make_post, moderator, monkeypatch):
+def test_moderators_cannot_be_restricted(client, make_user, make_post, moderator, monkeypatch, db):
     monkeypatch.setattr(settings, "admin_usernames", ["modteam", "second"])
-    second = make_user("second")
+    # 'second' is also in ADMIN_USERNAMES, so it cannot register publicly either.
+    second = _direct_account(db, "second")
     post = make_post(second)
     report(client, make_user("omar"), post["id"])
     case_id = client.get(f"{API}/admin/reports", headers=moderator.headers).json()["items"][0]["case_id"]

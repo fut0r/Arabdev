@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.errors import BadRequest, Conflict, Forbidden, NotFound, UnprocessableEntity
-from app.core.permissions import is_restricted
+from app.core.permissions import is_admin, is_admin_username, is_restricted
 from app.core.security import verify_password
 from app.models import (
     Block,
@@ -73,6 +73,8 @@ def update_profile(db: Session, user: User, data: ProfileUpdate) -> User:
 def update_username(db: Session, user: User, username: str) -> User:
     if username == user.username:
         return user
+    if is_admin_username(username) and not is_admin(user):
+        raise Conflict("Username is already taken", "username_taken", field="username")
     if users_repo.username_taken(db, username, exclude_id=user.id):
         raise Conflict("Username is already taken", "username_taken", field="username")
     user.username = username

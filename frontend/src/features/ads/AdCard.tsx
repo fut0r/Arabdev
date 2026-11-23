@@ -24,7 +24,10 @@ interface AdCardProps {
  */
 export function AdCard({ ad, variant = 'feed' }: AdCardProps) {
   const { t } = useTranslation();
-  const internal = ad.target_url.startsWith('/');
+  // Same check as the post-login redirect in router/guards.tsx: a single leading slash only.
+  // '//evil.com' and '/\evil.com' are protocol-relative URLs browsers resolve off-site, so
+  // they must go through the external (target=_blank, rel=sponsored noopener) branch instead.
+  const internal = ad.target_url.startsWith('/') && !ad.target_url.startsWith('//') && !ad.target_url.startsWith('/\\');
   const recordClick = () => void adsApi.click(ad.id).catch(() => undefined);
 
   return (

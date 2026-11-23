@@ -50,7 +50,9 @@ export default function LoginPage() {
 
   const goHome = () => {
     const from = (location.state as { from?: string } | null)?.from;
-    navigate(from && from.startsWith('/') ? from : HOME_PATH, { replace: true });
+    navigate(from && from.startsWith('/') && !from.startsWith('//') && !from.startsWith('/\\') ? from : HOME_PATH, {
+      replace: true,
+    });
   };
 
   const onSubmit = handleSubmit(async (values) => {

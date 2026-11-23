@@ -46,6 +46,76 @@ interface Initial {
 
 const BLANK: Initial = { metadata: EMPTY_METADATA, title: '', html: '', tags: [], linkUrl: '', image: null };
 
+/** A locally recovered draft, as kept in localStorage, plus the server ids it belongs to. */
+type StoredRecovery = Initial & { savedDraftId?: number | null };
+
+/**
+ * Recovery entries are wrapped in an envelope with a save time and expire after 7 days, so an
+ * unpublished draft does not sit in localStorage forever. Entries written before the envelope
+ * existed have no `savedAt`, so their age is unknowable: they are discarded (and removed), not
+ * treated as just-saved — granting them a fresh 7 days would defeat the expiry, and the recovery
+ * copy is only a crash safety net; the post/draft itself still loads from the server.
+ */
+const RECOVERY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+interface RecoveryEnvelope {
+  savedAt: number;
+  data: StoredRecovery;
+}
+
+function isStoredRecovery(value: unknown): value is StoredRecovery {
+  if (!value || typeof value !== 'object') return false;
+  const data = value as Record<string, unknown>;
+  return (
+    typeof data.title === 'string' &&
+    typeof data.html === 'string' &&
+    Array.isArray(data.tags) &&
+    typeof data.linkUrl === 'string' &&
+    Boolean(data.metadata)
+  );
+}
+
+/** Wrap a recovery payload (already a JSON string) in its expiry envelope for storage. */
+function wrapRecovery(payloadJson: string): string {
+  const envelope: RecoveryEnvelope = { savedAt: Date.now(), data: JSON.parse(payloadJson) as StoredRecovery };
+  return JSON.stringify(envelope);
+}
+
+/** Read and unwrap a recovery entry, removing the key when it is expired, legacy or malformed. */
+function readRecovery(key: string): StoredRecovery | null {
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(key);
+  } catch {
+    return null; /* unavailable storage */
+  }
+  if (!raw) return null;
+  let discard = false;
+  try {
+    const parsed = JSON.parse(raw) as Partial<RecoveryEnvelope> | null;
+    if (
+      parsed &&
+      typeof parsed.savedAt === 'number' &&
+      Number.isFinite(parsed.savedAt) &&
+      Date.now() - parsed.savedAt <= RECOVERY_TTL_MS &&
+      isStoredRecovery(parsed.data)
+    ) {
+      return parsed.data;
+    }
+    discard = true; // expired, legacy plain-format, or malformed envelope/payload
+  } catch {
+    discard = true; /* malformed JSON */
+  }
+  if (discard) {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      /* unavailable storage */
+    }
+  }
+  return null;
+}
+
 /** One page for writing a new post, continuing a draft, or editing a published post. */
 export default function EditorPage() {
   const params = useParams();
@@ -136,23 +206,7 @@ function EditorWorkspace({
 
   const user = useCurrentUser();
   const recoveryKey = `arabdev.editor.v1.${user.id}.${postId ? `post-${postId}` : draftId ? `draft-${draftId}` : 'new'}`;
-  const [recovery, setRecovery] = useState<Initial | null>(() => {
-    try {
-      const value = JSON.parse(localStorage.getItem(recoveryKey) ?? 'null');
-      if (
-        value &&
-        typeof value.title === 'string' &&
-        typeof value.html === 'string' &&
-        Array.isArray(value.tags) &&
-        typeof value.linkUrl === 'string' &&
-        value.metadata
-      )
-        return value;
-    } catch {
-      /* unavailable storage */
-    }
-    return null;
-  });
+  const [recovery, setRecovery] = useState<StoredRecovery | null>(() => readRecovery(recoveryKey));
   const [editorVersion, setEditorVersion] = useState(0);
   const [editorInitial, setEditorInitial] = useState(initial.html);
   const [metadata, setMetadata] = useState(initial.metadata);
@@ -252,7 +306,7 @@ function EditorWorkspace({
   useEffect(() => {
     if (!dirty || recovery || leaving.current) return;
     try {
-      localStorage.setItem(recoveryKey, snapshot);
+      localStorage.setItem(recoveryKey, wrapRecovery(snapshot));
     } catch {
       queueMicrotask(() => setStorageError(true));
     }
@@ -288,7 +342,9 @@ function EditorWorkspace({
       try {
         localStorage.setItem(
           recoveryKey,
-          JSON.stringify({ ...JSON.parse(latest.current), savedDraftId: draft.id, revision: draft.revision }),
+          wrapRecovery(
+            JSON.stringify({ ...JSON.parse(latest.current), savedDraftId: draft.id, revision: draft.revision }),
+          ),
         );
       } catch {
         /* local warning handled above */

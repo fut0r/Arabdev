@@ -6,6 +6,10 @@ from app.models import User
 from app.utils.time import utcnow
 
 
+def is_admin_username(username: str) -> bool:
+    return username.strip().lstrip("@").lower() in {name.strip().lower() for name in settings.admin_usernames}
+
+
 def is_admin(user: User | None) -> bool:
     """Marked admin in the database, or named in ADMIN_USERNAMES."""
     if user is None:

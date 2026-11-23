@@ -7,6 +7,7 @@ from fastapi import FastAPI, Request, Response
 from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.api import feeds, pages, seo
@@ -23,6 +24,12 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(messag
 logger = logging.getLogger("arabdev")
 
 TOKEN_PURGE_INTERVAL_SECONDS = 6 * 3600
+
+# The largest body any route accepts is one uploaded file (settings.max_upload_bytes)
+# plus its multipart framing. Allow a generous megabyte over that and refuse anything
+# bigger up front, before the body is parsed. Requests sent chunked, without a
+# Content-Length, are not covered by this check; the per-route upload limit still is.
+MAX_REQUEST_BODY_BYTES = settings.max_upload_bytes + 1024 * 1024
 
 OPENAPI_TAGS = [
     {"name": "Authentication", "description": "Registration, sign in, token refresh and password reset."},
@@ -86,6 +93,14 @@ async def lifespan(_app: FastAPI):
 
 
 def create_app() -> FastAPI:
+    if settings.environment == "production" and not settings.turnstile_configured and not settings.turnstile_disabled:
+        logger.error(
+            "Only one Turnstile key is set; Turnstile needs BOTH the site and secret key, so bot checks are DISABLED."
+            if bool(settings.turnstile_site_key) != bool(settings.turnstile_secret_key)
+            else "TURNSTILE IS NOT CONFIGURED: bot checks on register/login/publish/comment are DISABLED "
+            "and every request is being allowed through (fail-open). Set TURNSTILE_SITE_KEY and "
+            "TURNSTILE_SECRET_KEY, or set TURNSTILE_DISABLED=true to accept running without bot protection."
+        )
     app = FastAPI(
         title="ArabDev API",
         version="1.4.1",
@@ -106,6 +121,18 @@ def create_app() -> FastAPI:
 
     @app.middleware("http")
     async def security_headers(request: Request, call_next):
+        content_length = request.headers.get("content-length")
+        if content_length is not None:
+            try:
+                body_too_large = int(content_length) > MAX_REQUEST_BODY_BYTES
+            except ValueError:
+                body_too_large = False
+            if body_too_large:
+                return JSONResponse(
+                    status_code=413,
+                    content={"detail": "This request is too large.", "code": "request_too_large"},
+                    headers={"X-Content-Type-Options": "nosniff"},
+                )
         response = await call_next(request)
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "DENY")
@@ -121,7 +148,7 @@ def create_app() -> FastAPI:
             )
             response.headers.setdefault("Cross-Origin-Resource-Policy", "same-site")
         if settings.cookie_secure:
-            response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+            response.headers.setdefault("Strict-Transport-Security", "max-age=63072000; includeSubDomains")
         return response
 
     app.add_middleware(GZipMiddleware, minimum_size=1024)
