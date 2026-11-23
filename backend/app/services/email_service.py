@@ -85,7 +85,7 @@ def send(message: OutgoingEmail, *, required: bool = False) -> bool:
         outbox.append(message)
         del outbox[:-50]
     if not settings.smtp_configured:
-        logger.warning("EMAIL (not sent: no SMTP host) to=%s subject=%r\n%s", message.to, message.subject, message.body)
+        logger.warning("EMAIL (not sent: no SMTP host) to=%s", message.to)
         if required and settings.environment == "production":
             raise MailNotSent("We can't send email right now. Please try again later.", "mail_unavailable")
         return False

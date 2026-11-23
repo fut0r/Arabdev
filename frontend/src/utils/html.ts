@@ -51,6 +51,28 @@ export function sanitizePostHtml(html: string): string {
   return purifier.sanitize(html, { ALLOWED_TAGS, ALLOWED_ATTR, ALLOW_DATA_ATTR: false });
 }
 
+export function sanitizePreparedArticleHtml(html: string): string {
+  const clean = purifier.sanitize(html, {
+    ALLOWED_TAGS: [...ALLOWED_TAGS, 'button'],
+    ALLOWED_ATTR: [...ALLOWED_ATTR, 'id', 'tabindex', 'data-copy-code'],
+    ALLOW_DATA_ATTR: false,
+  });
+  const doc = new DOMParser().parseFromString(clean, 'text/html');
+  doc.body.querySelectorAll('*').forEach((el) => {
+    const id = el.getAttribute('id');
+    if (id !== null && !/^article-section-\d+$/.test(id)) el.removeAttribute('id');
+    const copy = el.getAttribute('data-copy-code');
+    if (copy !== null && !/^\d+$/.test(copy)) el.removeAttribute('data-copy-code');
+    if (el.nodeName === 'PRE') {
+      if (el.getAttribute('tabindex') !== '0') el.removeAttribute('tabindex');
+    } else if (el.hasAttribute('tabindex')) {
+      el.removeAttribute('tabindex');
+    }
+    if (el.nodeName === 'BUTTON') el.setAttribute('type', 'button');
+  });
+  return doc.body.innerHTML;
+}
+
 export function htmlToText(html: string): string {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   return (doc.body.textContent ?? '').replace(/\s+/g, ' ').trim();

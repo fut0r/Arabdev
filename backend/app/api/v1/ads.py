@@ -13,6 +13,11 @@ router = APIRouter(prefix="/ads", tags=["Ads"])
 @router.get(
     "",
     response_model=list[AdOut],
+    # Serving an ad records an impression in the database, so this GET writes on every
+    # call. The limit matches the public pages (240/min): a page load fetches at most a
+    # couple of placements, so real readers — even many behind one shared address —
+    # stay far below it, while a loop inflating impressions is stopped.
+    dependencies=[Depends(rate_limit("ads", limit=240, window=60))],
     summary="Ads for a placement",
     description=(
         "Returns up to `limit` active ads for the placement and language. `offset` rotates which ads are "

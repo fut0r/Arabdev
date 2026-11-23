@@ -55,7 +55,12 @@ export function GuestOnly({ children }: { children: ReactNode }) {
   const location = useLocation();
   if (status === 'authenticated') {
     const from = (location.state as { from?: string } | null)?.from;
-    return <Navigate to={from && from.startsWith('/') ? from : HOME_PATH} replace />;
+    return (
+      <Navigate
+        to={from && from.startsWith('/') && !from.startsWith('//') && !from.startsWith('/\\') ? from : HOME_PATH}
+        replace
+      />
+    );
   }
   return children;
 }

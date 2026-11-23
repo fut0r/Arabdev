@@ -2,7 +2,7 @@ from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 
 from app.core.errors import Forbidden, NotFound, UnprocessableEntity
-from app.core.permissions import ensure_can_publish
+from app.core.permissions import ensure_can_publish, is_admin
 from app.models import Comment, Post, User
 from app.repositories import users as users_repo
 from app.schemas.comment import CommentCreate, CommentOut, ReplyOut
@@ -81,7 +81,7 @@ def delete(db: Session, user: User, comment_id: int) -> None:
     if comment is None:
         raise NotFound("Comment not found", "comment_not_found")
     post = db.get(Post, comment.post_id)
-    allowed = user.id == comment.author_id or (post is not None and user.id == post.author_id) or user.is_admin
+    allowed = user.id == comment.author_id or (post is not None and user.id == post.author_id) or is_admin(user)
     if not allowed:
         raise Forbidden("You can't delete this comment", "not_comment_author")
     db.delete(comment)

@@ -7,9 +7,10 @@ from pydantic_core import PydanticCustomError
 from sqlalchemy import delete, or_, select, update
 from sqlalchemy.orm import Session
 
-from app.core import rate_limit
+from app.core import permissions, rate_limit
 from app.core.config import settings
 from app.core.errors import Conflict, NotFound, TooManyRequests, Unauthorized, UnprocessableEntity
+from app.core.permissions import is_admin_username
 from app.core.security import (
     create_access_token,
     generate_opaque_token,
@@ -58,6 +59,8 @@ class IssuedTokens:
 
 def _check_new_account(db: Session, username: str, email: str) -> None:
     spam_guard.ensure_real_inbox(email)
+    if is_admin_username(username):
+        raise Conflict("Username is already taken", "username_taken", field="username")
     if users_repo.username_taken(db, username):
         raise Conflict("Username is already taken", "username_taken", field="username")
     if users_repo.email_taken(db, email):
@@ -246,8 +249,15 @@ def rotate_refresh_token(db: Session, raw_token: str | None, user_agent: str | N
 
     now = utcnow()
     grace = timedelta(seconds=settings.refresh_reuse_grace_seconds)
-    if stored.revoked_at is not None and stored.rotated_at is not None and now - stored.rotated_at <= grace:
+    if (
+        stored.revoked_at is not None
+        and stored.rotated_at is not None
+        and now - stored.rotated_at <= grace
+        and stored.expires_at > now
+    ):
         # Another tab refreshed with the same cookie a moment ago: a race, not theft.
+        # The expiry check matters: without it an already-expired token replayed inside
+        # the grace window would mint a fresh session instead of ending here.
         user = users_repo.get_by_id(db, stored.user_id)
         if user is not None and user.is_active:
             return issue_tokens(db, user, remember=stored.remember, family_id=stored.family_id, user_agent=user_agent)
@@ -302,7 +312,13 @@ def check_availability(
         except PydanticCustomError as exc:
             result.username = FieldAvailability(available=False, code=exc.type, detail=exc.message())
         else:
-            taken = users_repo.username_taken(db, normalized, exclude_id)
+            reserved = is_admin_username(normalized)
+            exempt = (
+                exclude_id is not None
+                and (u := users_repo.get_by_id(db, exclude_id)) is not None
+                and permissions.is_admin(u)
+            )
+            taken = users_repo.username_taken(db, normalized, exclude_id) or (reserved and not exempt)
             result.username = FieldAvailability(
                 available=not taken,
                 code="username_taken" if taken else None,
@@ -322,6 +338,11 @@ def request_password_reset(db: Session, email: str) -> None:
     user = users_repo.get_by_email(db, email)
     if user is None or not user.is_active:
         return  # Same response either way: never reveal which emails have accounts.
+    db.execute(
+        update(PasswordResetToken)
+        .where(PasswordResetToken.user_id == user.id, PasswordResetToken.used_at.is_(None))
+        .values(used_at=utcnow())
+    )
     token = generate_opaque_token()
     db.add(
         PasswordResetToken(
@@ -344,6 +365,12 @@ def reset_password(db: Session, raw_token: str, new_password: str) -> None:
     user = users_repo.get_by_id(db, stored.user_id)
     if user is None:
         raise UnprocessableEntity("This reset link is invalid or has expired.", "reset_token_invalid", field="token")
+    if not user.is_active:
+        stored.used_at = now
+        db.commit()
+        raise UnprocessableEntity(
+            "This reset link is invalid or has expired. Request a new one.", "reset_token_invalid", field="token"
+        )
     ensure_not_breached(new_password)
     user.hashed_password = hash_password(new_password)
     user.password_changed_at = now

@@ -12,15 +12,18 @@ content; it is simply there before any script runs.
 The text is built from plain text and escaped here, never from stored HTML.
 """
 
+import ipaddress
 import json
 import logging
 import re
+import socket
 import time
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from html import escape
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -99,14 +102,89 @@ def _shell_files() -> list[Path]:
     return [*configured, BASE_DIR / "spa_shell.html", BASE_DIR.parent / "frontend" / "dist" / "app.html"]
 
 
+def _shell_hosts(url: str) -> set[str]:
+    """Hosts the shell may legitimately be fetched from: the ones named in settings.
+
+    These are operator-configured, so they are trusted even when one resolves to a
+    private address — in the Docker deployment the shell is served by a sibling
+    container (e.g. http://frontend/app.html) that only exists on the internal network.
+    """
+    hosts = set()
+    for candidate in (url, settings.spa_shell_url, settings.frontend_url):
+        if candidate:
+            host = urlparse(candidate).hostname
+            if host:
+                hosts.add(host.lower())
+    return hosts
+
+
+def _redirect_target_is_safe(url: str, allowed_hosts: set[str]) -> bool:
+    """Whether a redirect from the shell address may be followed.
+
+    urlopen follows redirects by default, so a compromised or misconfigured shell
+    host could bounce the fetch to the cloud metadata address or another internal
+    service. Redirects stay on http(s), and a host that is not one of the configured
+    shell hosts must resolve only to public addresses. (The check resolves the name
+    here and urlopen resolves it again, so this is best-effort hardening, not a
+    complete defence against DNS rebinding.)
+    """
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https") or not parsed.hostname:
+        return False
+    host = parsed.hostname.lower()
+    if host in allowed_hosts:
+        return True
+    if host == "localhost":
+        return False
+    try:
+        port = parsed.port or (443 if parsed.scheme == "https" else 80)
+        addresses = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
+    except OSError:
+        return False
+    if not addresses:
+        return False
+    for *_rest, sockaddr in addresses:
+        try:
+            ip = ipaddress.ip_address(sockaddr[0])
+        except ValueError:
+            return False
+        if (
+            ip.is_private
+            or ip.is_loopback
+            or ip.is_link_local
+            or ip.is_reserved
+            or ip.is_multicast
+            or ip.is_unspecified
+        ):
+            return False
+    return True
+
+
+class _ShellRedirectHandler(urllib.request.HTTPRedirectHandler):
+    """Follow redirects only to targets _redirect_target_is_safe approves."""
+
+    def __init__(self, allowed_hosts: set[str]) -> None:
+        super().__init__()
+        self._allowed_hosts = allowed_hosts
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if not _redirect_target_is_safe(newurl, self._allowed_hosts):
+            raise urllib.error.HTTPError(
+                newurl, code, "Refusing to follow a redirect to an unapproved host", headers, fp
+            )
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def _fetch_shell() -> str | None:
     url = settings.spa_shell_url or settings.frontend_url.rstrip("/") + "/app.html"
     if not url.startswith(("http://", "https://")):
         return None
     try:
-        # Our own address from settings, and only http(s) (checked above).
+        # Our own address from settings, and only http(s) (checked above). Redirects are
+        # checked by _ShellRedirectHandler instead of being followed blindly.
         request = urllib.request.Request(url, headers={"User-Agent": "ArabDev-pages/1.0"})  # noqa: S310
-        with urllib.request.urlopen(request, timeout=4) as response:  # noqa: S310
+        opener = urllib.request.build_opener(_ShellRedirectHandler(_shell_hosts(url)))
+        with opener.open(request, timeout=4) as response:
             html = response.read(512_000).decode("utf-8", "replace")
     except Exception:
         logger.warning("Could not fetch the app shell from %s", url, exc_info=True)

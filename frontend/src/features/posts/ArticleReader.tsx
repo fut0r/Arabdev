@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import hljs from 'highlight.js/lib/common';
 import 'highlight.js/styles/github-dark.css';
-import { sanitizePostHtml } from '@/utils/html';
+import { sanitizePostHtml, sanitizePreparedArticleHtml } from '@/utils/html';
 import { postContentStyles } from './PostContent';
 import { useNotify } from '@/components/Notifier';
 export function prepareArticle(html: string, copyLabel: string) {
@@ -36,7 +36,7 @@ export function prepareArticle(html: string, copyLabel: string) {
     button.textContent = copyLabel;
     pre.before(button);
   });
-  return { html: doc.body.innerHTML, headings, codes };
+  return { html: sanitizePreparedArticleHtml(doc.body.innerHTML), headings, codes };
 }
 export function ArticleReader({ html }: { html: string }) {
   const { t } = useTranslation();

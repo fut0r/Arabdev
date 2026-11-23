@@ -3,6 +3,7 @@
 from functools import lru_cache
 from pathlib import Path
 from typing import Annotated, Literal
+from urllib.parse import urlparse
 
 from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
@@ -109,6 +110,9 @@ class Settings(BaseSettings):
     # Cloudflare Turnstile. Both keys must be present for the checks to run.
     turnstile_site_key: str | None = None
     turnstile_secret_key: str | None = None
+    # Explicit acknowledgement that bot checks are off; silences the production warning below.
+    # Never set it just to quiet the log on the live site.
+    turnstile_disabled: bool = False
     turnstile_verify_url: str = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
     turnstile_timeout_seconds: float = 8.0
     # Refuse a token whose Turnstile hostname is not one of these (empty: accept any).
@@ -179,10 +183,37 @@ class Settings(BaseSettings):
                 )
         return self
 
+    # COOKIE_SECURE also gates the HSTS header in main.py, so forcing it on here turns HSTS on too.
+    @model_validator(mode="after")
+    def _check_production_cookie_secure(self) -> "Settings":
+        if self.environment == "production" and not self.cookie_secure:
+            host = (urlparse(self.frontend_url).hostname or "").lower()
+            if host not in {"localhost", "127.0.0.1", "::1"}:
+                raise ValueError(
+                    f"COOKIE_SECURE must be true in production when FRONTEND_URL host is {host!r} "
+                    "(not localhost): refresh cookies would travel over plain HTTP and no HSTS header "
+                    "is sent. Set COOKIE_SECURE=true, or set FRONTEND_URL to a localhost URL for a "
+                    "local-only run."
+                )
+        return self
+
     @model_validator(mode="after")
     def _check_production_secret(self) -> "Settings":
         if self.environment == "production" and self.secret_key.lower() in _PLACEHOLDER_SECRETS:
             raise ValueError("SECRET_KEY must be set in production")
+        return self
+
+    @model_validator(mode="after")
+    def _check_production_cors(self) -> "Settings":
+        if self.environment == "production":
+            bad = [o for o in self.cors_origins if o.strip().lower() in {"*", "null"} or "*" in o]
+            if bad:
+                raise ValueError(
+                    f"CORS_ORIGINS {bad} must not be used with allow_credentials=True in production: "
+                    'a wildcard reflects any origin and the literal "null" origin is sent by sandboxed '
+                    "iframes and file:// pages. List each real origin explicitly, "
+                    "e.g. CORS_ORIGINS=https://arabdev.site"
+                )
         return self
 
     @property
