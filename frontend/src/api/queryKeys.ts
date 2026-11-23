@@ -1,3 +1,4 @@
+import type { BookmarkFilters } from './users';
 import type { FeedTab, SearchType } from '@/types/api';
 
 /** Every TanStack Query key in one place, so invalidation stays consistent. */
@@ -13,7 +14,7 @@ export const queryKeys = {
   userReplies: (username: string, page: number) => ['user-replies', username, page] as const,
   followers: (username: string, page: number) => ['followers', username, page] as const,
   following: (username: string, page: number) => ['following', username, page] as const,
-  bookmarks: (page: number) => ['bookmarks', page] as const,
+  bookmarks: (page: number, filters: BookmarkFilters = {}) => ['bookmarks', page, filters] as const,
   drafts: (page: number) => ['drafts', page] as const,
   draft: (id: number) => ['draft', id] as const,
   notifications: (page: number) => ['notifications', page] as const,

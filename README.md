@@ -265,7 +265,17 @@ ArabDev is free software, released under the
 Developed by Zyad Mohamed · <https://github.com/fut0r/Arabdev>
 
 
-## ArabDev 1.4
+## ArabDev 1.4.1
+
+In Bookmarks, filter by private note or read from the oldest save in any collection.
+
+من صفحة المحفوظات يمكنك عرض المنشورات التي أضفت إليها ملاحظة خاصة، أو ترتيب أي مجموعة من الأقدم حفظًا.
+
+The homepage, navigation and feed use a wide layout by default. Choose standard, wide or full width in Appearance.
+
+تستخدم الرئيسية وشريط التنقّل والموجز العرض الواسع افتراضيًا. يمكنك اختيار العرض القياسي أو الواسع أو كامل الشاشة من صفحة التخصيص.
+
+### Features introduced in 1.4
 
 Personal appearance (colors, fonts, size, backgrounds and reading width), explicit discovery filters, developers and projects, question answers, series, followed topics, private reading collections, autosave/recovery, and accessible article tools. Optional GitHub sign-in, weekly digests and S3 media remain disabled until configured.
 

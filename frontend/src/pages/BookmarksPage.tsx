@@ -1,14 +1,14 @@
-import { Button, MenuItem, Stack, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, MenuItem, Stack, TextField } from '@mui/material';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { communityApi } from '@/api/community';
 import { errorMessage } from '@/api/errors';
 import { useNotify } from '@/components/Notifier';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 
+import { queryKeys } from '@/api/queryKeys';
 import { usersApi } from '@/api/users';
 import { PageHeader, Surface } from '@/components/common';
 import { EmptyState } from '@/components/EmptyState';
@@ -21,6 +21,8 @@ export default function BookmarksPage() {
   const { t } = useTranslation();
   const [page, setPage] = usePageParam();
   const [collection, setCollection] = useState(-1);
+  const [oldestFirst, setOldestFirst] = useState(false);
+  const [withNotes, setWithNotes] = useState(false);
   const [name, setName] = useState('');
   const [deleting, setDeleting] = useState(false);
   const client = useQueryClient();
@@ -52,9 +54,14 @@ export default function BookmarksPage() {
     onError: (e) => notify(errorMessage(e, t), 'error'),
   });
   useSeo({ title: t('bookmarks.title'), noindex: true });
+  const filters = {
+    collection_id: collection < 0 ? undefined : collection,
+    oldest_first: oldestFirst || undefined,
+    with_notes: withNotes || undefined,
+  };
   const query = useQuery({
-    queryKey: ['bookmarks', page, collection],
-    queryFn: () => usersApi.bookmarks(page, collection < 0 ? undefined : collection),
+    queryKey: queryKeys.bookmarks(page, filters),
+    queryFn: () => usersApi.bookmarks(page, filters),
     placeholderData: keepPreviousData,
   });
 
@@ -79,36 +86,69 @@ export default function BookmarksPage() {
             </MenuItem>
           ))}
         </TextField>
-        <Stack
-          component="form"
-          direction="row"
-          spacing={1}
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (name.trim()) save.mutate();
-          }}
-        >
-          <TextField
-            fullWidth
-            label={t('community.collectionName')}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            slotProps={{ htmlInput: { maxLength: 80 } }}
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1}>
+          <FormControlLabel
+            label={t('bookmarks.withNotes')}
+            control={
+              <Checkbox
+                checked={withNotes}
+                onChange={(_, checked) => {
+                  setWithNotes(checked);
+                  setPage(1);
+                }}
+              />
+            }
           />
-          <Button type="submit" disabled={!name.trim()} loading={save.isPending}>
-            {t('community.newCollection')}
-          </Button>
+          <FormControlLabel
+            label={t('bookmarks.oldestFirst')}
+            control={
+              <Checkbox
+                checked={oldestFirst}
+                onChange={(_, checked) => {
+                  setOldestFirst(checked);
+                  setPage(1);
+                }}
+              />
+            }
+          />
         </Stack>
-        {collection > 0 && (
-          <Button disabled={!name.trim()} loading={rename.isPending} onClick={() => rename.mutate()}>
-            {t('community.renameCollection')}
-          </Button>
-        )}
-        {collection > 0 && (
-          <Button color="error" onClick={() => setDeleting(true)}>
-            {t('community.deleteCollection')}
-          </Button>
-        )}
+        <Box component="details" sx={{ borderTop: 1, borderColor: 'divider', pt: 1 }}>
+          <Box component="summary" sx={{ cursor: 'pointer', py: 1, fontWeight: 600 }}>
+            {t('bookmarks.manageCollections')}
+          </Box>
+          <Stack spacing={1} sx={{ pt: 1 }}>
+            <Stack
+              component="form"
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={1}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (name.trim()) save.mutate();
+              }}
+            >
+              <TextField
+                fullWidth
+                label={t('community.collectionName')}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                slotProps={{ htmlInput: { maxLength: 80 } }}
+              />
+              <Button type="submit" disabled={!name.trim()} loading={save.isPending}>
+                {t('community.newCollection')}
+              </Button>
+            </Stack>
+            {collection > 0 && (
+              <Button disabled={!name.trim()} loading={rename.isPending} onClick={() => rename.mutate()}>
+                {t('community.renameCollection')}
+              </Button>
+            )}
+            {collection > 0 && (
+              <Button color="error" onClick={() => setDeleting(true)}>
+                {t('community.deleteCollection')}
+              </Button>
+            )}
+          </Stack>
+        </Box>
       </Stack>
       <ConfirmDialog
         open={deleting}
@@ -124,12 +164,16 @@ export default function BookmarksPage() {
         page={page}
         onPageChange={setPage}
         empty={
-          <EmptyState
-            icon={<BookmarkBorderIcon />}
-            title={t('bookmarks.emptyTitle')}
-            description={t('bookmarks.emptyBody')}
-            action={{ label: t('bookmarks.emptyAction'), to: HOME_PATH }}
-          />
+          withNotes ? (
+            <EmptyState icon={<BookmarkBorderIcon />} title={t('bookmarks.noNotes')} />
+          ) : (
+            <EmptyState
+              icon={<BookmarkBorderIcon />}
+              title={t('bookmarks.emptyTitle')}
+              description={t('bookmarks.emptyBody')}
+              action={{ label: t('bookmarks.emptyAction'), to: HOME_PATH }}
+            />
+          )
         }
       />
     </Surface>

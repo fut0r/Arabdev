@@ -167,13 +167,6 @@ function GuestActions() {
           {language === 'ar' ? 'English' : 'العربية'}
         </Button>
       </Tooltip>
-      <IconButton
-        onClick={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
-        aria-label={`${t('common.switchLanguage')}: ${language === 'ar' ? 'English' : 'العربية'}`}
-        sx={{ display: { xs: 'inline-flex', sm: 'none' } }}
-      >
-        <TranslateIcon />
-      </IconButton>
       {/* On phones "Sign in" lives in the bottom navigation. */}
       <Button
         component={RouterLink}
@@ -183,7 +176,7 @@ function GuestActions() {
       >
         {t('common.signIn')}
       </Button>
-      <Button component={RouterLink} to="/register" variant="contained" sx={{ whiteSpace: 'nowrap' }}>
+      <Button component={RouterLink} to="/register" variant="contained" sx={{ whiteSpace: 'nowrap', px: { xs: 1, sm: 2 } }}>
         {t('common.signUp')}
       </Button>
     </Stack>
@@ -202,8 +195,8 @@ export function Navbar() {
           width: '100%',
           maxWidth: layout.contentMaxWidth,
           mx: 'auto',
-          px: { xs: 2, sm: 2, lg: 3 },
-          gap: 2,
+          px: { xs: 1, sm: 2, lg: 3 },
+          gap: { xs: 0.5, sm: 2 },
         }}
       >
         <Box sx={{ width: { lg: layout.navWidth }, flexShrink: 0, display: 'flex', alignItems: 'center' }}>
@@ -212,8 +205,7 @@ export function Navbar() {
         <Box sx={{ flex: 1, maxWidth: 520, display: { xs: 'none', md: 'block' } }}>
           <SearchBar />
         </Box>
-        <Box sx={{ flex: 1, display: { xs: 'block', md: 'none' } }} />
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', marginInlineStart: 'auto' }}>
+        <Stack direction="row" spacing={{ xs: 0, sm: 1 }} sx={{ alignItems: 'center', marginInlineStart: 'auto' }}>
           <IconButton
             component={RouterLink}
             to="/search"

@@ -764,6 +764,10 @@
     "emptyAction": "Write a post"
   },
   "bookmarks": {
+    "manageCollections": "Manage collections",
+    "withNotes": "With a private note",
+    "oldestFirst": "Oldest saves first",
+    "noNotes": "No posts with notes in this list",
     "title": "Saved posts",
     "emptyTitle": "Nothing saved yet",
     "emptyBody": "Tap the bookmark icon on any post to keep it for later. Only you can see this list.",
@@ -907,6 +911,8 @@
     "font_size": "Text size",
     "background": "Background",
     "density": "Density",
+    "site_width": "Site width",
+    "full": "Full width",
     "reading_width": "Reading width",
     "tajawal": "Tajawal",
     "alexandria": "Alexandria",

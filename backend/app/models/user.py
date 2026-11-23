@@ -85,6 +85,7 @@ class UserSettings(Base):
     font_size: Mapped[int] = mapped_column(Integer, default=16, server_default=text("16"))
     background: Mapped[str] = mapped_column(String(16), default="plain", server_default="plain")
     density: Mapped[str] = mapped_column(String(16), default="comfortable", server_default="comfortable")
+    site_width: Mapped[str] = mapped_column(String(12), default="wide", server_default="wide")
     reading_width: Mapped[str] = mapped_column(String(12), default="standard", server_default="standard")
 
     # Privacy

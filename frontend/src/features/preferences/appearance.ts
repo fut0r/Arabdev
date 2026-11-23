@@ -5,6 +5,7 @@ export interface AppearancePreferences {
   font_size: 14 | 16 | 18 | 20;
   background: 'plain' | 'dots' | 'grid' | 'gradient';
   density: 'comfortable' | 'compact';
+  site_width: 'standard' | 'wide' | 'full';
   reading_width: 'standard' | 'wide';
 }
 
@@ -14,6 +15,7 @@ export const DEFAULT_APPEARANCE: AppearancePreferences = {
   font_size: 16,
   background: 'plain',
   density: 'comfortable',
+  site_width: 'wide',
   reading_width: 'standard',
 };
 export const APPEARANCE_KEY = 'arabdev.appearance.v1';
@@ -41,6 +43,7 @@ export function normalizeAppearance(value: unknown): AppearancePreferences {
       ? (input.background as AppearancePreferences['background'])
       : 'plain',
     density: input.density === 'compact' ? 'compact' : 'comfortable',
+    site_width: input.site_width === 'full' || input.site_width === 'standard' ? input.site_width : 'wide',
     reading_width: input.reading_width === 'wide' ? 'wide' : 'standard',
   };
 }

@@ -12,8 +12,8 @@ export const layout = {
   navWidth: 244,
   navRailWidth: 76,
   sidebarWidth: 320,
-  feedMaxWidth: 680,
-  contentMaxWidth: 1280,
+  feedMaxWidth: 'var(--ad-feed-width)',
+  contentMaxWidth: 'var(--ad-site-width)',
   mobileNavHeight: 60,
 } as const;
 

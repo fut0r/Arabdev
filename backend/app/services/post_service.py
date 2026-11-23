@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.core.errors import Conflict, Forbidden, NotFound, UnprocessableEntity
 from app.core.permissions import ensure_can_publish, is_admin
-from app.models import Bookmark, Comment, Draft, Follow, Like, Post, Repost, Series, User
+from app.models import Comment, Draft, Follow, Like, Post, Repost, Series, User
 from app.repositories import posts as posts_repo
 from app.repositories import tags as tags_repo
 from app.repositories import users as users_repo
@@ -127,12 +127,11 @@ def user_activity(db: Session, username: str, viewer: User | None, params: PageP
     return _activity_page(db, Post.author_id == user.id, Repost.user_id == user.id, params, viewer)
 
 
-def bookmarks(db: Session, viewer: User, params: PageParams, collection_id: int | None = None) -> Page[PostOut]:
-    stmt = posts_repo.bookmarks_stmt(viewer.id)
-    if collection_id is not None:
-        stmt = stmt.where(
-            Bookmark.collection_id == collection_id if collection_id else Bookmark.collection_id.is_(None)
-        )
+def bookmarks(
+    db: Session, viewer: User, params: PageParams, collection_id: int | None = None,
+    *, oldest_first: bool = False, with_notes: bool = False,
+) -> Page[PostOut]:
+    stmt = posts_repo.bookmarks_stmt(viewer.id, collection_id, oldest_first=oldest_first, with_notes=with_notes)
     return _page_of_posts(db, stmt, params, viewer)
 
 

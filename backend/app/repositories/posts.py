@@ -49,13 +49,21 @@ def tag_stmt(slug: str) -> Select:
     )
 
 
-def bookmarks_stmt(user_id: int) -> Select:
-    return (
+def bookmarks_stmt(
+    user_id: int, collection_id: int | None = None, *, oldest_first: bool = False, with_notes: bool = False
+) -> Select:
+    stmt = (
         select(Post)
         .join(Bookmark, Bookmark.post_id == Post.id)
         .where(Bookmark.user_id == user_id, visible())
-        .order_by(Bookmark.created_at.desc())
     )
+    if collection_id is not None:
+        stmt = stmt.where(Bookmark.collection_id == collection_id if collection_id else Bookmark.collection_id.is_(None))
+    if with_notes:
+        stmt = stmt.where(func.trim(Bookmark.note) != "")
+    if oldest_first:
+        return stmt.order_by(Bookmark.created_at, Bookmark.post_id)
+    return stmt.order_by(Bookmark.created_at.desc(), Bookmark.post_id.desc())
 
 
 def search_stmt(query: str) -> Select:

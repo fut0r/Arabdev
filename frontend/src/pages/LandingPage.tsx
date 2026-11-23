@@ -63,7 +63,7 @@ function LaptopScreenshot() {
       width={1600}
       height={969}
       fetchPriority="high"
-      sx={{ display: 'block', width: '100%', height: 'auto' }}
+      sx={{ display: 'block', width: '100%', maxHeight: '54vh', objectFit: 'contain', height: 'auto' }}
     />
   );
 }

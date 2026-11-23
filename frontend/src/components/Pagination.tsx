@@ -40,11 +40,12 @@ export function Pagination({ page, pages, onChange }: PaginationProps) {
       <Button
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
-        startIcon={<PrevIcon />}
+        aria-label={t('common.previous')}
+        startIcon={isMobile ? undefined : <PrevIcon />}
         color="inherit"
-        sx={{ minWidth: 0 }}
+        sx={{ minWidth: 44, minHeight: 44 }}
       >
-        {!isMobile && t('common.previous')}
+        {isMobile ? <PrevIcon /> : t('common.previous')}
       </Button>
 
       {isMobile ? (
@@ -68,11 +69,12 @@ export function Pagination({ page, pages, onChange }: PaginationProps) {
       <Button
         onClick={() => onChange(page + 1)}
         disabled={page >= pages}
-        endIcon={<NextIcon />}
+        aria-label={t('common.next')}
+        endIcon={isMobile ? undefined : <NextIcon />}
         color="inherit"
-        sx={{ minWidth: 0 }}
+        sx={{ minWidth: 44, minHeight: 44 }}
       >
-        {!isMobile && t('common.next')}
+        {isMobile ? <NextIcon /> : t('common.next')}
       </Button>
     </Stack>
   );

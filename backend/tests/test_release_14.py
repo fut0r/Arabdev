@@ -17,6 +17,7 @@ def test_preferences_round_trip_and_validation(client, make_user):
         "font_size": 20,
         "background": "grid",
         "density": "compact",
+        "site_width": "full",
         "reading_width": "wide",
         "email_weekly_digest": True,
     }
@@ -97,6 +98,20 @@ def test_private_collections_survive_collection_deletion(client, make_user, make
     remaining = client.get(f"{API}/users/me/bookmarks", headers=owner.headers).json()["items"][0]
     assert remaining["bookmark_collection_id"] is None
     assert remaining["bookmark_note"] == "My private reading note"
+
+
+def test_bookmark_filters_apply_before_pagination(client, make_user, make_post):
+    owner, other = make_user(), make_user("reader")
+    saved = [make_post(owner)["id"] for _ in range(3)]
+    for post_id, note in zip(saved, ["first", "", "third"], strict=True):
+        response = client.put(f"{API}/library/bookmarks/{post_id}", headers=owner.headers, json={"note": note})
+        assert response.status_code == 200
+    url = f"{API}/users/me/bookmarks"
+    params = {"oldest_first": True, "with_notes": True, "collection_id": 0, "limit": 1}
+    page = client.get(url, headers=owner.headers, params={**params, "page": 2}).json()
+    assert page["total"] == 2
+    assert [item["id"] for item in page["items"]] == [saved[2]]
+    assert client.get(url, headers=other.headers, params=params).json()["total"] == 0
 
 
 def test_series_order_and_ownership(client, make_user, make_post):

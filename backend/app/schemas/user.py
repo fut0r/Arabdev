@@ -55,6 +55,7 @@ AccentColor = Annotated[str, StringConstraints(pattern=r"^#[0-9a-fA-F]{6}$")]
 FontFamily = Literal["tajawal", "alexandria", "system"]
 Background = Literal["plain", "dots", "grid", "gradient"]
 Density = Literal["comfortable", "compact"]
+SiteWidth = Literal["standard", "wide", "full"]
 ReadingWidth = Literal["standard", "wide"]
 
 
@@ -66,6 +67,7 @@ class SettingsOut(ORMModel):
     font_size: int
     background: Background
     density: Density
+    site_width: SiteWidth
     reading_width: ReadingWidth
     email_weekly_digest: bool
     default_feed: Feed
@@ -89,6 +91,7 @@ class SettingsUpdate(BaseModel):
     font_size: Literal[14, 16, 18, 20] | None = None
     background: Background | None = None
     density: Density | None = None
+    site_width: SiteWidth | None = None
     reading_width: ReadingWidth | None = None
     email_weekly_digest: bool | None = None
     theme: Literal["light", "dark", "system"] | None = None

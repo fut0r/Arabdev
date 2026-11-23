@@ -334,9 +334,12 @@ def delete_account(data: AccountDelete, db: DbSession, user: CurrentUser) -> Res
 
 @router.get("/me/bookmarks", response_model=Page[PostOut], tags=["Interactions"], summary="Saved posts")
 def my_bookmarks(
-    db: DbSession, user: CurrentUser, params: Pagination, collection_id: Annotated[int | None, Query(ge=0)] = None
+    db: DbSession, user: CurrentUser, params: Pagination,
+    collection_id: Annotated[int | None, Query(ge=0)] = None,
+    oldest_first: bool = False,
+    with_notes: bool = False,
 ) -> Page[PostOut]:
-    return post_service.bookmarks(db, user, params, collection_id)
+    return post_service.bookmarks(db, user, params, collection_id, oldest_first=oldest_first, with_notes=with_notes)
 
 
 # ------------------------------------------------------------ discovery

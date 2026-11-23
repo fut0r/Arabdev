@@ -12,6 +12,7 @@ export function AppearancePanel() {
     font_size: [14, 16, 18, 20],
     background: ['plain', 'dots', 'grid', 'gradient'],
     density: ['comfortable', 'compact'],
+    site_width: ['standard', 'wide', 'full'],
     reading_width: ['standard', 'wide'],
   } as const;
   return (

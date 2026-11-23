@@ -1,5 +1,11 @@
 # ArabDev 1.4 release checklist
 
+## 1.4.1 layout update
+
+The homepage, navigation and feed share a configurable site width. Wide is the default. The palette opens Appearance, where guests and signed-in users can switch layouts independently of article reading width. Apply the Alembic migration before deploying the updated API so existing accounts receive the wide default.
+
+## 1.4 checklist
+
 This release implements the product review and user-requested personalization. Arabic and English, existing accounts/content, and public reading remain supported.
 
 - [x] Personalization: account-synced and guest-local accent, fonts, text size, background, density, reading width, theme and reset.

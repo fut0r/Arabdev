@@ -102,6 +102,8 @@ export function createAppTheme(
       MuiCssBaseline: {
         styleOverrides: (theme) => ({
           ':root': {
+            '--ad-site-width': { standard: '1280px', wide: '1800px', full: '100%' }[appearance.site_width],
+            '--ad-feed-width': appearance.site_width === 'standard' ? '680px' : 'none',
             '--ad-text-red': postTextColors.light.red,
             '--ad-text-crimson': postTextColors.light.crimson,
             '--ad-text-ink': postTextColors.light.ink,

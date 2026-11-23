@@ -24,6 +24,12 @@ export interface ProfilePayload {
   website: string | null;
 }
 
+export interface BookmarkFilters {
+  collection_id?: number;
+  oldest_first?: boolean;
+  with_notes?: boolean;
+}
+
 export const usersApi = {
   me: () => api.get<Me>('/users/me').then((r) => r.data),
   updateProfile: (payload: ProfilePayload) => api.patch<Me>('/users/me/profile', payload).then((r) => r.data),
@@ -69,8 +75,8 @@ export const usersApi = {
   },
   removeAvatar: () => api.delete<Me>('/users/me/avatar').then((r) => r.data),
   deleteAccount: (password: string) => api.delete('/users/me', { data: { password } }),
-  bookmarks: (page: number, collection_id?: number) =>
-    api.get<Page<Post>>('/users/me/bookmarks', { params: { page, collection_id } }).then((r) => r.data),
+  bookmarks: (page: number, filters: BookmarkFilters = {}) =>
+    api.get<Page<Post>>('/users/me/bookmarks', { params: { page, ...filters } }).then((r) => r.data),
 
   recommended: (limit = 6) => api.get<UserCard[]>('/users/recommended', { params: { limit } }).then((r) => r.data),
   profile: (username: string) => api.get<Profile>(`/users/${encodeURIComponent(username)}`).then((r) => r.data),

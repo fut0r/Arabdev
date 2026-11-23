@@ -88,7 +88,7 @@ async def lifespan(_app: FastAPI):
 def create_app() -> FastAPI:
     app = FastAPI(
         title="ArabDev API",
-        version="1.4.0",
+        version="1.4.1",
         description="REST API for ArabDev, a community for Arabic-speaking developers.",
         openapi_tags=OPENAPI_TAGS,
         contact={
