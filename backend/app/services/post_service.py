@@ -128,8 +128,13 @@ def user_activity(db: Session, username: str, viewer: User | None, params: PageP
 
 
 def bookmarks(
-    db: Session, viewer: User, params: PageParams, collection_id: int | None = None,
-    *, oldest_first: bool = False, with_notes: bool = False,
+    db: Session,
+    viewer: User,
+    params: PageParams,
+    collection_id: int | None = None,
+    *,
+    oldest_first: bool = False,
+    with_notes: bool = False,
 ) -> Page[PostOut]:
     stmt = posts_repo.bookmarks_stmt(viewer.id, collection_id, oldest_first=oldest_first, with_notes=with_notes)
     return _page_of_posts(db, stmt, params, viewer)

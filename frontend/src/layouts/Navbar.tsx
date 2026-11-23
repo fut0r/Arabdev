@@ -176,7 +176,12 @@ function GuestActions() {
       >
         {t('common.signIn')}
       </Button>
-      <Button component={RouterLink} to="/register" variant="contained" sx={{ whiteSpace: 'nowrap', px: { xs: 1, sm: 2 } }}>
+      <Button
+        component={RouterLink}
+        to="/register"
+        variant="contained"
+        sx={{ whiteSpace: 'nowrap', px: { xs: 1, sm: 2 } }}
+      >
         {t('common.signUp')}
       </Button>
     </Stack>
